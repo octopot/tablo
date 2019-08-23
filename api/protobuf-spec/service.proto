@@ -16,6 +16,18 @@ message UID {
 message Tablo {
     string id = 1;
     string title = 2;
+    repeated Column columns = 7;
+}
+
+message Column {
+    string id = 1;
+    string title = 2;
+    repeated Card cards = 7;
+}
+
+message Card {
+    string id = 1;
+    string title = 2;
     string url = 3;
     repeated string labels = 7;
 }
