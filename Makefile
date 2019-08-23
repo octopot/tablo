@@ -34,9 +34,13 @@ go-generate:
 .PHONY: proto-generate
 proto-generate:
 	@protoc --proto_path=./api/protobuf-spec \
+	        --proto_path=./third_party/protobuf-spec \
+	        --proto_path=./third_party/protobuf-spec/googleapis \
+	        --go_out=logtostderr=true:./internal/generated/api/v1 \
 	        --twirp_out=./internal/generated/api/v1 \
-	        --go_out=./internal/generated/api/v1 \
+	        --swagger_out=logtostderr=true,allow_merge=true,merge_file_name=tablo:./api/openapi-spec \
 	        service.proto
+	@mv api/openapi-spec/tablo.swagger.json api/openapi-spec/swagger.json
 
 .PHONY: refresh
 refresh: generate format
