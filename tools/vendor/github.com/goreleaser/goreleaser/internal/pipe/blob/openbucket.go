@@ -10,30 +10,23 @@ import (
 	"github.com/goreleaser/goreleaser/internal/semerrgroup"
 	"github.com/goreleaser/goreleaser/pkg/config"
 	"github.com/goreleaser/goreleaser/pkg/context"
-	"github.com/pkg/errors"
-	"gocloud.dev/blob"
-	"gocloud.dev/secrets"
+	gocdk "gocloud.dev/blob"
 
 	// Import the blob packages we want to be able to open.
 	_ "gocloud.dev/blob/azureblob"
 	_ "gocloud.dev/blob/gcsblob"
 	_ "gocloud.dev/blob/s3blob"
-
-	// import the secrets packages we want to be able to open:
-	_ "gocloud.dev/secrets/awskms"
-	_ "gocloud.dev/secrets/azurekeyvault"
-	_ "gocloud.dev/secrets/gcpkms"
 )
 
 // OpenBucket is the interface that wraps the BucketConnect and UploadBucket method
 type OpenBucket interface {
-	Connect(ctx *context.Context, bucketURL string) (*blob.Bucket, error)
+	Connect(ctx *context.Context, bucketURL string) (*gocdk.Bucket, error)
 	Upload(ctx *context.Context, conf config.Blob, folder string) error
 }
 
 // Bucket is object which holds connection for Go Bucker Provider
 type Bucket struct {
-	BucketConn *blob.Bucket
+	BucketConn *gocdk.Bucket
 }
 
 // returns openbucket connection for list of providers
@@ -42,12 +35,12 @@ func newOpenBucket() OpenBucket {
 }
 
 // Connect makes connection with provider
-func (b Bucket) Connect(ctx *context.Context, bucketURL string) (*blob.Bucket, error) {
-	conn, err := blob.OpenBucket(ctx, bucketURL)
+func (b Bucket) Connect(ctx *context.Context, bucketURL string) (*gocdk.Bucket, error) {
+	bucketConnection, err := gocdk.OpenBucket(ctx, bucketURL)
 	if err != nil {
 		return nil, err
 	}
-	return conn, nil
+	return bucketConnection, nil
 }
 
 // Upload takes connection initilized from newOpenBucket to upload goreleaser artifacts
@@ -56,11 +49,11 @@ func (b Bucket) Upload(ctx *context.Context, conf config.Blob, folder string) er
 	var bucketURL = fmt.Sprintf("%s://%s", conf.Provider, conf.Bucket)
 
 	// Get the openbucket connection for specific provider
-	conn, err := b.Connect(ctx, bucketURL)
+	openbucketConn, err := b.Connect(ctx, bucketURL)
 	if err != nil {
 		return err
 	}
-	defer conn.Close()
+	defer openbucketConn.Close()
 
 	var filter = artifact.Or(
 		artifact.ByType(artifact.UploadableArchive),
@@ -77,73 +70,45 @@ func (b Bucket) Upload(ctx *context.Context, conf config.Blob, folder string) er
 	for _, artifact := range ctx.Artifacts.Filter(filter).List() {
 		artifact := artifact
 		g.Go(func() error {
-			log.WithFields(log.Fields{
-				"provider": bucketURL,
-				"folder":   folder,
-				"artifact": artifact.Name,
-			}).Info("uploading")
-
-			w, err := conn.NewWriter(ctx, filepath.Join(folder, artifact.Name), nil)
-			if err != nil {
-				return errors.Wrap(err, "failed to obtain writer")
-			}
-			data, err := getData(ctx, conf, artifact.Path)
+			// Prepare artifact for upload.
+			data, err := ioutil.ReadFile(artifact.Path)
 			if err != nil {
 				return err
 			}
+			log.WithFields(log.Fields{
+				"provider": bucketURL,
+				"artifact": artifact.Name,
+			}).Info("uploading")
+
+			w, err := openbucketConn.NewWriter(ctx, filepath.Join(folder, artifact.Path), nil)
+			if err != nil {
+				return fmt.Errorf("failed to obtain writer: %s", err)
+			}
 			_, err = w.Write(data)
 			if err != nil {
-				switch {
-				case errorContains(err, "NoSuchBucket", "ContainerNotFound", "notFound"):
-					return errors.Wrapf(err, "provided bucket does not exist: %s", bucketURL)
-				case errorContains(err, "NoCredentialProviders"):
-					return errors.Wrapf(err, "check credentials and access to bucket: %s", bucketURL)
-				default:
-					return errors.Wrapf(err, "failed to write to bucket")
+				if errorContains(err, "NoSuchBucket", "ContainerNotFound", "notFound") {
+					return fmt.Errorf("(%v) provided bucket does not exist", bucketURL)
 				}
+				return fmt.Errorf("failed to write to bucket : %s", err)
 			}
 			if err = w.Close(); err != nil {
 				switch {
 				case errorContains(err, "InvalidAccessKeyId"):
-					return errors.Wrap(err, "aws access key id you provided does not exist in our records")
+					return fmt.Errorf("aws access key id you provided does not exist in our records")
 				case errorContains(err, "AuthenticationFailed"):
-					return errors.Wrap(err, "azure storage key you provided is not valid")
+					return fmt.Errorf("azure storage key you provided is not valid")
 				case errorContains(err, "invalid_grant"):
-					return errors.Wrap(err, "google app credentials you provided is not valid")
+					return fmt.Errorf("google app credentials you provided is not valid")
 				case errorContains(err, "no such host"):
-					return errors.Wrap(err, "azure storage account you provided is not valid")
+					return fmt.Errorf("azure storage account you provided is not valid")
 				case errorContains(err, "NoSuchBucket", "ContainerNotFound", "notFound"):
-					return errors.Wrapf(err, "provided bucket does not exist: %s", bucketURL)
-				case errorContains(err, "NoCredentialProviders"):
-					return errors.Wrapf(err, "check credentials and access to bucket %s", bucketURL)
-				case errorContains(err, "ServiceCode=ResourceNotFound"):
-					return errors.Wrapf(err, "missing azure storage key for provided bucket %s", bucketURL)
+					return fmt.Errorf("(%v) provided bucket does not exist", bucketURL)
 				default:
-					return errors.Wrap(err, "failed to close Bucket writer")
+					return fmt.Errorf("failed to close Bucket writer: %s", err)
 				}
 			}
 			return err
 		})
 	}
 	return g.Wait()
-}
-
-func getData(ctx *context.Context, conf config.Blob, path string) ([]byte, error) {
-	data, err := ioutil.ReadFile(path)
-	if err != nil {
-		return data, errors.Wrapf(err, "failed to open file %s", path)
-	}
-	if conf.KMSKey == "" {
-		return data, nil
-	}
-	keeper, err := secrets.OpenKeeper(ctx, conf.KMSKey)
-	if err != nil {
-		return data, errors.Wrapf(err, "failed to open kms %s", conf.KMSKey)
-	}
-	defer keeper.Close()
-	data, err = keeper.Encrypt(ctx, data)
-	if err != nil {
-		return data, errors.Wrap(err, "failed to encrypt with kms")
-	}
-	return data, err
 }

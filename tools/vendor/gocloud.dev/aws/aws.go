@@ -32,14 +32,10 @@ import (
 var DefaultSession = wire.NewSet(
 	SessionConfig,
 	ConfigCredentials,
-	NewDefaultSession,
+	session.NewSessionWithOptions,
+	wire.Value(session.Options{SharedConfigState: session.SharedConfigEnable}),
 	wire.Bind((*client.ConfigProvider)(nil), (*session.Session)(nil)),
 )
-
-// NewDefaultSession returns a *session.Session using the default options.
-func NewDefaultSession() (*session.Session, error) {
-	return session.NewSessionWithOptions(session.Options{SharedConfigState: session.SharedConfigEnable})
-}
 
 // SessionConfig returns sess.Config.
 func SessionConfig(sess *session.Session) *aws.Config {

@@ -61,8 +61,6 @@ func (v BlobSASSignatureValues) NewSASQueryParameters(sharedKeyCredential *Share
 		v.IPRange.String(),
 		string(v.Protocol),
 		v.Version,
-		resource,
-		"",                   // signed timestamp, @TODO add for snapshot sas feature
 		v.CacheControl,       // rscc
 		v.ContentDisposition, // rscd
 		v.ContentEncoding,    // rsce

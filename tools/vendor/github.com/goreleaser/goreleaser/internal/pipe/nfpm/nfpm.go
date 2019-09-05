@@ -41,7 +41,7 @@ func (Pipe) Default(ctx *context.Context) error {
 			deprecate.Notice("nfpm")
 		}
 	}
-	var ids = ids.New("nfpms")
+	var ids = ids.New()
 	for i := range ctx.Config.NFPMs {
 		var fpm = &ctx.Config.NFPMs[i]
 		if fpm.ID == "" {
@@ -118,7 +118,7 @@ func mergeOverrides(fpm config.NFPM, format string) (*config.NFPMOverridables, e
 	return &overrided, nil
 }
 
-func create(ctx *context.Context, fpm config.NFPM, format, arch string, binaries []*artifact.Artifact) error {
+func create(ctx *context.Context, fpm config.NFPM, format, arch string, binaries []artifact.Artifact) error {
 	overrided, err := mergeOverrides(fpm, format)
 	if err != nil {
 		return err
@@ -149,7 +149,6 @@ func create(ctx *context.Context, fpm config.NFPM, format, arch string, binaries
 		Version:     ctx.Git.CurrentTag,
 		Section:     "",
 		Priority:    "",
-		Epoch:       fpm.Epoch,
 		Maintainer:  fpm.Maintainer,
 		Description: fpm.Description,
 		Vendor:      fpm.Vendor,
@@ -195,7 +194,7 @@ func create(ctx *context.Context, fpm config.NFPM, format, arch string, binaries
 	if err := w.Close(); err != nil {
 		return errors.Wrap(err, "could not close package file")
 	}
-	ctx.Artifacts.Add(&artifact.Artifact{
+	ctx.Artifacts.Add(artifact.Artifact{
 		Type:   artifact.LinuxPackage,
 		Name:   name + "." + format,
 		Path:   path,

@@ -1,16 +1,14 @@
 package client
 
 import (
+	"bytes"
 	"crypto/tls"
 	"net/http"
 	"net/url"
 	"os"
-	"reflect"
-	"strconv"
 
 	"github.com/apex/log"
 	"github.com/google/go-github/v25/github"
-	"github.com/goreleaser/goreleaser/internal/artifact"
 	"github.com/goreleaser/goreleaser/internal/tmpl"
 	"github.com/goreleaser/goreleaser/pkg/config"
 	"github.com/goreleaser/goreleaser/pkg/context"
@@ -29,7 +27,7 @@ func NewGitHub(ctx *context.Context) (Client, error) {
 	httpClient := oauth2.NewClient(ctx, ts)
 	base := httpClient.Transport.(*oauth2.Transport).Base
 	// nolint: govet
-	if base == nil || reflect.ValueOf(base).IsNil() {
+	if &base != nil {
 		base = http.DefaultTransport
 	}
 	// nolint: gosec
@@ -58,7 +56,7 @@ func (c *githubClient) CreateFile(
 	ctx *context.Context,
 	commitAuthor config.CommitAuthor,
 	repo config.Repo,
-	content []byte,
+	content bytes.Buffer,
 	path,
 	message string,
 ) error {
@@ -67,7 +65,7 @@ func (c *githubClient) CreateFile(
 			Name:  github.String(commitAuthor.Name),
 			Email: github.String(commitAuthor.Email),
 		},
-		Content: content,
+		Content: content.Bytes(),
 		Message: github.String(message),
 	}
 
@@ -103,11 +101,11 @@ func (c *githubClient) CreateFile(
 	return err
 }
 
-func (c *githubClient) CreateRelease(ctx *context.Context, body string) (string, error) {
+func (c *githubClient) CreateRelease(ctx *context.Context, body string) (int64, error) {
 	var release *github.RepositoryRelease
 	title, err := tmpl.New(ctx).Apply(ctx.Config.Release.NameTemplate)
 	if err != nil {
-		return "", err
+		return 0, err
 	}
 
 	var data = &github.RepositoryRelease{
@@ -144,27 +142,22 @@ func (c *githubClient) CreateRelease(ctx *context.Context, body string) (string,
 		)
 	}
 	log.WithField("url", release.GetHTMLURL()).Info("release updated")
-	githubReleaseID := strconv.FormatInt(release.GetID(), 10)
-	return githubReleaseID, err
+	return release.GetID(), err
 }
 
 func (c *githubClient) Upload(
 	ctx *context.Context,
-	releaseID string,
-	artifact *artifact.Artifact,
+	releaseID int64,
+	name string,
 	file *os.File,
 ) error {
-	githubReleaseID, err := strconv.ParseInt(releaseID, 10, 64)
-	if err != nil {
-		return err
-	}
-	_, _, err = c.client.Repositories.UploadReleaseAsset(
+	_, _, err := c.client.Repositories.UploadReleaseAsset(
 		ctx,
 		ctx.Config.Release.GitHub.Owner,
 		ctx.Config.Release.GitHub.Name,
-		githubReleaseID,
+		releaseID,
 		&github.UploadOptions{
-			Name: artifact.Name,
+			Name: name,
 		},
 		file,
 	)

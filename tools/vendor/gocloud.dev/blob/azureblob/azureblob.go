@@ -23,7 +23,7 @@
 // AZURE_STORAGE_ACCOUNT is required, along with one of the other two.
 // To customize the URL opener, or for more details on the URL format,
 // see URLOpener.
-// See https://gocloud.dev/concepts/urls/ for background information.
+// See https://godoc.org/gocloud.dev#hdr-URLs for background information.
 //
 // Escaping
 //
@@ -48,7 +48,6 @@
 //  - ListObject: azblob.BlobItem for objects, azblob.BlobPrefix for "directories"
 //  - ListOptions.BeforeList: *azblob.ListBlobsSegmentOptions
 //  - Reader: azblob.DownloadResponse
-//  - Reader.BeforeRead: *azblob.BlockBlobURL, *azblob.BlobAccessConditions
 //  - Attributes: azblob.BlobGetPropertiesResponse
 //  - CopyOptions.BeforeCopy: azblob.Metadata, *azblob.ModifiedAccessConditions, *azblob.BlobAccessConditions
 //  - WriterOptions.BeforeWrite: *azblob.UploadStreamToBlockBlobOptions
@@ -409,31 +408,13 @@ func (r *reader) As(i interface{}) bool {
 func (b *bucket) NewRangeReader(ctx context.Context, key string, offset, length int64, opts *driver.ReaderOptions) (driver.Reader, error) {
 	key = escapeKey(key, false)
 	blockBlobURL := b.containerURL.NewBlockBlobURL(key)
-	blockBlobURLp := &blockBlobURL
-	accessConditions := &azblob.BlobAccessConditions{}
 
 	end := length
 	if end < 0 {
 		end = azblob.CountToEnd
 	}
-	if opts.BeforeRead != nil {
-		asFunc := func(i interface{}) bool {
-			if p, ok := i.(**azblob.BlockBlobURL); ok {
-				*p = blockBlobURLp
-				return true
-			}
-			if p, ok := i.(**azblob.BlobAccessConditions); ok {
-				*p = accessConditions
-				return true
-			}
-			return false
-		}
-		if err := opts.BeforeRead(asFunc); err != nil {
-			return nil, err
-		}
-	}
 
-	blobDownloadResponse, err := blockBlobURLp.Download(ctx, offset, end, *accessConditions, false)
+	blobDownloadResponse, err := blockBlobURL.Download(ctx, offset, end, azblob.BlobAccessConditions{}, false)
 	if err != nil {
 		return nil, err
 	}
@@ -790,7 +771,7 @@ func (w *writer) open(pr *io.PipeReader) error {
 	return nil
 }
 
-// Close completes the writer and closes it. Any error occurring during write will
+// Close completes the writer and close it. Any error occuring during write will
 // be returned. If a writer is closed before any Write is called, Close will
 // create an empty file at the given key.
 func (w *writer) Close() error {

@@ -219,11 +219,10 @@ func createControl(instSize int64, md5sums []byte, info nfpm.Info) (controlTarGz
 	}
 
 	for script, dest := range map[string]string{
-		info.Scripts.PreInstall:             "preinst",
-		info.Scripts.PostInstall:            "postinst",
-		info.Scripts.PreRemove:              "prerm",
-		info.Scripts.PostRemove:             "postrm",
-		info.Overridables.Deb.Scripts.Rules: "rules",
+		info.Scripts.PreInstall:  "preinst",
+		info.Scripts.PostInstall: "postinst",
+		info.Scripts.PreRemove:   "prerm",
+		info.Scripts.PostRemove:  "postrm",
 	} {
 		if script != "" {
 			if err := newScriptInsideTarGz(out, script, dest); err != nil {
@@ -335,11 +334,7 @@ func conffiles(info nfpm.Info) []byte {
 const controlTemplate = `
 {{- /* Mandatory fields */ -}}
 Package: {{.Info.Name}}
-{{- if .Info.Epoch}}
-Version: {{ .Info.Epoch }}:{{.Info.Version}}
-{{- else }}
 Version: {{.Info.Version}}
-{{- end }}
 Section: {{.Info.Section}}
 Priority: {{.Info.Priority}}
 Architecture: {{.Info.Arch}}

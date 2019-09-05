@@ -10,8 +10,7 @@ export GOPROXY := https://gocenter.io
 setup:
 	curl -sfL https://install.goreleaser.com/github.com/golangci/golangci-lint.sh | sh
 	curl -sfL https://install.goreleaser.com/github.com/gohugoio/hugo.sh | sh
-	curl -L https://git.io/misspell | sh
-	go mod tidy
+	go mod download
 .PHONY: setup
 
 # Run all the tests
@@ -27,24 +26,18 @@ cover: test
 # gofmt and goimports all go files
 fmt:
 	find . -name '*.go' -not -wholename './vendor/*' | while read -r file; do gofmt -w -s "$$file"; goimports -w "$$file"; done
+	# find . -name '*.md' -not -wholename './vendor/*' | xargs prettier --write
 .PHONY: fmt
 
 # Run all the linters
 lint:
 	# TODO: fix tests and lll issues
 	./bin/golangci-lint run --tests=false --enable-all --disable=lll ./...
-	./bin/misspell -error **/*
+	# find . -name '*.md' -not -wholename './vendor/*' | xargs prettier -l
 .PHONY: lint
 
-# Clean go.mod
-go-mod-tidy:
-	@go mod tidy -v
-	@git diff HEAD
-	@git diff-index --quiet HEAD
-.PHONY: go-mod-tidy
-
 # Run all the tests and code checks
-ci: build test lint go-mod-tidy
+ci: build test lint
 .PHONY: ci
 
 # Build a beta version of goreleaser

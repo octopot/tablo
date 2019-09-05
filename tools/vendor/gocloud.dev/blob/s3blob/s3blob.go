@@ -23,7 +23,7 @@
 // for more details.
 // To customize the URL opener, or for more details on the URL format,
 // see URLOpener.
-// See https://gocloud.dev/concepts/urls/ for background information.
+// See https://godoc.org/gocloud.dev#hdr-URLs for background information.
 //
 // Escaping
 //
@@ -47,7 +47,6 @@
 //  - ListOptions.BeforeList: *s3.ListObjectsV2Input, or *s3.ListObjectsInput
 //      when Options.UseLegacyList == true.
 //  - Reader: s3.GetObjectOutput
-//  - ReaderOptions.BeforeRead: *s3.GetObjectInput
 //  - Attributes: s3.HeadObjectOutput
 //  - CopyOptions.BeforeCopy: *s3.CopyObjectInput
 //  - WriterOptions.BeforeWrite: *s3manager.UploadInput
@@ -70,6 +69,7 @@ import (
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/awserr"
 	"github.com/aws/aws-sdk-go/aws/client"
+	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/s3"
 	"github.com/aws/aws-sdk-go/service/s3/s3manager"
 	"github.com/google/wire"
@@ -102,7 +102,7 @@ type lazySessionOpener struct {
 
 func (o *lazySessionOpener) OpenBucketURL(ctx context.Context, u *url.URL) (*blob.Bucket, error) {
 	o.init.Do(func() {
-		sess, err := gcaws.NewDefaultSession()
+		sess, err := session.NewSessionWithOptions(session.Options{SharedConfigState: session.SharedConfigEnable})
 		if err != nil {
 			o.err = err
 			return
@@ -275,9 +275,9 @@ func (w *writer) open(pr *io.PipeReader) error {
 	return nil
 }
 
-// Close completes the writer and closes it. Any error occurring during write
-// will be returned. If a writer is closed before any Write is called, Close
-// will create an empty file at the given key.
+// Close completes the writer and close it. Any error occuring during write will
+// be returned. If a writer is closed before any Write is called, Close will
+// create an empty file at the given key.
 func (w *writer) Close() error {
 	if w.w == nil {
 		// We never got any bytes written. We'll write an http.NoBody.
@@ -517,18 +517,6 @@ func (b *bucket) NewRangeReader(ctx context.Context, key string, offset, length 
 		in.Range = aws.String(fmt.Sprintf("bytes=%d-%d", offset, offset))
 	} else if length >= 0 {
 		in.Range = aws.String(fmt.Sprintf("bytes=%d-%d", offset, offset+length-1))
-	}
-	if opts.BeforeRead != nil {
-		asFunc := func(i interface{}) bool {
-			if p, ok := i.(**s3.GetObjectInput); ok {
-				*p = in
-				return true
-			}
-			return false
-		}
-		if err := opts.BeforeRead(asFunc); err != nil {
-			return nil, err
-		}
 	}
 	resp, err := b.client.GetObjectWithContext(ctx, in)
 	if err != nil {

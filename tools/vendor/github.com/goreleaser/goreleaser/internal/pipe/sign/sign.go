@@ -5,14 +5,10 @@ import (
 	"os"
 	"os/exec"
 	"path/filepath"
-	"reflect"
 
 	"github.com/apex/log"
 	"github.com/goreleaser/goreleaser/internal/artifact"
-	"github.com/goreleaser/goreleaser/internal/deprecate"
 	"github.com/goreleaser/goreleaser/internal/pipe"
-	"github.com/goreleaser/goreleaser/internal/semerrgroup"
-	"github.com/goreleaser/goreleaser/pkg/config"
 	"github.com/goreleaser/goreleaser/pkg/context"
 )
 
@@ -25,26 +21,18 @@ func (Pipe) String() string {
 
 // Default sets the Pipes defaults.
 func (Pipe) Default(ctx *context.Context) error {
-	if len(ctx.Config.Signs) == 0 {
-		ctx.Config.Signs = append(ctx.Config.Signs, ctx.Config.Sign)
-		if !reflect.DeepEqual(ctx.Config.Sign, config.Sign{}) {
-			deprecate.Notice("sign")
-		}
+	cfg := &ctx.Config.Sign
+	if cfg.Cmd == "" {
+		cfg.Cmd = "gpg"
 	}
-	for i := range ctx.Config.Signs {
-		cfg := &ctx.Config.Signs[i]
-		if cfg.Cmd == "" {
-			cfg.Cmd = "gpg"
-		}
-		if cfg.Signature == "" {
-			cfg.Signature = "${artifact}.sig"
-		}
-		if len(cfg.Args) == 0 {
-			cfg.Args = []string{"--output", "$signature", "--detach-sig", "$artifact"}
-		}
-		if cfg.Artifacts == "" {
-			cfg.Artifacts = "none"
-		}
+	if cfg.Signature == "" {
+		cfg.Signature = "${artifact}.sig"
+	}
+	if len(cfg.Args) == 0 {
+		cfg.Args = []string{"--output", "$signature", "--detach-sig", "$artifact"}
+	}
+	if cfg.Artifacts == "" {
+		cfg.Artifacts = "none"
 	}
 	return nil
 }
@@ -55,47 +43,40 @@ func (Pipe) Run(ctx *context.Context) error {
 		return pipe.ErrSkipSignEnabled
 	}
 
-	var g = semerrgroup.New(ctx.Parallelism)
-	for i := range ctx.Config.Signs {
-		cfg := ctx.Config.Signs[i]
-		g.Go(func() error {
-			switch cfg.Artifacts {
-			case "checksum":
-				var artifacts = ctx.Artifacts.
-					Filter(artifact.ByType(artifact.Checksum)).
-					List()
-				return sign(ctx, cfg, artifacts)
-			case "all":
-				var artifacts = ctx.Artifacts.
-					Filter(artifact.Or(
-						artifact.ByType(artifact.UploadableArchive),
-						artifact.ByType(artifact.UploadableBinary),
-						artifact.ByType(artifact.Checksum),
-						artifact.ByType(artifact.LinuxPackage),
-					)).List()
-				return sign(ctx, cfg, artifacts)
-			case "none":
-				return pipe.ErrSkipSignEnabled
-			default:
-				return fmt.Errorf("invalid list of artifacts to sign: %s", cfg.Artifacts)
-			}
-		})
+	switch ctx.Config.Sign.Artifacts {
+	case "checksum":
+		return sign(ctx, ctx.Artifacts.Filter(artifact.ByType(artifact.Checksum)).List())
+	case "all":
+		return sign(ctx, ctx.Artifacts.Filter(
+			artifact.Or(
+				artifact.ByType(artifact.UploadableArchive),
+				artifact.ByType(artifact.UploadableBinary),
+				artifact.ByType(artifact.Checksum),
+				artifact.ByType(artifact.LinuxPackage),
+			)).List())
+	case "none":
+		return pipe.ErrSkipSignEnabled
+	default:
+		return fmt.Errorf("invalid list of artifacts to sign: %s", ctx.Config.Sign.Artifacts)
 	}
-	return g.Wait()
 }
 
-func sign(ctx *context.Context, cfg config.Sign, artifacts []*artifact.Artifact) error {
+func sign(ctx *context.Context, artifacts []artifact.Artifact) error {
+
 	for _, a := range artifacts {
-		artifact, err := signone(ctx, cfg, a)
+		artifact, err := signone(ctx, a)
 		if err != nil {
 			return err
 		}
-		ctx.Artifacts.Add(artifact)
+
+		ctx.Artifacts.Add(*artifact)
 	}
 	return nil
 }
 
-func signone(ctx *context.Context, cfg config.Sign, a *artifact.Artifact) (*artifact.Artifact, error) {
+func signone(ctx *context.Context, a artifact.Artifact) (*artifact.Artifact, error) {
+	cfg := ctx.Config.Sign
+
 	env := ctx.Env
 	env["artifact"] = a.Path
 	env["signature"] = expand(cfg.Signature, env)

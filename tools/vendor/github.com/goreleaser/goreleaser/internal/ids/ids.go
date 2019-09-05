@@ -4,32 +4,23 @@ package ids
 import "fmt"
 
 // IDs is the IDs type
-type IDs struct {
-	ids  map[string]int
-	kind string
-}
+type IDs map[string]int
 
 // New IDs
-func New(kind string) IDs {
-	return IDs{
-		ids:  map[string]int{},
-		kind: kind,
-	}
+func New() IDs {
+	return IDs(map[string]int{})
 }
 
 // Inc increment the counter of the given id
-func (i IDs) Inc(id string) {
-	i.ids[id]++
+func (ids IDs) Inc(id string) {
+	ids[id]++
 }
 
 // Validate errors if there are any ids with counter > 1
-func (i IDs) Validate() error {
-	for id, count := range i.ids {
-		if count > 1 {
-			return fmt.Errorf(
-				"found %d %s with the ID '%s', please fix your config",
-				count, i.kind, id,
-			)
+func (ids IDs) Validate() error {
+	for id, cont := range ids {
+		if cont > 1 {
+			return fmt.Errorf("found %d items with the ID '%s', please fix your config", cont, id)
 		}
 	}
 	return nil
