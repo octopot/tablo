@@ -50,11 +50,26 @@ generate-proto:
 	@protoc --proto_path=./api/protobuf-spec \
 	        --proto_path=./third_party/protobuf-spec \
 	        --proto_path=./third_party/protobuf-spec/googleapis \
-	        --go_out=logtostderr=true:./internal/generated/api/v1 \
-	        --twirp_out=./internal/generated/api/v1 \
+	        --go_out=logtostderr=true:./internal/generated/api \
+	        --twirp_out=./internal/generated/api \
+	        v1/service.proto
+
+	# https://github.com/grpc-ecosystem/grpc-gateway/issues/837
+	@protoc --proto_path=./api/protobuf-spec \
+	        --proto_path=./third_party/protobuf-spec \
+	        --proto_path=./third_party/protobuf-spec/googleapis \
 	        --swagger_out=logtostderr=true,allow_merge=true,merge_file_name=tablo:./api/openapi-spec \
-	        desc.proto v1.proto
-	@mv api/openapi-spec/tablo.swagger.json api/openapi-spec/swagger.json
+	        desc.proto
+	@protoc --proto_path=./api/protobuf-spec \
+	        --proto_path=./third_party/protobuf-spec \
+	        --proto_path=./third_party/protobuf-spec/googleapis \
+	        --swagger_out=logtostderr=true,allow_merge=true,merge_file_name=v1:./api/openapi-spec \
+	        v1/service.proto
+	@swagger mixin \
+	        -o api/openapi-spec/swagger.json \
+	        api/openapi-spec/tablo.swagger.json \
+	        api/openapi-spec/v1.swagger.json
+	@rm api/openapi-spec/*.swagger.json
 
 .PHONY: update
 update:
