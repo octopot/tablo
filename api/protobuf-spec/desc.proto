@@ -1,0 +1,19 @@
+syntax = "proto3";
+
+package octolab.api.tablo;
+
+option go_package = "v1"; // https://github.com/grpc-ecosystem/grpc-gateway/issues/837
+
+import "protoc-gen-swagger/options/annotations.proto";
+
+option (grpc.gateway.protoc_gen_swagger.options.openapiv2_swagger) = {
+    info: {
+        title: "Tablo";
+        version: "dev";
+        contact: {
+            name:  "Tablo";
+            url:   "https://github.com/octopot/tablo";
+            email: "info@octolab.org";
+        }
+    }
+};

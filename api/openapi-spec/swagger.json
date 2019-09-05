@@ -1,24 +1,24 @@
 {
-  "swagger": "2.0",
-  "info": {
-    "title": "Tablo",
-    "version": "dev",
-    "contact": {
-      "name": "Tablo",
-      "url": "https://github.com/octopot/tablo",
-      "email": "info@octolab.org"
-    }
-  },
-  "schemes": [
-    "http",
-    "https"
-  ],
   "consumes": [
     "application/json"
   ],
   "produces": [
     "application/json"
   ],
+  "schemes": [
+    "http",
+    "https"
+  ],
+  "swagger": "2.0",
+  "info": {
+    "title": "Tablo",
+    "contact": {
+      "name": "Tablo",
+      "url": "https://github.com/octopot/tablo",
+      "email": "info@octolab.org"
+    },
+    "version": "dev"
+  },
   "paths": {},
   "definitions": {
     "v1Card": {
@@ -27,34 +27,34 @@
         "id": {
           "type": "string"
         },
-        "title": {
-          "type": "string"
-        },
-        "url": {
-          "type": "string"
-        },
         "labels": {
           "type": "array",
           "items": {
             "type": "string"
           }
+        },
+        "title": {
+          "type": "string"
+        },
+        "url": {
+          "type": "string"
         }
       }
     },
     "v1Column": {
       "type": "object",
       "properties": {
-        "id": {
-          "type": "string"
-        },
-        "title": {
-          "type": "string"
-        },
         "cards": {
           "type": "array",
           "items": {
             "$ref": "#/definitions/v1Card"
           }
+        },
+        "id": {
+          "type": "string"
+        },
+        "title": {
+          "type": "string"
         }
       }
     },
@@ -72,17 +72,17 @@
     "v1Tablo": {
       "type": "object",
       "properties": {
-        "id": {
-          "type": "string"
-        },
-        "title": {
-          "type": "string"
-        },
         "columns": {
           "type": "array",
           "items": {
             "$ref": "#/definitions/v1Column"
           }
+        },
+        "id": {
+          "type": "string"
+        },
+        "title": {
+          "type": "string"
         }
       }
     }
