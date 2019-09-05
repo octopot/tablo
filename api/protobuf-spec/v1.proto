@@ -1,0 +1,39 @@
+syntax = "proto3";
+
+package octolab.api.tablo.v1;
+
+option go_package = "v1";
+
+service TabloService {
+    rpc Get(UID) returns (Tablo);
+    rpc GetList(Criteria) returns (List);
+}
+
+message UID {
+    string id = 1;
+}
+
+message Tablo {
+    string id = 1;
+    string title = 2;
+    repeated Column columns = 7;
+}
+
+message Column {
+    string id = 1;
+    string title = 2;
+    repeated Card cards = 7;
+}
+
+message Card {
+    string id = 1;
+    string title = 2;
+    string url = 3;
+    repeated string labels = 7;
+}
+
+message Criteria {}
+
+message List {
+    repeated Tablo list = 2;
+}
