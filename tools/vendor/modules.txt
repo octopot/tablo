@@ -108,6 +108,8 @@ github.com/dimchansky/utfbom
 github.com/fatih/color
 # github.com/fsnotify/fsnotify v1.4.7
 github.com/fsnotify/fsnotify
+# github.com/ghodss/yaml v1.0.0
+github.com/ghodss/yaml
 # github.com/go-critic/go-critic v0.0.0-20181204210945-1df300866540
 github.com/go-critic/go-critic/checkers
 github.com/go-critic/go-critic/checkers/internal/lintutil
@@ -139,6 +141,8 @@ github.com/gobwas/glob/syntax/lexer
 github.com/gobwas/glob/util/strings
 # github.com/gogo/protobuf v1.2.0
 github.com/gogo/protobuf/proto
+# github.com/golang/glog v0.0.0-20160126235308-23def4e6c14b
+github.com/golang/glog
 # github.com/golang/mock v1.3.1
 github.com/golang/mock/mockgen
 github.com/golang/mock/mockgen/model
@@ -148,16 +152,17 @@ github.com/golang/protobuf/protoc-gen-go
 github.com/golang/protobuf/proto
 github.com/golang/protobuf/protoc-gen-go/generator
 github.com/golang/protobuf/protoc-gen-go/grpc
-github.com/golang/protobuf/protoc-gen-go/descriptor
 github.com/golang/protobuf/protoc-gen-go/plugin
+github.com/golang/protobuf/protoc-gen-go/descriptor
 github.com/golang/protobuf/protoc-gen-go/generator/internal/remap
-github.com/golang/protobuf/ptypes/duration
+github.com/golang/protobuf/jsonpb
+github.com/golang/protobuf/descriptor
+github.com/golang/protobuf/ptypes/any
 github.com/golang/protobuf/ptypes/struct
+github.com/golang/protobuf/ptypes/duration
 github.com/golang/protobuf/ptypes/timestamp
 github.com/golang/protobuf/ptypes/wrappers
 github.com/golang/protobuf/ptypes
-github.com/golang/protobuf/ptypes/any
-github.com/golang/protobuf/jsonpb
 # github.com/golangci/check v0.0.0-20180506172741-cfe4005ccda2
 github.com/golangci/check/cmd/structcheck
 github.com/golangci/check/cmd/varcheck
@@ -309,9 +314,16 @@ github.com/goreleaser/nfpm/glob
 # github.com/gostaticanalysis/analysisutil v0.0.0-20190318220348-4088753ea4d3
 github.com/gostaticanalysis/analysisutil
 # github.com/grpc-ecosystem/grpc-gateway v1.8.5
-github.com/grpc-ecosystem/grpc-gateway/runtime
-github.com/grpc-ecosystem/grpc-gateway/utilities
+github.com/grpc-ecosystem/grpc-gateway/protoc-gen-swagger
+github.com/grpc-ecosystem/grpc-gateway/codegenerator
+github.com/grpc-ecosystem/grpc-gateway/protoc-gen-grpc-gateway/descriptor
+github.com/grpc-ecosystem/grpc-gateway/protoc-gen-swagger/genswagger
+github.com/grpc-ecosystem/grpc-gateway/protoc-gen-grpc-gateway/httprule
 github.com/grpc-ecosystem/grpc-gateway/internal
+github.com/grpc-ecosystem/grpc-gateway/protoc-gen-grpc-gateway/generator
+github.com/grpc-ecosystem/grpc-gateway/protoc-gen-swagger/options
+github.com/grpc-ecosystem/grpc-gateway/utilities
+github.com/grpc-ecosystem/grpc-gateway/runtime
 # github.com/hashicorp/golang-lru v0.5.1
 github.com/hashicorp/golang-lru/simplelru
 # github.com/hashicorp/hcl v0.0.0-20180404174102-ef8a98b0bbce
@@ -543,9 +555,9 @@ google.golang.org/appengine/internal/log
 google.golang.org/appengine/internal/remote_api
 google.golang.org/appengine/internal/socket
 # google.golang.org/genproto v0.0.0-20190508193815-b515fa19cec8
+google.golang.org/genproto/googleapis/api/annotations
 google.golang.org/genproto/googleapis/cloud/kms/v1
 google.golang.org/genproto/googleapis/iam/v1
-google.golang.org/genproto/googleapis/api/annotations
 google.golang.org/genproto/protobuf/field_mask
 google.golang.org/genproto/googleapis/rpc/status
 google.golang.org/genproto/googleapis/rpc/code
