@@ -1,49 +1,67 @@
 BIN         = $(shell basename $(shell go list -m))
+BINPATH     = $(PWD)/bin
+COMMIT      = $(shell git rev-parse --verify HEAD)
+DATE        = $(shell date +%Y-%m-%dT%T%Z)
 GO111MODULE = on
 GOFLAGS     = -mod=vendor
 MODULE      = $(shell go list -m)
 PACKAGES    = $(shell go list ./...)
-PATHS       = $(shell go list ./... | sed -e "s|$(shell go list -m)/||g")
+PATHS       = $(shell go list ./... | sed -e "s|$(shell go list -m)/\{0,1\}||g")
 SHELL       = /bin/bash -euo pipefail
 TIMEOUT     = 1s
 
+export PATH := $(BINPATH):$(PATH)
 
 .DEFAULT_GOAL = test-with-coverage
+
+.PHONY: env
+env:
+	@echo "BIN:         $(BIN)"
+	@echo "BINPATH:     $(BINPATH)"
+	@echo "COMMIT:      $(COMMIT)"
+	@echo "DATE:        $(DATE)"
+	@echo "GO111MODULE: $(GO111MODULE)"
+	@echo "GOFLAGS:     $(GOFLAGS)"
+	@echo "MODULE:      $(MODULE)"
+	@echo "PACKAGES:    $(PACKAGES)"
+	@echo "PATH:        $(PATH)"
+	@echo "PATHS:       $(PATHS)"
+	@echo "SHELL:       $(SHELL)"
+	@echo "TIMEOUT:     $(TIMEOUT)"
 
 
 .PHONY: deps
 deps:
 	@go mod tidy && go mod vendor && go mod verify
 
-.PHONY: update
-update:
-	@go get -mod= -u
-
-
 .PHONY: format
 format:
-	@goimports -local $(dirname $(MODULE)) -ungroup -w $(PATHS)
+	@goimports -local $(dir $(shell go list -m)) -ungroup -w $(PATHS)
 
 .PHONY: generate
-generate: go-generate proto-generate
+generate: generate-go generate-proto
 
-.PHONY: go-generate
-go-generate:
-	@go generate ./...
+.PHONY: generate-go
+generate-go:
+	@go generate $(PACKAGES)
 
-.PHONY: proto-generate
-proto-generate:
+.PHONY: generate-proto
+generate-proto:
 	@protoc --proto_path=./api/protobuf-spec \
 	        --proto_path=./third_party/protobuf-spec \
 	        --proto_path=./third_party/protobuf-spec/googleapis \
 	        --go_out=logtostderr=true:./internal/generated/api/v1 \
 	        --twirp_out=./internal/generated/api/v1 \
 	        --swagger_out=logtostderr=true,allow_merge=true,merge_file_name=tablo:./api/openapi-spec \
-	        service.proto
+	        desc.proto v1.proto
 	@mv api/openapi-spec/tablo.swagger.json api/openapi-spec/swagger.json
 
+.PHONY: update
+update:
+	@go get -mod= -u
+
 .PHONY: refresh
-refresh: generate format
+refresh: update deps generate format test-with-coverage
 
 
 .PHONY: test
@@ -65,12 +83,8 @@ test-smoke:
 
 .PHONY: build
 build:
-	@go build -o bin/$(BIN) .
+	@go build -o bin/$(BIN) -ldflags "-s -w -X main.commit=$(COMMIT) -X main.date=$(DATE)" .
 
 .PHONY: dist
 dist:
 	@godownloader .goreleaser.yml > .github/install.sh
-
-.PHONY: install
-install:
-	@go build -o $(GOPATH)/bin/$(BIN) .
