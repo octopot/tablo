@@ -6,6 +6,7 @@ package tools
 
 // tool dependencies
 import (
+	_ "github.com/go-swagger/go-swagger/cmd/swagger"
 	_ "github.com/golang/mock/mockgen"
 	_ "github.com/golang/protobuf/protoc-gen-go"
 	_ "github.com/golangci/golangci-lint/cmd/golangci-lint"
