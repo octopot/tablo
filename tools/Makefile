@@ -18,7 +18,7 @@ env:
 
 .PHONY: brew
 brew:
-	@brew install protobuf
+	@brew list protobuf &>/dev/null || brew install protobuf
 
 .PHONY: build
 build:

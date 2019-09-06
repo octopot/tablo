@@ -31,7 +31,7 @@ env:
 
 
 .PHONY: deps
-deps:
+deps: tools
 	@go mod tidy && go mod vendor && go mod verify
 
 .PHONY: format
@@ -70,6 +70,10 @@ generate-proto:
 	        api/openapi-spec/tablo.swagger.json \
 	        api/openapi-spec/v1.swagger.json
 	@rm api/openapi-spec/*.swagger.json
+
+.PHONY: tools
+tools:
+	@cd tools && make
 
 .PHONY: update
 update:

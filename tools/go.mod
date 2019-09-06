@@ -17,5 +17,8 @@ require (
 	github.com/goreleaser/goreleaser v0.110.0
 	github.com/grpc-ecosystem/grpc-gateway v1.9.6
 	github.com/twitchtv/twirp v5.8.0+incompatible
-	golang.org/x/tools v0.0.0-20190905173453-6b3d1c9ba8bf
+	golang.org/x/net v0.0.0-20190827160401-ba9fcec4b297 // indirect
+	golang.org/x/sys v0.0.0-20190904154756-749cb33beabd // indirect
+	golang.org/x/tools v0.0.0-20190906185503-8159a2d3d69b
+	gopkg.in/check.v1 v1.0.0-20190902080502-41f04d3bba15 // indirect
 )
