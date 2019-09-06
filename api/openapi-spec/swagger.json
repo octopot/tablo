@@ -69,6 +69,14 @@
         }
       }
     },
+    "v1Provider": {
+      "type": "string",
+      "default": "GITHUB",
+      "enum": [
+        "GITHUB",
+        "TRELLO"
+      ]
+    },
     "v1Tablo": {
       "type": "object",
       "properties": {
@@ -85,6 +93,23 @@
           "type": "string"
         }
       }
+    },
+    "v1Vendor": {
+      "type": "object",
+      "properties": {
+        "desc": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "type": {
+          "$ref": "#/definitions/v1Provider"
+        }
+      }
+    },
+    "v1Void": {
+      "type": "object"
     }
   }
 }

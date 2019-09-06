@@ -1,0 +1,32 @@
+syntax = "proto3";
+
+package octolab.api.tablo.v1;
+
+import "v1/common.proto";
+
+option go_package = "v1";
+
+enum Provider {
+    GITHUB = 0;
+    TRELLO = 1;
+}
+
+service VendorService {
+    rpc Connect(Secret) returns (Vendor);
+    rpc Disconnect(UID) returns (Void);
+}
+
+message Secret {
+    string token = 1;
+    Provider provider = 2;
+}
+
+message Vendor {
+    string name = 1;
+    string desc = 2;
+    Provider type = 3;
+}
+
+message Bucket {}
+
+message Source {}

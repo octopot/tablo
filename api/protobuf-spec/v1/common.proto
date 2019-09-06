@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+package octolab.api.tablo.v1;
+
+option go_package = "v1";
+
+message UID {
+    string id = 1;
+}
+
+message Void {}
