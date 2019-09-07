@@ -269,7 +269,7 @@ github.com/google/wire
 github.com/googleapis/gax-go
 # github.com/googleapis/gax-go/v2 v2.0.5
 github.com/googleapis/gax-go/v2
-# github.com/goreleaser/godownloader v0.0.0-20190803193356-7ef626c90bb6
+# github.com/goreleaser/godownloader v0.0.0-20190907185828-93b2b793cd90
 github.com/goreleaser/godownloader
 # github.com/goreleaser/goreleaser v0.110.0
 github.com/goreleaser/goreleaser
@@ -487,7 +487,7 @@ golang.org/x/oauth2/jws
 golang.org/x/oauth2/jwt
 # golang.org/x/sync v0.0.0-20190423024810-112230192c58
 golang.org/x/sync/errgroup
-# golang.org/x/sys v0.0.0-20190904154756-749cb33beabd
+# golang.org/x/sys v0.0.0-20190907184412-d223b2b6db03
 golang.org/x/sys/unix
 # golang.org/x/text v0.3.2
 golang.org/x/text/transform
@@ -495,7 +495,7 @@ golang.org/x/text/unicode/norm
 golang.org/x/text/width
 golang.org/x/text/secure/bidirule
 golang.org/x/text/unicode/bidi
-# golang.org/x/tools v0.0.0-20190906185503-8159a2d3d69b => github.com/kamilsk/go-tools v0.0.0-20190618115843-d350ce7f7a97
+# golang.org/x/tools v0.0.0-20190908122318-4c50eace5a90 => github.com/kamilsk/go-tools v0.0.0-20190618115843-d350ce7f7a97
 golang.org/x/tools/cmd/goimports
 golang.org/x/tools/go/packages
 golang.org/x/tools/internal/imports
