@@ -12,21 +12,45 @@ enum Provider {
 }
 
 service VendorService {
-    rpc Connect(Secret) returns (Vendor);
-    rpc Disconnect(UID) returns (Void);
+    rpc Connect (Secret) returns (Vendor);
+    rpc Disconnect (URI) returns (Void);
+    rpc Sources (URI) returns (SourceNode);
 }
 
 message Secret {
     string token = 1;
-    Provider provider = 2;
+    string name = 2;
+    string desc = 3;
+    Provider provider = 4;
 }
 
 message Vendor {
-    string name = 1;
-    string desc = 2;
-    Provider type = 3;
+    URI id = 1;
+    string name = 2;
+    string desc = 3;
+    Provider type = 4;
 }
 
-message Bucket {}
+message Source {
+    URI id = 1;
+    string name = 2;
+    string desc = 3;
+    string uri = 4;
+}
 
-message Source {}
+message SourceList {
+    repeated Source list = 1;
+}
+
+message SourceNode {
+    message Meta {
+        string name = 1;
+        string desc = 2;
+    }
+
+    Meta meta = 1;
+    oneof data {
+        SourceNode child = 2;
+        SourceList leaves = 3;
+    }
+}

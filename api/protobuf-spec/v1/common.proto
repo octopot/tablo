@@ -4,8 +4,13 @@ package octolab.api.tablo.v1;
 
 option go_package = "v1";
 
-message UID {
-    string id = 1;
+message URI {
+    oneof value {
+        // internal UUID v4
+        string urn = 1;
+        // resource type and its location
+        string url = 2;
+    }
 }
 
 message Void {}
