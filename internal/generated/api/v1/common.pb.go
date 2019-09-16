@@ -5,9 +5,8 @@ package v1
 
 import (
 	fmt "fmt"
-	math "math"
-
 	proto "github.com/golang/protobuf/proto"
+	math "math"
 )
 
 // Reference imports to suppress errors if they are not otherwise used.
@@ -21,43 +20,84 @@ var _ = math.Inf
 // proto package needs to be updated.
 const _ = proto.ProtoPackageIsVersion3 // please upgrade the proto package
 
-type UID struct {
-	Id                   string   `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
-	XXX_NoUnkeyedLiteral struct{} `json:"-"`
-	XXX_unrecognized     []byte   `json:"-"`
-	XXX_sizecache        int32    `json:"-"`
+type URI struct {
+	// Types that are valid to be assigned to Value:
+	//	*URI_Urn
+	//	*URI_Url
+	Value                isURI_Value `protobuf_oneof:"value"`
+	XXX_NoUnkeyedLiteral struct{}    `json:"-"`
+	XXX_unrecognized     []byte      `json:"-"`
+	XXX_sizecache        int32       `json:"-"`
 }
 
-func (m *UID) Reset()         { *m = UID{} }
-func (m *UID) String() string { return proto.CompactTextString(m) }
-func (*UID) ProtoMessage()    {}
-func (*UID) Descriptor() ([]byte, []int) {
+func (m *URI) Reset()         { *m = URI{} }
+func (m *URI) String() string { return proto.CompactTextString(m) }
+func (*URI) ProtoMessage()    {}
+func (*URI) Descriptor() ([]byte, []int) {
 	return fileDescriptor_372283428b44e521, []int{0}
 }
 
-func (m *UID) XXX_Unmarshal(b []byte) error {
-	return xxx_messageInfo_UID.Unmarshal(m, b)
+func (m *URI) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_URI.Unmarshal(m, b)
 }
-func (m *UID) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
-	return xxx_messageInfo_UID.Marshal(b, m, deterministic)
+func (m *URI) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_URI.Marshal(b, m, deterministic)
 }
-func (m *UID) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_UID.Merge(m, src)
+func (m *URI) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_URI.Merge(m, src)
 }
-func (m *UID) XXX_Size() int {
-	return xxx_messageInfo_UID.Size(m)
+func (m *URI) XXX_Size() int {
+	return xxx_messageInfo_URI.Size(m)
 }
-func (m *UID) XXX_DiscardUnknown() {
-	xxx_messageInfo_UID.DiscardUnknown(m)
+func (m *URI) XXX_DiscardUnknown() {
+	xxx_messageInfo_URI.DiscardUnknown(m)
 }
 
-var xxx_messageInfo_UID proto.InternalMessageInfo
+var xxx_messageInfo_URI proto.InternalMessageInfo
 
-func (m *UID) GetId() string {
+type isURI_Value interface {
+	isURI_Value()
+}
+
+type URI_Urn struct {
+	Urn string `protobuf:"bytes,1,opt,name=urn,proto3,oneof"`
+}
+
+type URI_Url struct {
+	Url string `protobuf:"bytes,2,opt,name=url,proto3,oneof"`
+}
+
+func (*URI_Urn) isURI_Value() {}
+
+func (*URI_Url) isURI_Value() {}
+
+func (m *URI) GetValue() isURI_Value {
 	if m != nil {
-		return m.Id
+		return m.Value
+	}
+	return nil
+}
+
+func (m *URI) GetUrn() string {
+	if x, ok := m.GetValue().(*URI_Urn); ok {
+		return x.Urn
 	}
 	return ""
+}
+
+func (m *URI) GetUrl() string {
+	if x, ok := m.GetValue().(*URI_Url); ok {
+		return x.Url
+	}
+	return ""
+}
+
+// XXX_OneofWrappers is for the internal use of the proto package.
+func (*URI) XXX_OneofWrappers() []interface{} {
+	return []interface{}{
+		(*URI_Urn)(nil),
+		(*URI_Url)(nil),
+	}
 }
 
 type Void struct {
@@ -92,19 +132,20 @@ func (m *Void) XXX_DiscardUnknown() {
 var xxx_messageInfo_Void proto.InternalMessageInfo
 
 func init() {
-	proto.RegisterType((*UID)(nil), "octolab.api.tablo.v1.UID")
+	proto.RegisterType((*URI)(nil), "octolab.api.tablo.v1.URI")
 	proto.RegisterType((*Void)(nil), "octolab.api.tablo.v1.Void")
 }
 
 func init() { proto.RegisterFile("v1/common.proto", fileDescriptor_372283428b44e521) }
 
 var fileDescriptor_372283428b44e521 = []byte{
-	// 105 bytes of a gzipped FileDescriptorProto
+	// 124 bytes of a gzipped FileDescriptorProto
 	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xe2, 0xe2, 0x2f, 0x33, 0xd4, 0x4f,
 	0xce, 0xcf, 0xcd, 0xcd, 0xcf, 0xd3, 0x2b, 0x28, 0xca, 0x2f, 0xc9, 0x17, 0x12, 0xc9, 0x4f, 0x2e,
 	0xc9, 0xcf, 0x49, 0x4c, 0xd2, 0x4b, 0x2c, 0xc8, 0xd4, 0x2b, 0x49, 0x4c, 0xca, 0xc9, 0xd7, 0x2b,
-	0x33, 0x54, 0x12, 0xe5, 0x62, 0x0e, 0xf5, 0x74, 0x11, 0xe2, 0xe3, 0x62, 0xca, 0x4c, 0x91, 0x60,
-	0x54, 0x60, 0xd4, 0xe0, 0x0c, 0x62, 0xca, 0x4c, 0x51, 0x62, 0xe3, 0x62, 0x09, 0xcb, 0xcf, 0x4c,
-	0x71, 0x62, 0x89, 0x62, 0x2a, 0x33, 0x4c, 0x62, 0x03, 0x9b, 0x60, 0x0c, 0x08, 0x00, 0x00, 0xff,
-	0xff, 0x2c, 0xdf, 0xac, 0x5f, 0x54, 0x00, 0x00, 0x00,
+	0x33, 0x54, 0x32, 0xe3, 0x62, 0x0e, 0x0d, 0xf2, 0x14, 0x12, 0xe2, 0x62, 0x2e, 0x2d, 0xca, 0x93,
+	0x60, 0x54, 0x60, 0xd4, 0xe0, 0xf4, 0x60, 0x08, 0x02, 0x71, 0x20, 0x62, 0x39, 0x12, 0x4c, 0x08,
+	0xb1, 0x1c, 0x27, 0x76, 0x2e, 0xd6, 0xb2, 0xc4, 0x9c, 0xd2, 0x54, 0x25, 0x36, 0x2e, 0x96, 0xb0,
+	0xfc, 0xcc, 0x14, 0x27, 0x96, 0x28, 0xa6, 0x32, 0xc3, 0x24, 0x36, 0xb0, 0x15, 0xc6, 0x80, 0x00,
+	0x00, 0x00, 0xff, 0xff, 0x9f, 0xae, 0xd0, 0x79, 0x75, 0x00, 0x00, 0x00,
 }

@@ -11,21 +11,40 @@
   ],
   "swagger": "2.0",
   "info": {
+    "description": "The one point of view to all your task boards.",
     "title": "Tablo",
     "contact": {
       "name": "Tablo",
       "url": "https://github.com/octopot/tablo",
       "email": "info@octolab.org"
     },
+    "license": {
+      "name": "MIT",
+      "url": "https://github.com/octopot/tablo/blob/master/LICENSE"
+    },
     "version": "dev"
   },
   "paths": {},
   "definitions": {
+    "SourceNodeMeta": {
+      "type": "object",
+      "properties": {
+        "desc": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        }
+      }
+    },
     "v1Card": {
       "type": "object",
       "properties": {
-        "id": {
+        "emoji": {
           "type": "string"
+        },
+        "id": {
+          "$ref": "#/definitions/v1URI"
         },
         "labels": {
           "type": "array",
@@ -50,8 +69,14 @@
             "$ref": "#/definitions/v1Card"
           }
         },
-        "id": {
+        "desc": {
           "type": "string"
+        },
+        "emoji": {
+          "type": "string"
+        },
+        "id": {
+          "$ref": "#/definitions/v1URI"
         },
         "title": {
           "type": "string"
@@ -77,6 +102,48 @@
         "TRELLO"
       ]
     },
+    "v1Source": {
+      "type": "object",
+      "properties": {
+        "desc": {
+          "type": "string"
+        },
+        "id": {
+          "$ref": "#/definitions/v1URI"
+        },
+        "name": {
+          "type": "string"
+        },
+        "uri": {
+          "type": "string"
+        }
+      }
+    },
+    "v1SourceList": {
+      "type": "object",
+      "properties": {
+        "list": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/v1Source"
+          }
+        }
+      }
+    },
+    "v1SourceNode": {
+      "type": "object",
+      "properties": {
+        "child": {
+          "$ref": "#/definitions/v1SourceNode"
+        },
+        "leaves": {
+          "$ref": "#/definitions/v1SourceList"
+        },
+        "meta": {
+          "$ref": "#/definitions/SourceNodeMeta"
+        }
+      }
+    },
     "v1Tablo": {
       "type": "object",
       "properties": {
@@ -86,11 +153,36 @@
             "$ref": "#/definitions/v1Column"
           }
         },
-        "id": {
+        "desc": {
           "type": "string"
+        },
+        "emoji": {
+          "type": "string"
+        },
+        "id": {
+          "$ref": "#/definitions/v1URI"
+        },
+        "sources": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/v1Source"
+          }
         },
         "title": {
           "type": "string"
+        }
+      }
+    },
+    "v1URI": {
+      "type": "object",
+      "properties": {
+        "url": {
+          "type": "string",
+          "title": "resource type and its location"
+        },
+        "urn": {
+          "type": "string",
+          "title": "internal UUID v4"
         }
       }
     },
@@ -99,6 +191,9 @@
       "properties": {
         "desc": {
           "type": "string"
+        },
+        "id": {
+          "$ref": "#/definitions/v1URI"
         },
         "name": {
           "type": "string"
