@@ -13,6 +13,7 @@ enum Provider {
 
 service VendorService {
     rpc Connect (Secret) returns (Vendor);
+    rpc Connected (Void) returns (VendorList);
     rpc Disconnect (URI) returns (Void);
     rpc Sources (URI) returns (SourceNode);
 }
@@ -31,11 +32,14 @@ message Vendor {
     Provider type = 4;
 }
 
+message VendorList {
+    repeated Vendor list = 1;
+}
+
 message Source {
     URI id = 1;
     string name = 2;
     string desc = 3;
-    string uri = 4;
 }
 
 message SourceList {

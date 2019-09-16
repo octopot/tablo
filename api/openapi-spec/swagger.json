@@ -113,9 +113,6 @@
         },
         "name": {
           "type": "string"
-        },
-        "uri": {
-          "type": "string"
         }
       }
     },
@@ -200,6 +197,17 @@
         },
         "type": {
           "$ref": "#/definitions/v1Provider"
+        }
+      }
+    },
+    "v1VendorList": {
+      "type": "object",
+      "properties": {
+        "list": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/v1Vendor"
+          }
         }
       }
     },
