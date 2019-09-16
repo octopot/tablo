@@ -8,12 +8,17 @@ import "protoc-gen-swagger/options/annotations.proto";
 
 option (grpc.gateway.protoc_gen_swagger.options.openapiv2_swagger) = {
     info: {
-        title: "Tablo";
-        version: "dev";
+        title: "Tablo"
+        description: "The one point of view to all your task boards."
         contact: {
-            name:  "Tablo";
-            url:   "https://github.com/octopot/tablo";
-            email: "info@octolab.org";
+            name:  "Tablo"
+            url:   "https://github.com/octopot/tablo"
+            email: "info@octolab.org"
         }
+        license: {
+            name: "MIT"
+            url:  "https://github.com/octopot/tablo/blob/master/LICENSE"
+        }
+        version: "dev"
     }
 };
