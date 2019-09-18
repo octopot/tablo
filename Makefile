@@ -32,7 +32,7 @@ env:
 
 
 .PHONY: deps
-deps: tools
+deps: # tools # todo blocker#https://github.com/spf13/pflag/issues/218
 	@go mod tidy && go mod vendor && go mod verify
 
 .PHONY: format

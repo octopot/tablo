@@ -32,7 +32,7 @@ deps:
 
 .PHONY: egg
 egg:
-	@go get -m -u github.com/kamilsk/egg
+	@go get -d -u github.com/kamilsk/egg
 	@go build -o $(BINPATH)/egg github.com/kamilsk/egg
 
 .PHONY: install
