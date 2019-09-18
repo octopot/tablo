@@ -1,3 +1,5 @@
+github.com/adlio/trello v1.4.0 h1:Wpo6fPFgf28N3PbFyZkBJx2nDKkuLAoPkJ8Eh7jE3Bg=
+github.com/adlio/trello v1.4.0/go.mod h1:l2068AhUuUuQ9Vsb95ECMueHThYyAj4e85lWPmr2/LE=
 github.com/golang/protobuf v1.2.0/go.mod h1:6lQm79b+lXiMfvg/cZm0SGofjICqVBUtrP5yJMmIC1U=
 github.com/golang/protobuf v1.3.2 h1:6nsPYzhq5kReh6QImI3k5qWzO4PEbvbIW2cwSfR/6xs=
 github.com/golang/protobuf v1.3.2/go.mod h1:6lQm79b+lXiMfvg/cZm0SGofjICqVBUtrP5yJMmIC1U=
