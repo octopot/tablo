@@ -1,6 +1,6 @@
 module go.octolab.org/ecosystem/tablo
 
-go 1.12
+go 1.11
 
 require (
 	github.com/adlio/trello v1.4.0
