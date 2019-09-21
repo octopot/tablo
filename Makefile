@@ -4,7 +4,7 @@ COMMIT      = $(shell git rev-parse --verify HEAD)
 DATE        = $(shell date +%Y-%m-%dT%T%Z)
 GO111MODULE = on
 GOFLAGS     = -mod=vendor
-GOPROXY     = https://proxy.golang.org
+GOPROXY     = https://proxy.golang.org,https://gocenter.io,direct
 MODULE      = $(shell go list -m)
 PACKAGES    = $(shell go list ./...)
 PATHS       = $(shell go list ./... | sed -e "s|$(shell go list -m)/\{0,1\}||g")

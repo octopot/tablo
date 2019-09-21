@@ -40,4 +40,4 @@ install: brew egg deps build
 
 .PHONY: update
 update:
-	@go get -tags=tools -u
+	@go get -u all
