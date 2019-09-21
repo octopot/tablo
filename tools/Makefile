@@ -1,7 +1,7 @@
 BINPATH     = $(shell dirname $(PWD))/bin
 GO111MODULE = on
 GOFLAGS     = -mod=
-GOPROXY     = https://proxy.golang.org
+GOPROXY     = https://proxy.golang.org,https://gocenter.io,direct
 SHELL       = /bin/bash -euo pipefail
 
 export PATH := $(BINPATH):$(PATH)
