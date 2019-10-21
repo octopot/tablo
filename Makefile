@@ -21,8 +21,13 @@ env:
 	@echo "BINPATH:     $(BINPATH)"
 	@echo "COMMIT:      $(COMMIT)"
 	@echo "DATE:        $(DATE)"
-	@echo "GO111MODULE: $(GO111MODULE)"
-	@echo "GOFLAGS:     $(GOFLAGS)"
+	@echo "GO111MODULE: $(shell go env GO111MODULE)"
+	@echo "GOFLAGS:     $(shell go env GOFLAGS)"
+	@echo "GOPRIVATE:   $(shell go env GOPRIVATE)"
+	@echo "GOPROXY:     $(shell go env GOPROXY)"
+	@echo "GONOPROXY:   $(shell go env GONOPROXY)"
+	@echo "GOSUMDB:     $(shell go env GOSUMDB)"
+	@echo "GONOSUMDB:   $(shell go env GONOSUMDB)"
 	@echo "MODULE:      $(MODULE)"
 	@echo "PACKAGES:    $(PACKAGES)"
 	@echo "PATH:        $(PATH)"
@@ -32,19 +37,26 @@ env:
 
 
 .PHONY: deps
-deps: # tools # todo blocker#https://github.com/spf13/pflag/issues/218
+deps: deps-main deps-tools
+
+.PHONY: deps-main
+deps-main:
 	@go mod tidy && go mod vendor && go mod verify
+
+.PHONY: deps-tools
+deps-tools:
+	@cd tools && make
+
+.PHONY: deps-update
+deps-update:
+	@go get -mod= -u all
 
 .PHONY: format
 format:
 	@goimports -local $(dir $(shell go list -m)) -ungroup -w $(PATHS)
 
 .PHONY: generate
-generate: generate-go generate-proto
-
-.PHONY: generate-go
-generate-go:
-	@go generate $(PACKAGES)
+generate: generate-proto generate-go
 
 .PHONY: generate-proto
 generate-proto:
@@ -72,16 +84,12 @@ generate-proto:
 	        api/openapi-spec/v1.swagger.json &>/dev/null
 	@rm api/openapi-spec/*.swagger.json
 
-.PHONY: tools
-tools:
-	@cd tools && make
-
-.PHONY: update
-update:
-	@go get -mod= -u
+.PHONY: generate-go
+generate-go:
+	@go generate $(PACKAGES)
 
 .PHONY: refresh
-refresh: update deps generate format test-with-coverage
+refresh: deps-update deps generate format test-with-coverage
 
 
 .PHONY: test
