@@ -19,6 +19,8 @@ require (
 	github.com/golangci/gocyclo v0.0.0-20180528144436-0a533e8fa43d // indirect
 	github.com/golangci/golangci-lint v1.21.0
 	github.com/golangci/revgrep v0.0.0-20180812185044-276a5c0a1039 // indirect
+	github.com/goreleaser/godownloader v0.1.0
+	github.com/goreleaser/goreleaser v0.120.2
 	github.com/gostaticanalysis/analysisutil v0.0.3 // indirect
 	github.com/grpc-ecosystem/grpc-gateway v1.11.3
 	github.com/konsorten/go-windows-terminal-sequences v1.0.2 // indirect
