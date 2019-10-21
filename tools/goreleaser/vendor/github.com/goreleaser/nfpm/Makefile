@@ -1,15 +1,17 @@
 SOURCE_FILES?=./...
 TEST_PATTERN?=.
 TEST_OPTIONS?=
+TEST_TIMEOUT?=5m
 
 export PATH := ./bin:$(PATH)
 export GO111MODULE := on
-export GOPROXY := https://gocenter.io
+export GOPROXY := https://proxy.golang.org,https://gocenter.io,direct
 
 # Install all the build and lint dependencies
 setup:
 	curl -sfL https://install.goreleaser.com/github.com/golangci/golangci-lint.sh | sh
-	go mod download
+	go mod tidy
+	git config core.hooksPath .githooks
 .PHONY: setup
 
 
@@ -18,7 +20,7 @@ pull_test_imgs:
 .PHONY: pull_test_imgs
 
 test: pull_test_imgs
-	go test $(TEST_OPTIONS) -v -failfast -race -coverpkg=./... -covermode=atomic -coverprofile=coverage.out $(SOURCE_FILES) -run $(TEST_PATTERN) -timeout=5m
+	go test $(TEST_OPTIONS) -v -failfast -race -coverpkg=./... -covermode=atomic -coverprofile=coverage.out $(SOURCE_FILES) -run $(TEST_PATTERN) -timeout=$(TEST_TIMEOUT)
 .PHONY: test
 
 cover: test
@@ -30,7 +32,7 @@ fmt:
 .PHONY: fmt
 
 lint: check
-	./bin/golangci-lint run --enable-all ./...
+	./bin/golangci-lint run --exclude-use-default=false --fix -v
 .PHONY: check
 
 ci: build lint test
@@ -39,6 +41,12 @@ ci: build lint test
 build:
 	go build -o nfpm ./cmd/nfpm/main.go
 .PHONY: build
+
+deps:
+	go get -u
+	go mod tidy
+	go mod verify
+.PHONY: deps
 
 todo:
 	@grep \

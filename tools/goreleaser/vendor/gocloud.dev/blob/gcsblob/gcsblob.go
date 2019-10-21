@@ -27,7 +27,7 @@
 //
 // Escaping
 //
-// Go CDK supports all UTF-8 strings; to make this work with providers lacking
+// Go CDK supports all UTF-8 strings; to make this work with services lacking
 // full UTF-8 support, strings must be escaped (during writes) and unescaped
 // (during reads). The following escapes are performed for gcsblob:
 //  - Blob keys: ASCII characters 10 and 13 are escaped to "__0x<hex>__".
@@ -81,8 +81,7 @@ func init() {
 
 // Set holds Wire providers for this package.
 var Set = wire.NewSet(
-	Options{},
-	URLOpener{},
+	wire.Struct(new(URLOpener), "Client"),
 )
 
 // lazyCredsOpener obtains Application Default Credentials on the first call
@@ -580,7 +579,7 @@ func (b *bucket) SignedURL(ctx context.Context, key string, dopts *driver.Signed
 	key = escapeKey(key)
 	opts := &storage.SignedURLOptions{
 		Expires:        time.Now().Add(dopts.Expiry),
-		Method:         "GET",
+		Method:         dopts.Method,
 		GoogleAccessID: b.opts.GoogleAccessID,
 		PrivateKey:     b.opts.PrivateKey,
 		SignBytes:      b.opts.SignBytes,

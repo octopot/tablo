@@ -26,8 +26,7 @@ var ErrNoArchivesFound = errors.New("no linux/macos archives found")
 
 // ErrMultipleArchivesSameOS happens when the config yields multiple archives
 // for linux or windows.
-// TODO: improve this confusing error message
-var ErrMultipleArchivesSameOS = errors.New("one tap can handle only 1 linux and 1 macos archive")
+var ErrMultipleArchivesSameOS = errors.New("one tap can handle only archive of an OS/Arch combination. Consider using ids in the brew section")
 
 // ErrTokenTypeNotImplementedForBrew indicates that a new token type was not implemented for this pipe
 var ErrTokenTypeNotImplementedForBrew = errors.New("token type not implemented for brew pipe")
@@ -88,6 +87,9 @@ func (Pipe) Default(ctx *context.Context) error {
 		if brew.Name == "" {
 			brew.Name = ctx.Config.ProjectName
 		}
+		if brew.Goarm == "" {
+			brew.Goarm = "6"
+		}
 	}
 
 	return nil
@@ -116,13 +118,21 @@ func doRun(ctx *context.Context, brew config.Homebrew, client client.Client) err
 		return pipe.Skip("brew section is not configured")
 	}
 
+	// TODO: properly cover this with tests
 	var filters = []artifact.Filter{
 		artifact.Or(
 			artifact.ByGoos("darwin"),
 			artifact.ByGoos("linux"),
 		),
 		artifact.ByFormats("zip", "tar.gz"),
-		artifact.ByGoarch("amd64"),
+		artifact.Or(
+			artifact.ByGoarch("amd64"),
+			artifact.ByGoarch("arm64"),
+			artifact.And(
+				artifact.ByGoarch("arm"),
+				artifact.ByGoarm(brew.Goarm),
+			),
+		),
 		artifact.ByType(artifact.UploadableArchive),
 	}
 	if len(brew.IDs) > 0 {

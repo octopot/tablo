@@ -68,6 +68,7 @@ type Homebrew struct {
 	CustomRequire    string       `yaml:"custom_require,omitempty"`
 	CustomBlock      string       `yaml:"custom_block,omitempty"`
 	IDs              []string     `yaml:"ids,omitempty"`
+	Goarm            string       `yaml:"goarm,omitempty"`
 }
 
 // Scoop contains the scoop.sh section
@@ -174,13 +175,14 @@ type Archive struct {
 
 // Release config used for the GitHub/GitLab release
 type Release struct {
-	GitHub       Repo   `yaml:",omitempty"`
-	GitLab       Repo   `yaml:",omitempty"`
-	Gitea        Repo   `yaml:",omitempty"`
-	Draft        bool   `yaml:",omitempty"`
-	Disable      bool   `yaml:",omitempty"`
-	Prerelease   string `yaml:",omitempty"`
-	NameTemplate string `yaml:"name_template,omitempty"`
+	GitHub       Repo     `yaml:",omitempty"`
+	GitLab       Repo     `yaml:",omitempty"`
+	Gitea        Repo     `yaml:",omitempty"`
+	Draft        bool     `yaml:",omitempty"`
+	Disable      bool     `yaml:",omitempty"`
+	Prerelease   string   `yaml:",omitempty"`
+	NameTemplate string   `yaml:"name_template,omitempty"`
+	IDs          []string `yaml:"ids,omitempty"`
 }
 
 // NFPM config

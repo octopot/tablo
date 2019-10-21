@@ -9,7 +9,9 @@ import (
 	"strings"
 	"sync"
 
+	"github.com/Masterminds/semver/v3"
 	"github.com/imdario/mergo"
+	"github.com/pkg/errors"
 
 	"gopkg.in/yaml.v2"
 )
@@ -44,9 +46,24 @@ func Parse(in io.Reader) (config Config, err error) {
 		return
 	}
 
+	// preserver backwards compatibility
+	if config.Info.RPM.Release != "" && config.Info.Release == "" {
+		config.Info.Release = os.ExpandEnv(config.Info.RPM.Release)
+	}
+	config.Info.Release = os.ExpandEnv(config.Info.Release)
+
 	config.Info.Version = os.ExpandEnv(config.Info.Version)
+	// parse the version as a semver so we can properly split the parts and support proper ordering for both rpm and deb
+	var v *semver.Version
+	if v, err = semver.NewVersion(config.Info.Version); err == nil {
+		config.Info.Version = fmt.Sprintf("%d.%d.%d", v.Major(), v.Minor(), v.Patch())
+		if config.Info.Release == "" {
+			config.Info.Release = v.Prerelease()
+		}
+		config.Info.Deb.VersionMetadata = v.Metadata()
+	}
 	err = config.Validate()
-	return
+	return config, err
 }
 
 // ParseFile decodes YAML data from a file path into a configuration struct
@@ -62,7 +79,7 @@ func ParseFile(path string) (config Config, err error) {
 
 // Packager represents any packager implementation
 type Packager interface {
-	Package(info Info, w io.Writer) error
+	Package(info *Info, w io.Writer) error
 }
 
 // Config contains the top level configuration for packages
@@ -73,21 +90,21 @@ type Config struct {
 
 // Get returns the Info struct for the given packager format. Overrides
 // for the given format are merged into the final struct
-func (c *Config) Get(format string) (info Info, err error) {
+func (c *Config) Get(format string) (info *Info, err error) {
+	info = &Info{}
 	// make a deep copy of info
-	if err = mergo.Merge(&info, c.Info); err != nil {
-		return
+	if err = mergo.Merge(info, c.Info); err != nil {
+		return nil, errors.Wrap(err, "failed to merge config into info")
 	}
 	override, ok := c.Overrides[format]
 	if !ok {
 		// no overrides
-		return
+		return info, nil
 	}
-	err = mergo.Merge(&info.Overridables, override, mergo.WithOverride)
-	if err != nil {
-		return
+	if err = mergo.Merge(&info.Overridables, override, mergo.WithOverride); err != nil {
+		return nil, errors.Wrap(err, "failed to merge overrides into info")
 	}
-	return
+	return info, nil
 }
 
 // Validate ensures that the config is well typed
@@ -108,6 +125,7 @@ type Info struct {
 	Platform     string `yaml:"platform,omitempty"`
 	Epoch        string `yaml:"epoch,omitempty"`
 	Version      string `yaml:"version,omitempty"`
+	Release      string `yaml:"release,omitempty"`
 	Section      string `yaml:"section,omitempty"`
 	Priority     string `yaml:"priority,omitempty"`
 	Maintainer   string `yaml:"maintainer,omitempty"`
@@ -144,7 +162,8 @@ type RPM struct {
 
 // Deb is custom configs that are only available on deb packages
 type Deb struct {
-	Scripts DebScripts `yaml:"scripts,omitempty"`
+	Scripts         DebScripts `yaml:"scripts,omitempty"`
+	VersionMetadata string     `yaml:"metadata,omitempty"`
 }
 
 // DebScripts is scripts only available on deb packages
@@ -161,7 +180,7 @@ type Scripts struct {
 }
 
 // Validate the given Info and returns an error if it is invalid.
-func Validate(info Info) error {
+func Validate(info *Info) error {
 	if info.Name == "" {
 		return fmt.Errorf("package name cannot be empty")
 	}
@@ -178,7 +197,7 @@ func Validate(info Info) error {
 }
 
 // WithDefaults set some sane defaults into the given Info
-func WithDefaults(info Info) Info {
+func WithDefaults(info *Info) *Info {
 	if info.Bindir == "" {
 		info.Bindir = "/usr/local/bin"
 	}

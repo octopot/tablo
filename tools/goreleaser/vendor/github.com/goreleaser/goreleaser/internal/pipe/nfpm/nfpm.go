@@ -142,11 +142,11 @@ func create(ctx *context.Context, fpm config.NFPM, format, arch string, binaries
 	}
 	log.WithField("files", files).Debug("all archive files")
 
-	var info = nfpm.Info{
+	var info = &nfpm.Info{
 		Arch:        arch,
 		Platform:    "linux",
 		Name:        ctx.Config.ProjectName,
-		Version:     ctx.Git.CurrentTag,
+		Version:     ctx.Version,
 		Section:     "",
 		Priority:    "",
 		Epoch:       fpm.Epoch,

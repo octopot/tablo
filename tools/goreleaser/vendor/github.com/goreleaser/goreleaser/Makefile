@@ -4,7 +4,8 @@ TEST_OPTIONS?=
 
 export PATH := ./bin:$(PATH)
 export GO111MODULE := on
-export GOPROXY := https://gocenter.io
+# enable consistent Go 1.12/1.13 GOPROXY behavior.
+export GOPROXY = https://proxy.golang.org,https://gocenter.io,direct
 
 # Install all the build and lint dependencies
 setup:
@@ -16,7 +17,7 @@ setup:
 
 # Run all the tests
 test:
-	go test $(TEST_OPTIONS) -failfast -race -coverpkg=./... -covermode=atomic -coverprofile=coverage.txt $(SOURCE_FILES) -run $(TEST_PATTERN) -timeout=2m
+	LC_ALL=C go test $(TEST_OPTIONS) -failfast -race -coverpkg=./... -covermode=atomic -coverprofile=coverage.txt $(SOURCE_FILES) -run $(TEST_PATTERN) -timeout=2m
 .PHONY: test
 
 # Run all the tests and opens the coverage report
@@ -31,8 +32,12 @@ fmt:
 
 # Run all the linters
 lint:
-	# TODO: fix tests and lll issues
-	./bin/golangci-lint run --tests=false --enable-all --disable=lll ./...
+	# TODO: fix tests issues
+	# TODO: fix lll issues
+	# TODO: fix funlen issues
+	# TODO: fix godox issues
+	# TODO: fix wsl issues
+	./bin/golangci-lint run ./...
 	./bin/misspell -error **/*
 .PHONY: lint
 

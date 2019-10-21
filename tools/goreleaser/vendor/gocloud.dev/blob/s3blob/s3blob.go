@@ -27,7 +27,7 @@
 //
 // Escaping
 //
-// Go CDK supports all UTF-8 strings; to make this work with providers lacking
+// Go CDK supports all UTF-8 strings; to make this work with services lacking
 // full UTF-8 support, strings must be escaped (during writes) and unescaped
 // (during reads). The following escapes are performed for s3blob:
 //  - Blob keys: ASCII characters 0-31 are escaped to "__0x<hex>__".
@@ -88,8 +88,7 @@ func init() {
 
 // Set holds Wire providers for this package.
 var Set = wire.NewSet(
-	Options{},
-	URLOpener{},
+	wire.Struct(new(URLOpener), "ConfigProvider"),
 )
 
 // lazySessionOpener obtains the AWS session from the environment on the first
@@ -151,7 +150,7 @@ func (o *URLOpener) OpenBucketURL(ctx context.Context, u *url.URL) (*blob.Bucket
 // Options sets options for constructing a *blob.Bucket backed by fileblob.
 type Options struct {
 	// UseLegacyList forces the use of ListObjects instead of ListObjectsV2.
-	// Some S3-compatible providers (like CEPH) do not currently support
+	// Some S3-compatible services (like CEPH) do not currently support
 	// ListObjectsV2.
 	UseLegacyList bool
 }
@@ -721,10 +720,29 @@ func (b *bucket) Delete(ctx context.Context, key string) error {
 
 func (b *bucket) SignedURL(ctx context.Context, key string, opts *driver.SignedURLOptions) (string, error) {
 	key = escapeKey(key)
-	in := &s3.GetObjectInput{
-		Bucket: aws.String(b.name),
-		Key:    aws.String(key),
+	switch opts.Method {
+	case http.MethodGet:
+		in := &s3.GetObjectInput{
+			Bucket: aws.String(b.name),
+			Key:    aws.String(key),
+		}
+		req, _ := b.client.GetObjectRequest(in)
+		return req.Presign(opts.Expiry)
+	case http.MethodPut:
+		in := &s3.PutObjectInput{
+			Bucket: aws.String(b.name),
+			Key:    aws.String(key),
+		}
+		req, _ := b.client.PutObjectRequest(in)
+		return req.Presign(opts.Expiry)
+	case http.MethodDelete:
+		in := &s3.DeleteObjectInput{
+			Bucket: aws.String(b.name),
+			Key:    aws.String(key),
+		}
+		req, _ := b.client.DeleteObjectRequest(in)
+		return req.Presign(opts.Expiry)
+	default:
+		return "", fmt.Errorf("unsupported Method %q", opts.Method)
 	}
-	req, _ := b.client.GetObjectRequest(in)
-	return req.Presign(opts.Expiry)
 }
