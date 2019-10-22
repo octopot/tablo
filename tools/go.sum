@@ -372,11 +372,11 @@ github.com/gopherjs/gopherjs v0.0.0-20181103185306-d547d1d9531e/go.mod h1:wJfORR
 github.com/goreleaser/godownloader v0.1.0 h1:oC8sQksHeS4NLRuiFZzofTY282ABcYmEz+3HRa3fTEA=
 github.com/goreleaser/godownloader v0.1.0/go.mod h1:IgBRgYLhbD9A2xD4Y0bt4K6b1RNNYdoHP5gNk6XGxbg=
 github.com/goreleaser/goreleaser v0.118.2/go.mod h1:/8PalJ1igLHW/xtfl952ZhkXHNp04hRoHCwblbGNidA=
-github.com/goreleaser/goreleaser v0.120.2 h1:68XuPsmQsGeGUbmtF3zBaZfqlERShDtghEevXqZB7+s=
-github.com/goreleaser/goreleaser v0.120.2/go.mod h1:h7JdLgTiLDfqsB/+h/N+0drGoHNWXKbEszF8SjtS2XQ=
+github.com/goreleaser/goreleaser v0.120.3 h1:bw1x6qK7fDsFg6+eQ9aQdA+/IjuMZGFlV7+aiSLlKdM=
+github.com/goreleaser/goreleaser v0.120.3/go.mod h1:DSufjAhZyvSaATfo1HRmYRD/AOzHlKFKQvufBU+VbEw=
 github.com/goreleaser/nfpm v0.13.0/go.mod h1:F2yzin6cBAL9gb+mSiReuXdsfTrOQwDMsuSpULof+y4=
-github.com/goreleaser/nfpm v1.0.0 h1:h0IYBvDz5V2vnhhTjJK8qqSa4RqcxPHA8WwLbUiXSUQ=
-github.com/goreleaser/nfpm v1.0.0/go.mod h1:MFbtRv5hRxynPKwC29Gg18yqcyRjPuB6bL/ewxxVGKU=
+github.com/goreleaser/nfpm v1.0.1-0.20191022035611-07dfa5b67a4a h1:7GVNzUCi+2ObVcfHWevnEYjd2e9kGwvcLGa+tGTZUEg=
+github.com/goreleaser/nfpm v1.0.1-0.20191022035611-07dfa5b67a4a/go.mod h1:MFbtRv5hRxynPKwC29Gg18yqcyRjPuB6bL/ewxxVGKU=
 github.com/gorilla/context v1.1.1/go.mod h1:kBGZzfjB9CEq2AlWe17Uuf7NDRt0dE0s8S51q0aT7Yg=
 github.com/gorilla/handlers v1.4.2 h1:0QniY0USkHQ1RGCLfKxeNHK9bkDHGRYGNDFBCS+YARg=
 github.com/gorilla/handlers v1.4.2/go.mod h1:Qkdc/uu4tH4g6mTK6auzZ766c4CA0Ng8+o/OAirnOIQ=
