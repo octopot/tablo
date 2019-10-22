@@ -6,7 +6,6 @@ GO111MODULE = on
 GOFLAGS     = -mod=vendor
 GOPROXY     = https://proxy.golang.org,https://gocenter.io,direct
 MODULE      = $(shell go list -m)
-PACKAGES    = $(shell go list ./...)
 PATHS       = $(shell go list ./... | sed -e "s|$(shell go list -m)/\{0,1\}||g")
 SHELL       = /bin/bash -euo pipefail
 TIMEOUT     = 1s
@@ -29,7 +28,6 @@ env:
 	@echo "GOSUMDB:     $(shell go env GOSUMDB)"
 	@echo "GONOSUMDB:   $(shell go env GONOSUMDB)"
 	@echo "MODULE:      $(MODULE)"
-	@echo "PACKAGES:    $(PACKAGES)"
 	@echo "PATH:        $(PATH)"
 	@echo "PATHS:       $(PATHS)"
 	@echo "SHELL:       $(SHELL)"
@@ -79,14 +77,14 @@ generate-proto:
 	        --swagger_out=logtostderr=true,allow_merge=true,merge_file_name=v1:./api/openapi-spec \
 	        $(shell ls api/protobuf-spec/v1 | grep .proto | awk '{print "v1/"$$1}')
 	@swagger mixin \
-	        -o api/openapi-spec/swagger.json \
-	        api/openapi-spec/tablo.swagger.json \
-	        api/openapi-spec/v1.swagger.json &>/dev/null
+	         -o api/openapi-spec/swagger.json \
+	         api/openapi-spec/tablo.swagger.json \
+	         api/openapi-spec/v1.swagger.json &>/dev/null
 	@rm api/openapi-spec/*.swagger.json
 
 .PHONY: generate-go
 generate-go:
-	@go generate $(PACKAGES)
+	@go generate $(MODULE)/...
 
 .PHONY: refresh
 refresh: deps-update deps generate format test-with-coverage
