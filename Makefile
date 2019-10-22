@@ -94,19 +94,30 @@ refresh: deps-update deps generate format test-with-coverage
 
 .PHONY: test
 test:
-	@go test -race -timeout $(TIMEOUT) $(PACKAGES)
+	@go test -race -timeout $(TIMEOUT) $(MODULE)/...
+
+.PHONY: test-full
+test-full: test-with-coverage test-integration
+
+.PHONY: test-integration
+test-integration:
+	@go test -cover \
+	         -covermode count \
+	         -coverprofile i.out \
+	         -tags=integration \
+	         ./test/... 2> /dev/null
 
 .PHONY: test-smoke
 test-smoke:
-	@go test -run=^smoke -tags=integration -timeout $(TIMEOUT) $(PACKAGES)
+	@go test -run=^TestSmoke -tags=integration -timeout 100ms $(MODULE)/...
 
 .PHONY: test-with-coverage
 test-with-coverage:
-	@go test -cover -timeout $(TIMEOUT) $(PACKAGES) | column -t | sort -r
+	@go test -cover -timeout $(TIMEOUT) $(MODULE)/... | column -t | sort -r
 
 .PHONY: test-with-coverage-profile
 test-with-coverage-profile:
-	@go test -cover -covermode count -coverprofile c.out -timeout $(TIMEOUT) $(PACKAGES)
+	@go test -cover -covermode count -coverprofile c.out -timeout $(TIMEOUT) $(MODULE)/...
 
 
 .PHONY: build
