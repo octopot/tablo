@@ -96,6 +96,10 @@ refresh: deps-update deps generate format test-with-coverage
 test:
 	@go test -race -timeout $(TIMEOUT) $(PACKAGES)
 
+.PHONY: test-smoke
+test-smoke:
+	@go test -run=^smoke -tags=integration -timeout $(TIMEOUT) $(PACKAGES)
+
 .PHONY: test-with-coverage
 test-with-coverage:
 	@go test -cover -timeout $(TIMEOUT) $(PACKAGES) | column -t | sort -r
@@ -103,10 +107,6 @@ test-with-coverage:
 .PHONY: test-with-coverage-profile
 test-with-coverage-profile:
 	@go test -cover -covermode count -coverprofile c.out -timeout $(TIMEOUT) $(PACKAGES)
-
-.PHONY: test-smoke
-test-smoke:
-	@echo not implemented yet
 
 
 .PHONY: build
