@@ -30,4 +30,4 @@ docker-run:
 	           -p 8090:8090 \
 	           -p 8091:8091 \
 	           -p 8092:8092 \
-	           octopot/tablo:$(VERSION) run --with-profiling --with-monitoring
+	           octopot/tablo:$(VERSION) run --with-monitoring --with-profiling
