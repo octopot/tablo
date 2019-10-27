@@ -12,6 +12,11 @@ TIMEOUT     = 1s
 
 export PATH := $(BINPATH):$(PATH)
 
+VERSION     = 1.x
+
+include env/make/go.mk
+include env/make/docker.mk
+
 .DEFAULT_GOAL = test-with-coverage
 
 .PHONY: env
