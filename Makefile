@@ -49,6 +49,23 @@ deps-tools:
 deps-update:
 	@go get -mod= -u all
 
+.PHONY: proto-update
+proto-update: VERSION = $(shell protoc --version | awk '{print $$2}')
+proto-update:
+	@rm -f bin/protobuf-$(VERSION).tar.gz
+	@curl -sL -o bin/protobuf-$(VERSION).tar.gz \
+	      https://github.com/protocolbuffers/protobuf/archive/v$(VERSION).tar.gz
+	@rm -rf third_party/protobuf-spec/google/protobuf/*
+	@tar -tf bin/protobuf-$(VERSION).tar.gz \
+	| grep 'protobuf-$(VERSION)/src/google/protobuf/[^/]*.proto$$' \
+	| grep -v 'unittest' \
+	| grep -v '/test_' \
+	| grep -v '_test' \
+	| xargs tar --strip-components=4 \
+	            -C third_party/protobuf-spec/google/protobuf \
+	            -xf bin/protobuf-$(VERSION).tar.gz
+	@rm -f bin/protobuf-$(VERSION).tar.gz
+
 .PHONY: format
 format:
 	@goimports -local $(dir $(shell go list -m)) -ungroup -w $(PATHS)
