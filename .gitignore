@@ -4,3 +4,6 @@
 # binaries
 /bin/*
 !/bin/.gitkeep
+
+# sensitive data
+http-client.private.env.json

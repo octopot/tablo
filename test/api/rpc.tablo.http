@@ -1,0 +1,140 @@
+#
+# Tablo editor
+#
+
+POST {{host}}/twirp/octolab.api.tablo.v1.TabloService/Create
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "title": "Tablo",
+  "emoji": "🧐",
+  "desc": "The one point of view to all your task boards."
+}
+
+###
+
+POST {{host}}/twirp/octolab.api.tablo.v1.TabloService/Get
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "urn": "DCC2E74D-CDCE-4AE2-870A-45BCC4DF430F"
+}
+
+###
+
+POST {{host}}/twirp/octolab.api.tablo.v1.TabloService/GetList
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{}
+
+###
+
+POST {{host}}/twirp/octolab.api.tablo.v1.TabloService/Update
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "id": {
+    "urn": "DCC2E74D-CDCE-4AE2-870A-45BCC4DF430F"
+  },
+  "title": "Tablo",
+  "emoji": "🧐",
+  "desc": "The one point of view to all your task boards."
+}
+
+###
+
+POST {{host}}/twirp/octolab.api.tablo.v1.TabloService/Delete
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "urn": "DCC2E74D-CDCE-4AE2-870A-45BCC4DF430F"
+}
+
+###
+
+#
+# Column editor
+#
+
+POST {{host}}/twirp/octolab.api.tablo.v1.TabloService/CreateColumn
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "title": "Backlog",
+  "emoji": "🗄",
+  "desc": "Product backlog, a list of requirements for a software product in development."
+}
+
+###
+
+POST {{host}}/twirp/octolab.api.tablo.v1.TabloService/UpdateColumn
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "id": {
+    "urn": "78B30F56-4EBD-43A3-950D-0F830FA12026"
+  },
+  "title": "Product backlog",
+  "emoji": "🗄",
+  "desc": "Product backlog is a list of requirements for a software product in development."
+}
+
+###
+
+POST {{host}}/twirp/octolab.api.tablo.v1.TabloService/DeleteColumn
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "urn": "78B30F56-4EBD-43A3-950D-0F830FA12026"
+}
+
+###
+
+#
+# Card editor
+#
+
+POST {{host}}/twirp/octolab.api.tablo.v1.TabloService/CreateCard
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "title": "Minimum viable product",
+  "emoji": "📦",
+  "desc": "Minimum viable product is a product with just enough features to satisfy early customers and provide feedback for future product development."
+}
+
+###
+
+POST {{host}}/twirp/octolab.api.tablo.v1.TabloService/UpdateCard
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "id": {
+    "urn": "7F35888A-2B4B-4BD6-83AB-B5E0E5B65AFA"
+  },
+  "title": "Minimum viable product",
+  "emoji": "📦",
+  "desc": "Minimum viable product is a product with just enough features to satisfy early customers and provide feedback for future product development."
+}
+
+###
+
+POST {{host}}/twirp/octolab.api.tablo.v1.TabloService/DeleteCard
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "urn": "7F35888A-2B4B-4BD6-83AB-B5E0E5B65AFA"
+}
+
+###
