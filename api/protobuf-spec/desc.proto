@@ -13,12 +13,12 @@ option (grpc.gateway.protoc_gen_swagger.options.openapiv2_swagger) = {
         contact: {
             name:  "Tablo"
             url:   "https://github.com/octopot/tablo"
-            email: "info@octolab.org"
+            email: "tablo@octolab.org"
         }
         license: {
             name: "MIT"
             url:  "https://github.com/octopot/tablo/blob/master/LICENSE"
         }
-        version: "dev"
+        version: "v1"
     }
 };

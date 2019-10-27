@@ -35,15 +35,27 @@ import url "net/url"
 // ======================
 
 type TabloService interface {
-	Create(context.Context, *Tablo) (*URI, error)
+	Create(context.Context, *NewTablo) (*URI, error)
 
 	Get(context.Context, *URI) (*Tablo, error)
 
-	GetList(context.Context, *Criteria) (*List, error)
+	GetList(context.Context, *Criteria) (*TabloList, error)
 
 	Update(context.Context, *Tablo) (*Void, error)
 
 	Delete(context.Context, *URI) (*Void, error)
+
+	CreateColumn(context.Context, *NewColumn) (*URI, error)
+
+	UpdateColumn(context.Context, *Column) (*Void, error)
+
+	DeleteColumn(context.Context, *URI) (*Void, error)
+
+	CreateCard(context.Context, *NewCard) (*URI, error)
+
+	UpdateCard(context.Context, *Card) (*Void, error)
+
+	DeleteCard(context.Context, *URI) (*Void, error)
 }
 
 // ============================
@@ -52,19 +64,25 @@ type TabloService interface {
 
 type tabloServiceProtobufClient struct {
 	client HTTPClient
-	urls   [5]string
+	urls   [11]string
 }
 
 // NewTabloServiceProtobufClient creates a Protobuf client that implements the TabloService interface.
 // It communicates using Protobuf and can be configured with a custom HTTPClient.
 func NewTabloServiceProtobufClient(addr string, client HTTPClient) TabloService {
 	prefix := urlBase(addr) + TabloServicePathPrefix
-	urls := [5]string{
+	urls := [11]string{
 		prefix + "Create",
 		prefix + "Get",
 		prefix + "GetList",
 		prefix + "Update",
 		prefix + "Delete",
+		prefix + "CreateColumn",
+		prefix + "UpdateColumn",
+		prefix + "DeleteColumn",
+		prefix + "CreateCard",
+		prefix + "UpdateCard",
+		prefix + "DeleteCard",
 	}
 	if httpClient, ok := client.(*http.Client); ok {
 		return &tabloServiceProtobufClient{
@@ -78,7 +96,7 @@ func NewTabloServiceProtobufClient(addr string, client HTTPClient) TabloService 
 	}
 }
 
-func (c *tabloServiceProtobufClient) Create(ctx context.Context, in *Tablo) (*URI, error) {
+func (c *tabloServiceProtobufClient) Create(ctx context.Context, in *NewTablo) (*URI, error) {
 	ctx = ctxsetters.WithPackageName(ctx, "octolab.api.tablo.v1")
 	ctx = ctxsetters.WithServiceName(ctx, "TabloService")
 	ctx = ctxsetters.WithMethodName(ctx, "Create")
@@ -102,11 +120,11 @@ func (c *tabloServiceProtobufClient) Get(ctx context.Context, in *URI) (*Tablo, 
 	return out, nil
 }
 
-func (c *tabloServiceProtobufClient) GetList(ctx context.Context, in *Criteria) (*List, error) {
+func (c *tabloServiceProtobufClient) GetList(ctx context.Context, in *Criteria) (*TabloList, error) {
 	ctx = ctxsetters.WithPackageName(ctx, "octolab.api.tablo.v1")
 	ctx = ctxsetters.WithServiceName(ctx, "TabloService")
 	ctx = ctxsetters.WithMethodName(ctx, "GetList")
-	out := new(List)
+	out := new(TabloList)
 	err := doProtobufRequest(ctx, c.client, c.urls[2], in, out)
 	if err != nil {
 		return nil, err
@@ -138,25 +156,103 @@ func (c *tabloServiceProtobufClient) Delete(ctx context.Context, in *URI) (*Void
 	return out, nil
 }
 
+func (c *tabloServiceProtobufClient) CreateColumn(ctx context.Context, in *NewColumn) (*URI, error) {
+	ctx = ctxsetters.WithPackageName(ctx, "octolab.api.tablo.v1")
+	ctx = ctxsetters.WithServiceName(ctx, "TabloService")
+	ctx = ctxsetters.WithMethodName(ctx, "CreateColumn")
+	out := new(URI)
+	err := doProtobufRequest(ctx, c.client, c.urls[5], in, out)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *tabloServiceProtobufClient) UpdateColumn(ctx context.Context, in *Column) (*Void, error) {
+	ctx = ctxsetters.WithPackageName(ctx, "octolab.api.tablo.v1")
+	ctx = ctxsetters.WithServiceName(ctx, "TabloService")
+	ctx = ctxsetters.WithMethodName(ctx, "UpdateColumn")
+	out := new(Void)
+	err := doProtobufRequest(ctx, c.client, c.urls[6], in, out)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *tabloServiceProtobufClient) DeleteColumn(ctx context.Context, in *URI) (*Void, error) {
+	ctx = ctxsetters.WithPackageName(ctx, "octolab.api.tablo.v1")
+	ctx = ctxsetters.WithServiceName(ctx, "TabloService")
+	ctx = ctxsetters.WithMethodName(ctx, "DeleteColumn")
+	out := new(Void)
+	err := doProtobufRequest(ctx, c.client, c.urls[7], in, out)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *tabloServiceProtobufClient) CreateCard(ctx context.Context, in *NewCard) (*URI, error) {
+	ctx = ctxsetters.WithPackageName(ctx, "octolab.api.tablo.v1")
+	ctx = ctxsetters.WithServiceName(ctx, "TabloService")
+	ctx = ctxsetters.WithMethodName(ctx, "CreateCard")
+	out := new(URI)
+	err := doProtobufRequest(ctx, c.client, c.urls[8], in, out)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *tabloServiceProtobufClient) UpdateCard(ctx context.Context, in *Card) (*Void, error) {
+	ctx = ctxsetters.WithPackageName(ctx, "octolab.api.tablo.v1")
+	ctx = ctxsetters.WithServiceName(ctx, "TabloService")
+	ctx = ctxsetters.WithMethodName(ctx, "UpdateCard")
+	out := new(Void)
+	err := doProtobufRequest(ctx, c.client, c.urls[9], in, out)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *tabloServiceProtobufClient) DeleteCard(ctx context.Context, in *URI) (*Void, error) {
+	ctx = ctxsetters.WithPackageName(ctx, "octolab.api.tablo.v1")
+	ctx = ctxsetters.WithServiceName(ctx, "TabloService")
+	ctx = ctxsetters.WithMethodName(ctx, "DeleteCard")
+	out := new(Void)
+	err := doProtobufRequest(ctx, c.client, c.urls[10], in, out)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // ========================
 // TabloService JSON Client
 // ========================
 
 type tabloServiceJSONClient struct {
 	client HTTPClient
-	urls   [5]string
+	urls   [11]string
 }
 
 // NewTabloServiceJSONClient creates a JSON client that implements the TabloService interface.
 // It communicates using JSON and can be configured with a custom HTTPClient.
 func NewTabloServiceJSONClient(addr string, client HTTPClient) TabloService {
 	prefix := urlBase(addr) + TabloServicePathPrefix
-	urls := [5]string{
+	urls := [11]string{
 		prefix + "Create",
 		prefix + "Get",
 		prefix + "GetList",
 		prefix + "Update",
 		prefix + "Delete",
+		prefix + "CreateColumn",
+		prefix + "UpdateColumn",
+		prefix + "DeleteColumn",
+		prefix + "CreateCard",
+		prefix + "UpdateCard",
+		prefix + "DeleteCard",
 	}
 	if httpClient, ok := client.(*http.Client); ok {
 		return &tabloServiceJSONClient{
@@ -170,7 +266,7 @@ func NewTabloServiceJSONClient(addr string, client HTTPClient) TabloService {
 	}
 }
 
-func (c *tabloServiceJSONClient) Create(ctx context.Context, in *Tablo) (*URI, error) {
+func (c *tabloServiceJSONClient) Create(ctx context.Context, in *NewTablo) (*URI, error) {
 	ctx = ctxsetters.WithPackageName(ctx, "octolab.api.tablo.v1")
 	ctx = ctxsetters.WithServiceName(ctx, "TabloService")
 	ctx = ctxsetters.WithMethodName(ctx, "Create")
@@ -194,11 +290,11 @@ func (c *tabloServiceJSONClient) Get(ctx context.Context, in *URI) (*Tablo, erro
 	return out, nil
 }
 
-func (c *tabloServiceJSONClient) GetList(ctx context.Context, in *Criteria) (*List, error) {
+func (c *tabloServiceJSONClient) GetList(ctx context.Context, in *Criteria) (*TabloList, error) {
 	ctx = ctxsetters.WithPackageName(ctx, "octolab.api.tablo.v1")
 	ctx = ctxsetters.WithServiceName(ctx, "TabloService")
 	ctx = ctxsetters.WithMethodName(ctx, "GetList")
-	out := new(List)
+	out := new(TabloList)
 	err := doJSONRequest(ctx, c.client, c.urls[2], in, out)
 	if err != nil {
 		return nil, err
@@ -224,6 +320,78 @@ func (c *tabloServiceJSONClient) Delete(ctx context.Context, in *URI) (*Void, er
 	ctx = ctxsetters.WithMethodName(ctx, "Delete")
 	out := new(Void)
 	err := doJSONRequest(ctx, c.client, c.urls[4], in, out)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *tabloServiceJSONClient) CreateColumn(ctx context.Context, in *NewColumn) (*URI, error) {
+	ctx = ctxsetters.WithPackageName(ctx, "octolab.api.tablo.v1")
+	ctx = ctxsetters.WithServiceName(ctx, "TabloService")
+	ctx = ctxsetters.WithMethodName(ctx, "CreateColumn")
+	out := new(URI)
+	err := doJSONRequest(ctx, c.client, c.urls[5], in, out)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *tabloServiceJSONClient) UpdateColumn(ctx context.Context, in *Column) (*Void, error) {
+	ctx = ctxsetters.WithPackageName(ctx, "octolab.api.tablo.v1")
+	ctx = ctxsetters.WithServiceName(ctx, "TabloService")
+	ctx = ctxsetters.WithMethodName(ctx, "UpdateColumn")
+	out := new(Void)
+	err := doJSONRequest(ctx, c.client, c.urls[6], in, out)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *tabloServiceJSONClient) DeleteColumn(ctx context.Context, in *URI) (*Void, error) {
+	ctx = ctxsetters.WithPackageName(ctx, "octolab.api.tablo.v1")
+	ctx = ctxsetters.WithServiceName(ctx, "TabloService")
+	ctx = ctxsetters.WithMethodName(ctx, "DeleteColumn")
+	out := new(Void)
+	err := doJSONRequest(ctx, c.client, c.urls[7], in, out)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *tabloServiceJSONClient) CreateCard(ctx context.Context, in *NewCard) (*URI, error) {
+	ctx = ctxsetters.WithPackageName(ctx, "octolab.api.tablo.v1")
+	ctx = ctxsetters.WithServiceName(ctx, "TabloService")
+	ctx = ctxsetters.WithMethodName(ctx, "CreateCard")
+	out := new(URI)
+	err := doJSONRequest(ctx, c.client, c.urls[8], in, out)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *tabloServiceJSONClient) UpdateCard(ctx context.Context, in *Card) (*Void, error) {
+	ctx = ctxsetters.WithPackageName(ctx, "octolab.api.tablo.v1")
+	ctx = ctxsetters.WithServiceName(ctx, "TabloService")
+	ctx = ctxsetters.WithMethodName(ctx, "UpdateCard")
+	out := new(Void)
+	err := doJSONRequest(ctx, c.client, c.urls[9], in, out)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *tabloServiceJSONClient) DeleteCard(ctx context.Context, in *URI) (*Void, error) {
+	ctx = ctxsetters.WithPackageName(ctx, "octolab.api.tablo.v1")
+	ctx = ctxsetters.WithServiceName(ctx, "TabloService")
+	ctx = ctxsetters.WithMethodName(ctx, "DeleteCard")
+	out := new(Void)
+	err := doJSONRequest(ctx, c.client, c.urls[10], in, out)
 	if err != nil {
 		return nil, err
 	}
@@ -293,6 +461,24 @@ func (s *tabloServiceServer) ServeHTTP(resp http.ResponseWriter, req *http.Reque
 	case "/twirp/octolab.api.tablo.v1.TabloService/Delete":
 		s.serveDelete(ctx, resp, req)
 		return
+	case "/twirp/octolab.api.tablo.v1.TabloService/CreateColumn":
+		s.serveCreateColumn(ctx, resp, req)
+		return
+	case "/twirp/octolab.api.tablo.v1.TabloService/UpdateColumn":
+		s.serveUpdateColumn(ctx, resp, req)
+		return
+	case "/twirp/octolab.api.tablo.v1.TabloService/DeleteColumn":
+		s.serveDeleteColumn(ctx, resp, req)
+		return
+	case "/twirp/octolab.api.tablo.v1.TabloService/CreateCard":
+		s.serveCreateCard(ctx, resp, req)
+		return
+	case "/twirp/octolab.api.tablo.v1.TabloService/UpdateCard":
+		s.serveUpdateCard(ctx, resp, req)
+		return
+	case "/twirp/octolab.api.tablo.v1.TabloService/DeleteCard":
+		s.serveDeleteCard(ctx, resp, req)
+		return
 	default:
 		msg := fmt.Sprintf("no handler for path %q", req.URL.Path)
 		err = badRouteError(msg, req.Method, req.URL.Path)
@@ -328,7 +514,7 @@ func (s *tabloServiceServer) serveCreateJSON(ctx context.Context, resp http.Resp
 		return
 	}
 
-	reqContent := new(Tablo)
+	reqContent := new(NewTablo)
 	unmarshaler := jsonpb.Unmarshaler{AllowUnknownFields: true}
 	if err = unmarshaler.Unmarshal(req.Body, reqContent); err != nil {
 		s.writeError(ctx, resp, malformedRequestError("the json request could not be decoded"))
@@ -388,7 +574,7 @@ func (s *tabloServiceServer) serveCreateProtobuf(ctx context.Context, resp http.
 		s.writeError(ctx, resp, wrapInternal(err, "failed to read request body"))
 		return
 	}
-	reqContent := new(Tablo)
+	reqContent := new(NewTablo)
 	if err = proto.Unmarshal(buf, reqContent); err != nil {
 		s.writeError(ctx, resp, malformedRequestError("the protobuf request could not be decoded"))
 		return
@@ -594,7 +780,7 @@ func (s *tabloServiceServer) serveGetListJSON(ctx context.Context, resp http.Res
 	}
 
 	// Call service method
-	var respContent *List
+	var respContent *TabloList
 	func() {
 		defer ensurePanicResponses(ctx, resp, s.hooks)
 		respContent, err = s.TabloService.GetList(ctx, reqContent)
@@ -605,7 +791,7 @@ func (s *tabloServiceServer) serveGetListJSON(ctx context.Context, resp http.Res
 		return
 	}
 	if respContent == nil {
-		s.writeError(ctx, resp, twirp.InternalError("received a nil *List and nil error while calling GetList. nil responses are not supported"))
+		s.writeError(ctx, resp, twirp.InternalError("received a nil *TabloList and nil error while calling GetList. nil responses are not supported"))
 		return
 	}
 
@@ -653,7 +839,7 @@ func (s *tabloServiceServer) serveGetListProtobuf(ctx context.Context, resp http
 	}
 
 	// Call service method
-	var respContent *List
+	var respContent *TabloList
 	func() {
 		defer ensurePanicResponses(ctx, resp, s.hooks)
 		respContent, err = s.TabloService.GetList(ctx, reqContent)
@@ -664,7 +850,7 @@ func (s *tabloServiceServer) serveGetListProtobuf(ctx context.Context, resp http
 		return
 	}
 	if respContent == nil {
-		s.writeError(ctx, resp, twirp.InternalError("received a nil *List and nil error while calling GetList. nil responses are not supported"))
+		s.writeError(ctx, resp, twirp.InternalError("received a nil *TabloList and nil error while calling GetList. nil responses are not supported"))
 		return
 	}
 
@@ -923,6 +1109,780 @@ func (s *tabloServiceServer) serveDeleteProtobuf(ctx context.Context, resp http.
 	}
 	if respContent == nil {
 		s.writeError(ctx, resp, twirp.InternalError("received a nil *Void and nil error while calling Delete. nil responses are not supported"))
+		return
+	}
+
+	ctx = callResponsePrepared(ctx, s.hooks)
+
+	respBytes, err := proto.Marshal(respContent)
+	if err != nil {
+		s.writeError(ctx, resp, wrapInternal(err, "failed to marshal proto response"))
+		return
+	}
+
+	ctx = ctxsetters.WithStatusCode(ctx, http.StatusOK)
+	resp.Header().Set("Content-Type", "application/protobuf")
+	resp.Header().Set("Content-Length", strconv.Itoa(len(respBytes)))
+	resp.WriteHeader(http.StatusOK)
+	if n, err := resp.Write(respBytes); err != nil {
+		msg := fmt.Sprintf("failed to write response, %d of %d bytes written: %s", n, len(respBytes), err.Error())
+		twerr := twirp.NewError(twirp.Unknown, msg)
+		callError(ctx, s.hooks, twerr)
+	}
+	callResponseSent(ctx, s.hooks)
+}
+
+func (s *tabloServiceServer) serveCreateColumn(ctx context.Context, resp http.ResponseWriter, req *http.Request) {
+	header := req.Header.Get("Content-Type")
+	i := strings.Index(header, ";")
+	if i == -1 {
+		i = len(header)
+	}
+	switch strings.TrimSpace(strings.ToLower(header[:i])) {
+	case "application/json":
+		s.serveCreateColumnJSON(ctx, resp, req)
+	case "application/protobuf":
+		s.serveCreateColumnProtobuf(ctx, resp, req)
+	default:
+		msg := fmt.Sprintf("unexpected Content-Type: %q", req.Header.Get("Content-Type"))
+		twerr := badRouteError(msg, req.Method, req.URL.Path)
+		s.writeError(ctx, resp, twerr)
+	}
+}
+
+func (s *tabloServiceServer) serveCreateColumnJSON(ctx context.Context, resp http.ResponseWriter, req *http.Request) {
+	var err error
+	ctx = ctxsetters.WithMethodName(ctx, "CreateColumn")
+	ctx, err = callRequestRouted(ctx, s.hooks)
+	if err != nil {
+		s.writeError(ctx, resp, err)
+		return
+	}
+
+	reqContent := new(NewColumn)
+	unmarshaler := jsonpb.Unmarshaler{AllowUnknownFields: true}
+	if err = unmarshaler.Unmarshal(req.Body, reqContent); err != nil {
+		s.writeError(ctx, resp, malformedRequestError("the json request could not be decoded"))
+		return
+	}
+
+	// Call service method
+	var respContent *URI
+	func() {
+		defer ensurePanicResponses(ctx, resp, s.hooks)
+		respContent, err = s.TabloService.CreateColumn(ctx, reqContent)
+	}()
+
+	if err != nil {
+		s.writeError(ctx, resp, err)
+		return
+	}
+	if respContent == nil {
+		s.writeError(ctx, resp, twirp.InternalError("received a nil *URI and nil error while calling CreateColumn. nil responses are not supported"))
+		return
+	}
+
+	ctx = callResponsePrepared(ctx, s.hooks)
+
+	var buf bytes.Buffer
+	marshaler := &jsonpb.Marshaler{OrigName: true}
+	if err = marshaler.Marshal(&buf, respContent); err != nil {
+		s.writeError(ctx, resp, wrapInternal(err, "failed to marshal json response"))
+		return
+	}
+
+	ctx = ctxsetters.WithStatusCode(ctx, http.StatusOK)
+	respBytes := buf.Bytes()
+	resp.Header().Set("Content-Type", "application/json")
+	resp.Header().Set("Content-Length", strconv.Itoa(len(respBytes)))
+	resp.WriteHeader(http.StatusOK)
+
+	if n, err := resp.Write(respBytes); err != nil {
+		msg := fmt.Sprintf("failed to write response, %d of %d bytes written: %s", n, len(respBytes), err.Error())
+		twerr := twirp.NewError(twirp.Unknown, msg)
+		callError(ctx, s.hooks, twerr)
+	}
+	callResponseSent(ctx, s.hooks)
+}
+
+func (s *tabloServiceServer) serveCreateColumnProtobuf(ctx context.Context, resp http.ResponseWriter, req *http.Request) {
+	var err error
+	ctx = ctxsetters.WithMethodName(ctx, "CreateColumn")
+	ctx, err = callRequestRouted(ctx, s.hooks)
+	if err != nil {
+		s.writeError(ctx, resp, err)
+		return
+	}
+
+	buf, err := ioutil.ReadAll(req.Body)
+	if err != nil {
+		s.writeError(ctx, resp, wrapInternal(err, "failed to read request body"))
+		return
+	}
+	reqContent := new(NewColumn)
+	if err = proto.Unmarshal(buf, reqContent); err != nil {
+		s.writeError(ctx, resp, malformedRequestError("the protobuf request could not be decoded"))
+		return
+	}
+
+	// Call service method
+	var respContent *URI
+	func() {
+		defer ensurePanicResponses(ctx, resp, s.hooks)
+		respContent, err = s.TabloService.CreateColumn(ctx, reqContent)
+	}()
+
+	if err != nil {
+		s.writeError(ctx, resp, err)
+		return
+	}
+	if respContent == nil {
+		s.writeError(ctx, resp, twirp.InternalError("received a nil *URI and nil error while calling CreateColumn. nil responses are not supported"))
+		return
+	}
+
+	ctx = callResponsePrepared(ctx, s.hooks)
+
+	respBytes, err := proto.Marshal(respContent)
+	if err != nil {
+		s.writeError(ctx, resp, wrapInternal(err, "failed to marshal proto response"))
+		return
+	}
+
+	ctx = ctxsetters.WithStatusCode(ctx, http.StatusOK)
+	resp.Header().Set("Content-Type", "application/protobuf")
+	resp.Header().Set("Content-Length", strconv.Itoa(len(respBytes)))
+	resp.WriteHeader(http.StatusOK)
+	if n, err := resp.Write(respBytes); err != nil {
+		msg := fmt.Sprintf("failed to write response, %d of %d bytes written: %s", n, len(respBytes), err.Error())
+		twerr := twirp.NewError(twirp.Unknown, msg)
+		callError(ctx, s.hooks, twerr)
+	}
+	callResponseSent(ctx, s.hooks)
+}
+
+func (s *tabloServiceServer) serveUpdateColumn(ctx context.Context, resp http.ResponseWriter, req *http.Request) {
+	header := req.Header.Get("Content-Type")
+	i := strings.Index(header, ";")
+	if i == -1 {
+		i = len(header)
+	}
+	switch strings.TrimSpace(strings.ToLower(header[:i])) {
+	case "application/json":
+		s.serveUpdateColumnJSON(ctx, resp, req)
+	case "application/protobuf":
+		s.serveUpdateColumnProtobuf(ctx, resp, req)
+	default:
+		msg := fmt.Sprintf("unexpected Content-Type: %q", req.Header.Get("Content-Type"))
+		twerr := badRouteError(msg, req.Method, req.URL.Path)
+		s.writeError(ctx, resp, twerr)
+	}
+}
+
+func (s *tabloServiceServer) serveUpdateColumnJSON(ctx context.Context, resp http.ResponseWriter, req *http.Request) {
+	var err error
+	ctx = ctxsetters.WithMethodName(ctx, "UpdateColumn")
+	ctx, err = callRequestRouted(ctx, s.hooks)
+	if err != nil {
+		s.writeError(ctx, resp, err)
+		return
+	}
+
+	reqContent := new(Column)
+	unmarshaler := jsonpb.Unmarshaler{AllowUnknownFields: true}
+	if err = unmarshaler.Unmarshal(req.Body, reqContent); err != nil {
+		s.writeError(ctx, resp, malformedRequestError("the json request could not be decoded"))
+		return
+	}
+
+	// Call service method
+	var respContent *Void
+	func() {
+		defer ensurePanicResponses(ctx, resp, s.hooks)
+		respContent, err = s.TabloService.UpdateColumn(ctx, reqContent)
+	}()
+
+	if err != nil {
+		s.writeError(ctx, resp, err)
+		return
+	}
+	if respContent == nil {
+		s.writeError(ctx, resp, twirp.InternalError("received a nil *Void and nil error while calling UpdateColumn. nil responses are not supported"))
+		return
+	}
+
+	ctx = callResponsePrepared(ctx, s.hooks)
+
+	var buf bytes.Buffer
+	marshaler := &jsonpb.Marshaler{OrigName: true}
+	if err = marshaler.Marshal(&buf, respContent); err != nil {
+		s.writeError(ctx, resp, wrapInternal(err, "failed to marshal json response"))
+		return
+	}
+
+	ctx = ctxsetters.WithStatusCode(ctx, http.StatusOK)
+	respBytes := buf.Bytes()
+	resp.Header().Set("Content-Type", "application/json")
+	resp.Header().Set("Content-Length", strconv.Itoa(len(respBytes)))
+	resp.WriteHeader(http.StatusOK)
+
+	if n, err := resp.Write(respBytes); err != nil {
+		msg := fmt.Sprintf("failed to write response, %d of %d bytes written: %s", n, len(respBytes), err.Error())
+		twerr := twirp.NewError(twirp.Unknown, msg)
+		callError(ctx, s.hooks, twerr)
+	}
+	callResponseSent(ctx, s.hooks)
+}
+
+func (s *tabloServiceServer) serveUpdateColumnProtobuf(ctx context.Context, resp http.ResponseWriter, req *http.Request) {
+	var err error
+	ctx = ctxsetters.WithMethodName(ctx, "UpdateColumn")
+	ctx, err = callRequestRouted(ctx, s.hooks)
+	if err != nil {
+		s.writeError(ctx, resp, err)
+		return
+	}
+
+	buf, err := ioutil.ReadAll(req.Body)
+	if err != nil {
+		s.writeError(ctx, resp, wrapInternal(err, "failed to read request body"))
+		return
+	}
+	reqContent := new(Column)
+	if err = proto.Unmarshal(buf, reqContent); err != nil {
+		s.writeError(ctx, resp, malformedRequestError("the protobuf request could not be decoded"))
+		return
+	}
+
+	// Call service method
+	var respContent *Void
+	func() {
+		defer ensurePanicResponses(ctx, resp, s.hooks)
+		respContent, err = s.TabloService.UpdateColumn(ctx, reqContent)
+	}()
+
+	if err != nil {
+		s.writeError(ctx, resp, err)
+		return
+	}
+	if respContent == nil {
+		s.writeError(ctx, resp, twirp.InternalError("received a nil *Void and nil error while calling UpdateColumn. nil responses are not supported"))
+		return
+	}
+
+	ctx = callResponsePrepared(ctx, s.hooks)
+
+	respBytes, err := proto.Marshal(respContent)
+	if err != nil {
+		s.writeError(ctx, resp, wrapInternal(err, "failed to marshal proto response"))
+		return
+	}
+
+	ctx = ctxsetters.WithStatusCode(ctx, http.StatusOK)
+	resp.Header().Set("Content-Type", "application/protobuf")
+	resp.Header().Set("Content-Length", strconv.Itoa(len(respBytes)))
+	resp.WriteHeader(http.StatusOK)
+	if n, err := resp.Write(respBytes); err != nil {
+		msg := fmt.Sprintf("failed to write response, %d of %d bytes written: %s", n, len(respBytes), err.Error())
+		twerr := twirp.NewError(twirp.Unknown, msg)
+		callError(ctx, s.hooks, twerr)
+	}
+	callResponseSent(ctx, s.hooks)
+}
+
+func (s *tabloServiceServer) serveDeleteColumn(ctx context.Context, resp http.ResponseWriter, req *http.Request) {
+	header := req.Header.Get("Content-Type")
+	i := strings.Index(header, ";")
+	if i == -1 {
+		i = len(header)
+	}
+	switch strings.TrimSpace(strings.ToLower(header[:i])) {
+	case "application/json":
+		s.serveDeleteColumnJSON(ctx, resp, req)
+	case "application/protobuf":
+		s.serveDeleteColumnProtobuf(ctx, resp, req)
+	default:
+		msg := fmt.Sprintf("unexpected Content-Type: %q", req.Header.Get("Content-Type"))
+		twerr := badRouteError(msg, req.Method, req.URL.Path)
+		s.writeError(ctx, resp, twerr)
+	}
+}
+
+func (s *tabloServiceServer) serveDeleteColumnJSON(ctx context.Context, resp http.ResponseWriter, req *http.Request) {
+	var err error
+	ctx = ctxsetters.WithMethodName(ctx, "DeleteColumn")
+	ctx, err = callRequestRouted(ctx, s.hooks)
+	if err != nil {
+		s.writeError(ctx, resp, err)
+		return
+	}
+
+	reqContent := new(URI)
+	unmarshaler := jsonpb.Unmarshaler{AllowUnknownFields: true}
+	if err = unmarshaler.Unmarshal(req.Body, reqContent); err != nil {
+		s.writeError(ctx, resp, malformedRequestError("the json request could not be decoded"))
+		return
+	}
+
+	// Call service method
+	var respContent *Void
+	func() {
+		defer ensurePanicResponses(ctx, resp, s.hooks)
+		respContent, err = s.TabloService.DeleteColumn(ctx, reqContent)
+	}()
+
+	if err != nil {
+		s.writeError(ctx, resp, err)
+		return
+	}
+	if respContent == nil {
+		s.writeError(ctx, resp, twirp.InternalError("received a nil *Void and nil error while calling DeleteColumn. nil responses are not supported"))
+		return
+	}
+
+	ctx = callResponsePrepared(ctx, s.hooks)
+
+	var buf bytes.Buffer
+	marshaler := &jsonpb.Marshaler{OrigName: true}
+	if err = marshaler.Marshal(&buf, respContent); err != nil {
+		s.writeError(ctx, resp, wrapInternal(err, "failed to marshal json response"))
+		return
+	}
+
+	ctx = ctxsetters.WithStatusCode(ctx, http.StatusOK)
+	respBytes := buf.Bytes()
+	resp.Header().Set("Content-Type", "application/json")
+	resp.Header().Set("Content-Length", strconv.Itoa(len(respBytes)))
+	resp.WriteHeader(http.StatusOK)
+
+	if n, err := resp.Write(respBytes); err != nil {
+		msg := fmt.Sprintf("failed to write response, %d of %d bytes written: %s", n, len(respBytes), err.Error())
+		twerr := twirp.NewError(twirp.Unknown, msg)
+		callError(ctx, s.hooks, twerr)
+	}
+	callResponseSent(ctx, s.hooks)
+}
+
+func (s *tabloServiceServer) serveDeleteColumnProtobuf(ctx context.Context, resp http.ResponseWriter, req *http.Request) {
+	var err error
+	ctx = ctxsetters.WithMethodName(ctx, "DeleteColumn")
+	ctx, err = callRequestRouted(ctx, s.hooks)
+	if err != nil {
+		s.writeError(ctx, resp, err)
+		return
+	}
+
+	buf, err := ioutil.ReadAll(req.Body)
+	if err != nil {
+		s.writeError(ctx, resp, wrapInternal(err, "failed to read request body"))
+		return
+	}
+	reqContent := new(URI)
+	if err = proto.Unmarshal(buf, reqContent); err != nil {
+		s.writeError(ctx, resp, malformedRequestError("the protobuf request could not be decoded"))
+		return
+	}
+
+	// Call service method
+	var respContent *Void
+	func() {
+		defer ensurePanicResponses(ctx, resp, s.hooks)
+		respContent, err = s.TabloService.DeleteColumn(ctx, reqContent)
+	}()
+
+	if err != nil {
+		s.writeError(ctx, resp, err)
+		return
+	}
+	if respContent == nil {
+		s.writeError(ctx, resp, twirp.InternalError("received a nil *Void and nil error while calling DeleteColumn. nil responses are not supported"))
+		return
+	}
+
+	ctx = callResponsePrepared(ctx, s.hooks)
+
+	respBytes, err := proto.Marshal(respContent)
+	if err != nil {
+		s.writeError(ctx, resp, wrapInternal(err, "failed to marshal proto response"))
+		return
+	}
+
+	ctx = ctxsetters.WithStatusCode(ctx, http.StatusOK)
+	resp.Header().Set("Content-Type", "application/protobuf")
+	resp.Header().Set("Content-Length", strconv.Itoa(len(respBytes)))
+	resp.WriteHeader(http.StatusOK)
+	if n, err := resp.Write(respBytes); err != nil {
+		msg := fmt.Sprintf("failed to write response, %d of %d bytes written: %s", n, len(respBytes), err.Error())
+		twerr := twirp.NewError(twirp.Unknown, msg)
+		callError(ctx, s.hooks, twerr)
+	}
+	callResponseSent(ctx, s.hooks)
+}
+
+func (s *tabloServiceServer) serveCreateCard(ctx context.Context, resp http.ResponseWriter, req *http.Request) {
+	header := req.Header.Get("Content-Type")
+	i := strings.Index(header, ";")
+	if i == -1 {
+		i = len(header)
+	}
+	switch strings.TrimSpace(strings.ToLower(header[:i])) {
+	case "application/json":
+		s.serveCreateCardJSON(ctx, resp, req)
+	case "application/protobuf":
+		s.serveCreateCardProtobuf(ctx, resp, req)
+	default:
+		msg := fmt.Sprintf("unexpected Content-Type: %q", req.Header.Get("Content-Type"))
+		twerr := badRouteError(msg, req.Method, req.URL.Path)
+		s.writeError(ctx, resp, twerr)
+	}
+}
+
+func (s *tabloServiceServer) serveCreateCardJSON(ctx context.Context, resp http.ResponseWriter, req *http.Request) {
+	var err error
+	ctx = ctxsetters.WithMethodName(ctx, "CreateCard")
+	ctx, err = callRequestRouted(ctx, s.hooks)
+	if err != nil {
+		s.writeError(ctx, resp, err)
+		return
+	}
+
+	reqContent := new(NewCard)
+	unmarshaler := jsonpb.Unmarshaler{AllowUnknownFields: true}
+	if err = unmarshaler.Unmarshal(req.Body, reqContent); err != nil {
+		s.writeError(ctx, resp, malformedRequestError("the json request could not be decoded"))
+		return
+	}
+
+	// Call service method
+	var respContent *URI
+	func() {
+		defer ensurePanicResponses(ctx, resp, s.hooks)
+		respContent, err = s.TabloService.CreateCard(ctx, reqContent)
+	}()
+
+	if err != nil {
+		s.writeError(ctx, resp, err)
+		return
+	}
+	if respContent == nil {
+		s.writeError(ctx, resp, twirp.InternalError("received a nil *URI and nil error while calling CreateCard. nil responses are not supported"))
+		return
+	}
+
+	ctx = callResponsePrepared(ctx, s.hooks)
+
+	var buf bytes.Buffer
+	marshaler := &jsonpb.Marshaler{OrigName: true}
+	if err = marshaler.Marshal(&buf, respContent); err != nil {
+		s.writeError(ctx, resp, wrapInternal(err, "failed to marshal json response"))
+		return
+	}
+
+	ctx = ctxsetters.WithStatusCode(ctx, http.StatusOK)
+	respBytes := buf.Bytes()
+	resp.Header().Set("Content-Type", "application/json")
+	resp.Header().Set("Content-Length", strconv.Itoa(len(respBytes)))
+	resp.WriteHeader(http.StatusOK)
+
+	if n, err := resp.Write(respBytes); err != nil {
+		msg := fmt.Sprintf("failed to write response, %d of %d bytes written: %s", n, len(respBytes), err.Error())
+		twerr := twirp.NewError(twirp.Unknown, msg)
+		callError(ctx, s.hooks, twerr)
+	}
+	callResponseSent(ctx, s.hooks)
+}
+
+func (s *tabloServiceServer) serveCreateCardProtobuf(ctx context.Context, resp http.ResponseWriter, req *http.Request) {
+	var err error
+	ctx = ctxsetters.WithMethodName(ctx, "CreateCard")
+	ctx, err = callRequestRouted(ctx, s.hooks)
+	if err != nil {
+		s.writeError(ctx, resp, err)
+		return
+	}
+
+	buf, err := ioutil.ReadAll(req.Body)
+	if err != nil {
+		s.writeError(ctx, resp, wrapInternal(err, "failed to read request body"))
+		return
+	}
+	reqContent := new(NewCard)
+	if err = proto.Unmarshal(buf, reqContent); err != nil {
+		s.writeError(ctx, resp, malformedRequestError("the protobuf request could not be decoded"))
+		return
+	}
+
+	// Call service method
+	var respContent *URI
+	func() {
+		defer ensurePanicResponses(ctx, resp, s.hooks)
+		respContent, err = s.TabloService.CreateCard(ctx, reqContent)
+	}()
+
+	if err != nil {
+		s.writeError(ctx, resp, err)
+		return
+	}
+	if respContent == nil {
+		s.writeError(ctx, resp, twirp.InternalError("received a nil *URI and nil error while calling CreateCard. nil responses are not supported"))
+		return
+	}
+
+	ctx = callResponsePrepared(ctx, s.hooks)
+
+	respBytes, err := proto.Marshal(respContent)
+	if err != nil {
+		s.writeError(ctx, resp, wrapInternal(err, "failed to marshal proto response"))
+		return
+	}
+
+	ctx = ctxsetters.WithStatusCode(ctx, http.StatusOK)
+	resp.Header().Set("Content-Type", "application/protobuf")
+	resp.Header().Set("Content-Length", strconv.Itoa(len(respBytes)))
+	resp.WriteHeader(http.StatusOK)
+	if n, err := resp.Write(respBytes); err != nil {
+		msg := fmt.Sprintf("failed to write response, %d of %d bytes written: %s", n, len(respBytes), err.Error())
+		twerr := twirp.NewError(twirp.Unknown, msg)
+		callError(ctx, s.hooks, twerr)
+	}
+	callResponseSent(ctx, s.hooks)
+}
+
+func (s *tabloServiceServer) serveUpdateCard(ctx context.Context, resp http.ResponseWriter, req *http.Request) {
+	header := req.Header.Get("Content-Type")
+	i := strings.Index(header, ";")
+	if i == -1 {
+		i = len(header)
+	}
+	switch strings.TrimSpace(strings.ToLower(header[:i])) {
+	case "application/json":
+		s.serveUpdateCardJSON(ctx, resp, req)
+	case "application/protobuf":
+		s.serveUpdateCardProtobuf(ctx, resp, req)
+	default:
+		msg := fmt.Sprintf("unexpected Content-Type: %q", req.Header.Get("Content-Type"))
+		twerr := badRouteError(msg, req.Method, req.URL.Path)
+		s.writeError(ctx, resp, twerr)
+	}
+}
+
+func (s *tabloServiceServer) serveUpdateCardJSON(ctx context.Context, resp http.ResponseWriter, req *http.Request) {
+	var err error
+	ctx = ctxsetters.WithMethodName(ctx, "UpdateCard")
+	ctx, err = callRequestRouted(ctx, s.hooks)
+	if err != nil {
+		s.writeError(ctx, resp, err)
+		return
+	}
+
+	reqContent := new(Card)
+	unmarshaler := jsonpb.Unmarshaler{AllowUnknownFields: true}
+	if err = unmarshaler.Unmarshal(req.Body, reqContent); err != nil {
+		s.writeError(ctx, resp, malformedRequestError("the json request could not be decoded"))
+		return
+	}
+
+	// Call service method
+	var respContent *Void
+	func() {
+		defer ensurePanicResponses(ctx, resp, s.hooks)
+		respContent, err = s.TabloService.UpdateCard(ctx, reqContent)
+	}()
+
+	if err != nil {
+		s.writeError(ctx, resp, err)
+		return
+	}
+	if respContent == nil {
+		s.writeError(ctx, resp, twirp.InternalError("received a nil *Void and nil error while calling UpdateCard. nil responses are not supported"))
+		return
+	}
+
+	ctx = callResponsePrepared(ctx, s.hooks)
+
+	var buf bytes.Buffer
+	marshaler := &jsonpb.Marshaler{OrigName: true}
+	if err = marshaler.Marshal(&buf, respContent); err != nil {
+		s.writeError(ctx, resp, wrapInternal(err, "failed to marshal json response"))
+		return
+	}
+
+	ctx = ctxsetters.WithStatusCode(ctx, http.StatusOK)
+	respBytes := buf.Bytes()
+	resp.Header().Set("Content-Type", "application/json")
+	resp.Header().Set("Content-Length", strconv.Itoa(len(respBytes)))
+	resp.WriteHeader(http.StatusOK)
+
+	if n, err := resp.Write(respBytes); err != nil {
+		msg := fmt.Sprintf("failed to write response, %d of %d bytes written: %s", n, len(respBytes), err.Error())
+		twerr := twirp.NewError(twirp.Unknown, msg)
+		callError(ctx, s.hooks, twerr)
+	}
+	callResponseSent(ctx, s.hooks)
+}
+
+func (s *tabloServiceServer) serveUpdateCardProtobuf(ctx context.Context, resp http.ResponseWriter, req *http.Request) {
+	var err error
+	ctx = ctxsetters.WithMethodName(ctx, "UpdateCard")
+	ctx, err = callRequestRouted(ctx, s.hooks)
+	if err != nil {
+		s.writeError(ctx, resp, err)
+		return
+	}
+
+	buf, err := ioutil.ReadAll(req.Body)
+	if err != nil {
+		s.writeError(ctx, resp, wrapInternal(err, "failed to read request body"))
+		return
+	}
+	reqContent := new(Card)
+	if err = proto.Unmarshal(buf, reqContent); err != nil {
+		s.writeError(ctx, resp, malformedRequestError("the protobuf request could not be decoded"))
+		return
+	}
+
+	// Call service method
+	var respContent *Void
+	func() {
+		defer ensurePanicResponses(ctx, resp, s.hooks)
+		respContent, err = s.TabloService.UpdateCard(ctx, reqContent)
+	}()
+
+	if err != nil {
+		s.writeError(ctx, resp, err)
+		return
+	}
+	if respContent == nil {
+		s.writeError(ctx, resp, twirp.InternalError("received a nil *Void and nil error while calling UpdateCard. nil responses are not supported"))
+		return
+	}
+
+	ctx = callResponsePrepared(ctx, s.hooks)
+
+	respBytes, err := proto.Marshal(respContent)
+	if err != nil {
+		s.writeError(ctx, resp, wrapInternal(err, "failed to marshal proto response"))
+		return
+	}
+
+	ctx = ctxsetters.WithStatusCode(ctx, http.StatusOK)
+	resp.Header().Set("Content-Type", "application/protobuf")
+	resp.Header().Set("Content-Length", strconv.Itoa(len(respBytes)))
+	resp.WriteHeader(http.StatusOK)
+	if n, err := resp.Write(respBytes); err != nil {
+		msg := fmt.Sprintf("failed to write response, %d of %d bytes written: %s", n, len(respBytes), err.Error())
+		twerr := twirp.NewError(twirp.Unknown, msg)
+		callError(ctx, s.hooks, twerr)
+	}
+	callResponseSent(ctx, s.hooks)
+}
+
+func (s *tabloServiceServer) serveDeleteCard(ctx context.Context, resp http.ResponseWriter, req *http.Request) {
+	header := req.Header.Get("Content-Type")
+	i := strings.Index(header, ";")
+	if i == -1 {
+		i = len(header)
+	}
+	switch strings.TrimSpace(strings.ToLower(header[:i])) {
+	case "application/json":
+		s.serveDeleteCardJSON(ctx, resp, req)
+	case "application/protobuf":
+		s.serveDeleteCardProtobuf(ctx, resp, req)
+	default:
+		msg := fmt.Sprintf("unexpected Content-Type: %q", req.Header.Get("Content-Type"))
+		twerr := badRouteError(msg, req.Method, req.URL.Path)
+		s.writeError(ctx, resp, twerr)
+	}
+}
+
+func (s *tabloServiceServer) serveDeleteCardJSON(ctx context.Context, resp http.ResponseWriter, req *http.Request) {
+	var err error
+	ctx = ctxsetters.WithMethodName(ctx, "DeleteCard")
+	ctx, err = callRequestRouted(ctx, s.hooks)
+	if err != nil {
+		s.writeError(ctx, resp, err)
+		return
+	}
+
+	reqContent := new(URI)
+	unmarshaler := jsonpb.Unmarshaler{AllowUnknownFields: true}
+	if err = unmarshaler.Unmarshal(req.Body, reqContent); err != nil {
+		s.writeError(ctx, resp, malformedRequestError("the json request could not be decoded"))
+		return
+	}
+
+	// Call service method
+	var respContent *Void
+	func() {
+		defer ensurePanicResponses(ctx, resp, s.hooks)
+		respContent, err = s.TabloService.DeleteCard(ctx, reqContent)
+	}()
+
+	if err != nil {
+		s.writeError(ctx, resp, err)
+		return
+	}
+	if respContent == nil {
+		s.writeError(ctx, resp, twirp.InternalError("received a nil *Void and nil error while calling DeleteCard. nil responses are not supported"))
+		return
+	}
+
+	ctx = callResponsePrepared(ctx, s.hooks)
+
+	var buf bytes.Buffer
+	marshaler := &jsonpb.Marshaler{OrigName: true}
+	if err = marshaler.Marshal(&buf, respContent); err != nil {
+		s.writeError(ctx, resp, wrapInternal(err, "failed to marshal json response"))
+		return
+	}
+
+	ctx = ctxsetters.WithStatusCode(ctx, http.StatusOK)
+	respBytes := buf.Bytes()
+	resp.Header().Set("Content-Type", "application/json")
+	resp.Header().Set("Content-Length", strconv.Itoa(len(respBytes)))
+	resp.WriteHeader(http.StatusOK)
+
+	if n, err := resp.Write(respBytes); err != nil {
+		msg := fmt.Sprintf("failed to write response, %d of %d bytes written: %s", n, len(respBytes), err.Error())
+		twerr := twirp.NewError(twirp.Unknown, msg)
+		callError(ctx, s.hooks, twerr)
+	}
+	callResponseSent(ctx, s.hooks)
+}
+
+func (s *tabloServiceServer) serveDeleteCardProtobuf(ctx context.Context, resp http.ResponseWriter, req *http.Request) {
+	var err error
+	ctx = ctxsetters.WithMethodName(ctx, "DeleteCard")
+	ctx, err = callRequestRouted(ctx, s.hooks)
+	if err != nil {
+		s.writeError(ctx, resp, err)
+		return
+	}
+
+	buf, err := ioutil.ReadAll(req.Body)
+	if err != nil {
+		s.writeError(ctx, resp, wrapInternal(err, "failed to read request body"))
+		return
+	}
+	reqContent := new(URI)
+	if err = proto.Unmarshal(buf, reqContent); err != nil {
+		s.writeError(ctx, resp, malformedRequestError("the protobuf request could not be decoded"))
+		return
+	}
+
+	// Call service method
+	var respContent *Void
+	func() {
+		defer ensurePanicResponses(ctx, resp, s.hooks)
+		respContent, err = s.TabloService.DeleteCard(ctx, reqContent)
+	}()
+
+	if err != nil {
+		s.writeError(ctx, resp, err)
+		return
+	}
+	if respContent == nil {
+		s.writeError(ctx, resp, twirp.InternalError("received a nil *Void and nil error while calling DeleteCard. nil responses are not supported"))
 		return
 	}
 
@@ -1435,31 +2395,42 @@ func callError(ctx context.Context, h *twirp.ServerHooks, err twirp.Error) conte
 }
 
 var twirpFileDescriptor0 = []byte{
-	// 412 bytes of a gzipped FileDescriptorProto
-	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xbc, 0x93, 0x4d, 0xae, 0xd3, 0x30,
-	0x14, 0x85, 0x95, 0xd4, 0x75, 0xd3, 0xfb, 0x90, 0x88, 0xac, 0x27, 0x14, 0x02, 0x42, 0x55, 0x47,
-	0x65, 0x92, 0x92, 0x22, 0xc1, 0x08, 0xf1, 0x53, 0xd0, 0x13, 0x15, 0x23, 0x3f, 0x1e, 0x03, 0x66,
-	0x4e, 0x7c, 0x07, 0x46, 0x4e, 0x5d, 0x39, 0x6e, 0x36, 0xc2, 0x4a, 0xd8, 0x0e, 0x8b, 0x60, 0x0d,
-	0x28, 0x76, 0x3b, 0x40, 0x6a, 0xc2, 0x08, 0x66, 0xbe, 0xa7, 0xe7, 0x9e, 0x9e, 0x4f, 0x76, 0x20,
-	0xed, 0xca, 0x75, 0x8b, 0xb6, 0x53, 0x35, 0x16, 0x07, 0x6b, 0x9c, 0x61, 0xd7, 0xa6, 0x76, 0x46,
-	0x8b, 0xaa, 0x10, 0x07, 0x55, 0x38, 0x51, 0x69, 0x53, 0x74, 0x65, 0x7e, 0xbf, 0x2b, 0xd7, 0xb5,
-	0x69, 0x1a, 0xb3, 0x0f, 0x36, 0x2f, 0x74, 0xb8, 0x97, 0xc6, 0x06, 0x61, 0xf9, 0x2b, 0x82, 0xe9,
-	0xe7, 0xde, 0xce, 0x9e, 0x42, 0xac, 0x64, 0x16, 0x2d, 0xa2, 0xd5, 0xd5, 0xe6, 0x61, 0x71, 0x29,
-	0xae, 0xb8, 0xe3, 0x1f, 0x79, 0xac, 0x24, 0xbb, 0x86, 0xa9, 0x53, 0x4e, 0x63, 0x16, 0x2f, 0xa2,
-	0xd5, 0x9c, 0x87, 0xa1, 0x57, 0xb1, 0x31, 0xdf, 0x54, 0x36, 0x09, 0xaa, 0x1f, 0x18, 0x03, 0x22,
-	0xb1, 0xad, 0x33, 0xe2, 0x45, 0x7f, 0x66, 0x2f, 0x60, 0x56, 0x1b, 0x7d, 0x6c, 0xf6, 0x6d, 0x36,
-	0x5d, 0x4c, 0x56, 0x57, 0x9b, 0xc7, 0x97, 0xff, 0x6f, 0xeb, 0x4d, 0xfc, 0x6c, 0xee, 0xf7, 0x5a,
-	0x73, 0xb4, 0x35, 0xb6, 0x19, 0x1d, 0xdb, 0xbb, 0xf5, 0x26, 0x7e, 0x36, 0xef, 0x48, 0x32, 0x4b,
-	0x93, 0x1d, 0x49, 0x92, 0x74, 0xbe, 0xfc, 0x11, 0x01, 0x0d, 0xb9, 0xff, 0x93, 0xf8, 0x19, 0x4c,
-	0x6b, 0x61, 0xe5, 0x99, 0x37, 0x1f, 0xe0, 0x15, 0x56, 0xf2, 0x60, 0xdc, 0x91, 0x84, 0xa6, 0xb3,
-	0xd0, 0x7c, 0xf9, 0x3d, 0x02, 0xd2, 0xff, 0xf6, 0xaf, 0x1a, 0xa7, 0x30, 0x39, 0x5a, 0x7d, 0x2a,
-	0xdc, 0x1f, 0xd9, 0x03, 0xa0, 0x5a, 0x54, 0xa8, 0x43, 0xe1, 0x39, 0x3f, 0x4d, 0x7f, 0xb4, 0x02,
-	0x48, 0xb6, 0x56, 0x39, 0xb4, 0x4a, 0x2c, 0x5f, 0x02, 0xf9, 0xa4, 0x5a, 0xc7, 0xd6, 0x40, 0xb4,
-	0x6a, 0x5d, 0x16, 0x79, 0xcc, 0x47, 0x97, 0x2b, 0xfa, 0xf7, 0xc6, 0xbd, 0x71, 0xf3, 0x33, 0x86,
-	0x7b, 0x7e, 0xbe, 0x0d, 0xcf, 0x99, 0xbd, 0x01, 0xba, 0xb5, 0x28, 0x1c, 0xb2, 0xb1, 0xed, 0x7c,
-	0x98, 0x9e, 0xbd, 0x82, 0xc9, 0x0d, 0x3a, 0x36, 0xec, 0xc8, 0xc7, 0x92, 0xd9, 0x07, 0x98, 0xdd,
-	0xa0, 0xf3, 0x34, 0x4f, 0x06, 0xae, 0xe9, 0x44, 0x9d, 0x0f, 0x5c, 0xa3, 0xdf, 0x7d, 0x0b, 0xf4,
-	0xee, 0x20, 0xff, 0xca, 0x31, 0x10, 0xf1, 0xc5, 0x28, 0xc9, 0x5e, 0x03, 0x7d, 0x8f, 0x1a, 0x1d,
-	0x8e, 0xb1, 0x8c, 0x04, 0xbc, 0x23, 0x5f, 0xe3, 0xae, 0xac, 0xa8, 0xff, 0xd2, 0x9f, 0xff, 0x0e,
-	0x00, 0x00, 0xff, 0xff, 0xe8, 0xe6, 0x20, 0xbf, 0x35, 0x04, 0x00, 0x00,
+	// 589 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xdc, 0x54, 0x5d, 0x6f, 0xd3, 0x30,
+	0x14, 0x55, 0x93, 0x34, 0x5d, 0xef, 0x2a, 0x31, 0x59, 0x13, 0x0a, 0xe1, 0xa3, 0x55, 0x9e, 0xca,
+	0x4b, 0x4a, 0x8b, 0x84, 0x84, 0x04, 0x42, 0xa5, 0x83, 0x41, 0x41, 0x7b, 0xc8, 0x36, 0x1e, 0x78,
+	0x99, 0xdc, 0xd8, 0x4c, 0x46, 0x49, 0x5d, 0x39, 0x6e, 0xf6, 0x3f, 0x78, 0xe5, 0x8f, 0xf1, 0x67,
+	0x90, 0x50, 0x6c, 0x47, 0x9b, 0x50, 0x62, 0xb4, 0x22, 0x5e, 0x78, 0x8b, 0xad, 0x73, 0xcf, 0x3d,
+	0xe7, 0xdc, 0x5c, 0xc3, 0x41, 0x39, 0x9d, 0x14, 0x54, 0x94, 0x2c, 0xa5, 0xf1, 0x46, 0x70, 0xc9,
+	0xd1, 0x21, 0x4f, 0x25, 0xcf, 0xf0, 0x2a, 0xc6, 0x1b, 0x16, 0x4b, 0xbc, 0xca, 0x78, 0x5c, 0x4e,
+	0xc3, 0xe1, 0x25, 0xe7, 0x97, 0x19, 0x9d, 0x28, 0xcc, 0x6a, 0xfb, 0x65, 0x22, 0x59, 0x4e, 0x0b,
+	0x89, 0xf3, 0x8d, 0x2e, 0x0b, 0xef, 0x94, 0xd3, 0x49, 0xca, 0xf3, 0x9c, 0xaf, 0x6f, 0x5c, 0x94,
+	0x74, 0x4d, 0xb8, 0xd0, 0x17, 0xd1, 0x12, 0xf6, 0x4e, 0xe8, 0xd5, 0x59, 0xc5, 0x88, 0x0e, 0xa1,
+	0x2b, 0x99, 0xcc, 0x68, 0xd0, 0x19, 0x75, 0xc6, 0xfd, 0x44, 0x1f, 0xaa, 0x5b, 0x9a, 0xf3, 0xaf,
+	0x2c, 0x70, 0xf4, 0xad, 0x3a, 0x20, 0x04, 0x1e, 0xa1, 0x45, 0x1a, 0xb8, 0xea, 0x52, 0x7d, 0x47,
+	0x3f, 0x1c, 0xe8, 0x6a, 0xa6, 0xc7, 0xe0, 0x30, 0xa2, 0x68, 0xf6, 0x67, 0xf7, 0xe2, 0x26, 0xed,
+	0xf1, 0x79, 0xf2, 0x3e, 0x71, 0x18, 0xb9, 0x6e, 0xea, 0x34, 0x36, 0x75, 0x9b, 0x9a, 0x7a, 0xd7,
+	0x4d, 0xd1, 0x73, 0x80, 0x54, 0x50, 0x2c, 0x29, 0xb9, 0xc0, 0x32, 0xe8, 0xaa, 0x96, 0x61, 0xac,
+	0x83, 0x89, 0xeb, 0x60, 0xe2, 0xb3, 0x3a, 0x98, 0xa4, 0x6f, 0xd0, 0x73, 0x59, 0x95, 0x6e, 0x37,
+	0xa4, 0x2e, 0xf5, 0xff, 0x5c, 0x6a, 0xd0, 0x73, 0x89, 0x9e, 0x41, 0x2f, 0xe5, 0xd9, 0x36, 0x5f,
+	0x17, 0x41, 0x6f, 0xe4, 0x8e, 0xf7, 0x67, 0x0f, 0x9a, 0x5d, 0x2e, 0x14, 0x28, 0xa9, 0xc1, 0x55,
+	0x5d, 0xc1, 0xb7, 0x22, 0xa5, 0x45, 0xb0, 0x67, 0xab, 0x3b, 0x55, 0xa0, 0xa4, 0x06, 0x47, 0x2f,
+	0xa0, 0xaf, 0x92, 0xfd, 0xc8, 0x0a, 0x89, 0x26, 0xe0, 0x65, 0xac, 0x90, 0x41, 0x47, 0x31, 0xdc,
+	0x6f, 0x66, 0x50, 0xf0, 0x44, 0x01, 0xa3, 0x0f, 0xd0, 0x3f, 0xa1, 0x57, 0x5a, 0xcb, 0x5f, 0x4f,
+	0xf9, 0xbb, 0x03, 0xbe, 0xa1, 0xfa, 0xef, 0xc7, 0xfc, 0x04, 0xba, 0x29, 0x16, 0xa4, 0x1e, 0x72,
+	0xd8, 0x32, 0x64, 0x2c, 0x48, 0xa2, 0x81, 0xd1, 0x05, 0xf4, 0xaa, 0xa8, 0xb1, 0x20, 0xb7, 0x0a,
+	0xfa, 0x00, 0xdc, 0xad, 0xc8, 0x4c, 0x0c, 0xd5, 0x27, 0xba, 0x0b, 0x7e, 0x86, 0x57, 0x34, 0x2b,
+	0x02, 0x6f, 0xe4, 0x8e, 0xfb, 0x89, 0x39, 0x45, 0x3f, 0x3b, 0xe0, 0x29, 0xfa, 0x7f, 0x14, 0xbe,
+	0x51, 0xe2, 0x35, 0x29, 0xe9, 0xde, 0x54, 0xf2, 0xdb, 0x48, 0xfc, 0xdd, 0x47, 0xd2, 0xbb, 0xc5,
+	0x48, 0x22, 0x80, 0xbd, 0x85, 0x60, 0x92, 0x0a, 0x86, 0x67, 0xdf, 0x7c, 0x18, 0xa8, 0xff, 0xfc,
+	0x54, 0x3f, 0x96, 0x68, 0x01, 0xfe, 0x42, 0x35, 0x41, 0x8f, 0x9a, 0x13, 0xa9, 0xdf, 0xba, 0xb0,
+	0x3d, 0x31, 0xf4, 0x12, 0xdc, 0x63, 0x2a, 0x51, 0x3b, 0x22, 0xb4, 0xad, 0x1c, 0x5a, 0x42, 0xef,
+	0x98, 0x4a, 0xb5, 0xa8, 0x2d, 0x22, 0x6a, 0xfd, 0xe1, 0xd0, 0xc2, 0xa3, 0x08, 0xe6, 0xe0, 0x9f,
+	0x2b, 0xe7, 0xc8, 0xd6, 0x32, 0x6c, 0xf9, 0x2f, 0x3f, 0x71, 0x46, 0xd0, 0x2b, 0xf0, 0x8f, 0x68,
+	0x46, 0x25, 0xb5, 0x19, 0xb2, 0x11, 0x2c, 0x61, 0xa0, 0x33, 0x35, 0x4b, 0x3f, 0x6c, 0x4d, 0x56,
+	0x03, 0x6c, 0xd1, 0xbe, 0x83, 0x81, 0xf6, 0x63, 0xb8, 0xac, 0xaf, 0xa6, 0x55, 0xd5, 0x1b, 0x18,
+	0x68, 0x5b, 0x86, 0x69, 0x47, 0x73, 0x6f, 0x01, 0x8c, 0xb9, 0x6a, 0xa5, 0x1e, 0xb6, 0x5b, 0xc3,
+	0x82, 0xd8, 0x8c, 0x1d, 0x01, 0x18, 0x63, 0x15, 0x8f, 0xe5, 0x9d, 0xb0, 0xaa, 0x59, 0x00, 0x18,
+	0x53, 0x15, 0xcb, 0x6e, 0x96, 0x5e, 0x7b, 0x9f, 0x9d, 0x72, 0xba, 0xf2, 0xd5, 0x16, 0x3d, 0xfd,
+	0x15, 0x00, 0x00, 0xff, 0xff, 0x77, 0xe7, 0xc3, 0xf5, 0x4b, 0x08, 0x00, 0x00,
 }
