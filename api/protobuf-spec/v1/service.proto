@@ -50,8 +50,9 @@ message BatchRequest {
     message Card {
         string title = 1;
         string emoji = 2;
-        string url = 3;
-        repeated string labels = 4;
+        string desc = 3;
+        string url = 4;
+        repeated string labels = 5;
     }
 
     repeated Board boards = 1;
@@ -121,7 +122,6 @@ message NewColumn {
 
 message Column {
     URI id = 1;
-    URI board_id = 2;
 
     string title = 3;
     string emoji = 4;
@@ -138,21 +138,22 @@ message NewCard {
 
     string title = 2;
     string emoji = 3;
-    string url = 4;
-    repeated string labels = 5;
+    string desc = 4;
+    string url = 5;
+    repeated string labels = 6;
 }
 
 message Card {
     URI id = 1;
-    URI column_id = 2;
 
     string title = 3;
     string emoji = 4;
-    string url = 5;
-    repeated string labels = 6;
+    string desc = 5;
+    string url = 6;
+    repeated string labels = 7;
 
-    google.protobuf.Timestamp created_at = 7;
-    google.protobuf.Timestamp updated_at = 8;
+    google.protobuf.Timestamp created_at = 8;
+    google.protobuf.Timestamp updated_at = 9;
 }
 
 message Filter {}

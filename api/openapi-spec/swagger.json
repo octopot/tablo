@@ -83,12 +83,12 @@
     "tablov1Card": {
       "type": "object",
       "properties": {
-        "column_id": {
-          "$ref": "#/definitions/v1URI"
-        },
         "created_at": {
           "type": "string",
           "format": "date-time"
+        },
+        "desc": {
+          "type": "string"
         },
         "emoji": {
           "type": "string"
@@ -117,9 +117,6 @@
     "tablov1Column": {
       "type": "object",
       "properties": {
-        "board_id": {
-          "$ref": "#/definitions/v1URI"
-        },
         "cards": {
           "type": "array",
           "items": {
@@ -183,6 +180,9 @@
     "v1BatchRequestCard": {
       "type": "object",
       "properties": {
+        "desc": {
+          "type": "string"
+        },
         "emoji": {
           "type": "string"
         },
