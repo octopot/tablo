@@ -37,9 +37,55 @@
         }
       }
     },
-    "v1Card": {
+    "tablov1Board": {
       "type": "object",
       "properties": {
+        "columns": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/tablov1Column"
+          }
+        },
+        "created_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "desc": {
+          "type": "string"
+        },
+        "emoji": {
+          "type": "string"
+        },
+        "filters": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/v1Filter"
+          }
+        },
+        "id": {
+          "$ref": "#/definitions/v1URI"
+        },
+        "sources": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/v1Source"
+          }
+        },
+        "title": {
+          "type": "string"
+        },
+        "updated_at": {
+          "type": "string",
+          "format": "date-time"
+        }
+      }
+    },
+    "tablov1Card": {
+      "type": "object",
+      "properties": {
+        "column_id": {
+          "$ref": "#/definitions/v1URI"
+        },
         "created_at": {
           "type": "string",
           "format": "date-time"
@@ -68,13 +114,16 @@
         }
       }
     },
-    "v1Column": {
+    "tablov1Column": {
       "type": "object",
       "properties": {
+        "board_id": {
+          "$ref": "#/definitions/v1URI"
+        },
         "cards": {
           "type": "array",
           "items": {
-            "$ref": "#/definitions/v1Card"
+            "$ref": "#/definitions/tablov1Card"
           }
         },
         "created_at": {
@@ -98,6 +147,148 @@
           "format": "date-time"
         }
       }
+    },
+    "v1BatchRequestBoard": {
+      "type": "object",
+      "properties": {
+        "columns": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/v1BatchRequestColumn"
+          }
+        },
+        "desc": {
+          "type": "string"
+        },
+        "emoji": {
+          "type": "string"
+        },
+        "filters": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/v1Filter"
+          }
+        },
+        "sources": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/v1Source"
+          }
+        },
+        "title": {
+          "type": "string"
+        }
+      }
+    },
+    "v1BatchRequestCard": {
+      "type": "object",
+      "properties": {
+        "emoji": {
+          "type": "string"
+        },
+        "labels": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "title": {
+          "type": "string"
+        },
+        "url": {
+          "type": "string"
+        }
+      }
+    },
+    "v1BatchRequestColumn": {
+      "type": "object",
+      "properties": {
+        "cards": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/v1BatchRequestCard"
+          }
+        },
+        "desc": {
+          "type": "string"
+        },
+        "emoji": {
+          "type": "string"
+        },
+        "title": {
+          "type": "string"
+        }
+      }
+    },
+    "v1BatchResponse": {
+      "type": "object",
+      "properties": {
+        "boards": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/v1BatchResponseBoard"
+          }
+        }
+      }
+    },
+    "v1BatchResponseBoard": {
+      "type": "object",
+      "properties": {
+        "columns": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/v1BatchResponseColumn"
+          }
+        },
+        "url": {
+          "type": "string"
+        },
+        "urn": {
+          "type": "string"
+        }
+      }
+    },
+    "v1BatchResponseCard": {
+      "type": "object",
+      "properties": {
+        "url": {
+          "type": "string"
+        },
+        "urn": {
+          "type": "string"
+        }
+      }
+    },
+    "v1BatchResponseColumn": {
+      "type": "object",
+      "properties": {
+        "cards": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/v1BatchResponseCard"
+          }
+        },
+        "url": {
+          "type": "string"
+        },
+        "urn": {
+          "type": "string"
+        }
+      }
+    },
+    "v1BoardList": {
+      "type": "object",
+      "properties": {
+        "list": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/tablov1Board"
+          }
+        }
+      }
+    },
+    "v1Filter": {
+      "type": "object"
     },
     "v1Provider": {
       "type": "string",
@@ -143,54 +334,6 @@
         },
         "meta": {
           "$ref": "#/definitions/SourceNodeMeta"
-        }
-      }
-    },
-    "v1Tablo": {
-      "type": "object",
-      "properties": {
-        "columns": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/v1Column"
-          }
-        },
-        "created_at": {
-          "type": "string",
-          "format": "date-time"
-        },
-        "desc": {
-          "type": "string"
-        },
-        "emoji": {
-          "type": "string"
-        },
-        "id": {
-          "$ref": "#/definitions/v1URI"
-        },
-        "sources": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/v1Source"
-          }
-        },
-        "title": {
-          "type": "string"
-        },
-        "updated_at": {
-          "type": "string",
-          "format": "date-time"
-        }
-      }
-    },
-    "v1TabloList": {
-      "type": "object",
-      "properties": {
-        "list": {
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/v1Tablo"
-          }
         }
       }
     },

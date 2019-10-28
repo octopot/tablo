@@ -14,8 +14,8 @@ service TabloService {
     rpc CreateBoard (NewBoard) returns (URI);
     rpc GetBoard (URI) returns (Board);
     rpc GetBoards (Criteria) returns (BoardList);
-    rpc Update (Board) returns (Void);
-    rpc Delete (URI) returns (Void);
+    rpc UpdateBoard (Board) returns (Void);
+    rpc DeleteBoard (URI) returns (Void);
 
     rpc CreateColumn (NewColumn) returns (URI);
     rpc GetColumn (URI) returns (Column);
@@ -27,6 +27,64 @@ service TabloService {
     rpc UpdateCard (Card) returns (Void);
     rpc DeleteCard (URI) returns (Void);
 }
+
+message BatchRequest {
+    message Board {
+        string title = 1;
+        string emoji = 2;
+        string desc = 3;
+
+        repeated Column columns = 4;
+        repeated Filter filters = 5;
+        repeated Source sources = 6;
+    }
+
+    message Column {
+        string title = 1;
+        string emoji = 2;
+        string desc = 3;
+
+        repeated Card cards = 4;
+    }
+
+    message Card {
+        string title = 1;
+        string emoji = 2;
+        string url = 3;
+        repeated string labels = 4;
+    }
+
+    repeated Board boards = 1;
+}
+
+message BatchResponse {
+    message Board {
+        oneof id {
+            string urn = 1;
+            string url = 2;
+        }
+        repeated Column columns = 3;
+    }
+
+    message Column {
+        oneof id {
+            string urn = 1;
+            string url = 2;
+        }
+        repeated Card cards = 3;
+    }
+
+    message Card {
+        oneof id {
+            string urn = 1;
+            string url = 2;
+        }
+    }
+
+    repeated Board boards = 1;
+}
+
+message Criteria {}
 
 message NewBoard {
     string title = 1;
@@ -98,9 +156,3 @@ message Card {
 }
 
 message Filter {}
-
-message Criteria {}
-
-message BatchRequest {}
-
-message BatchResponse {}
