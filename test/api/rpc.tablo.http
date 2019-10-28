@@ -7,6 +7,40 @@ Authorization: Bearer {{token}}
 Content-Type: application/json
 
 {
+  "boards": [
+    {
+      "title": "Tablo",
+      "emoji": "🧐",
+      "desc": "The one point of view to all your task boards.",
+      "columns": [
+        {
+          "title": "Backlog",
+          "emoji": "🗄",
+          "desc": "Product backlog, a list of requirements for a software product in development.",
+          "cards": [
+            {
+              "title": "up stub http server",
+              "emoji": "📦",
+              "desc": "Describe stub data as responses of API.",
+              "url": "https://github.com/octopot/tablo/issues/1",
+              "labels": ["type:task"]
+            }
+          ]
+        }
+      ],
+      "filters": [],
+      "sources": []
+    }
+  ]
+}
+
+###
+
+POST {{host}}/twirp/octolab.api.tablo.v1.TabloService/CreateBoard
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
   "title": "Tablo",
   "emoji": "🧐",
   "desc": "The one point of view to all your task boards."
@@ -14,7 +48,7 @@ Content-Type: application/json
 
 ###
 
-POST {{host}}/twirp/octolab.api.tablo.v1.TabloService/Get
+POST {{host}}/twirp/octolab.api.tablo.v1.TabloService/GetBoard
 Authorization: Bearer {{token}}
 Content-Type: application/json
 
@@ -24,7 +58,7 @@ Content-Type: application/json
 
 ###
 
-POST {{host}}/twirp/octolab.api.tablo.v1.TabloService/GetList
+POST {{host}}/twirp/octolab.api.tablo.v1.TabloService/GetBoards
 Authorization: Bearer {{token}}
 Content-Type: application/json
 
@@ -32,7 +66,7 @@ Content-Type: application/json
 
 ###
 
-POST {{host}}/twirp/octolab.api.tablo.v1.TabloService/Update
+POST {{host}}/twirp/octolab.api.tablo.v1.TabloService/UpdateBoard
 Authorization: Bearer {{token}}
 Content-Type: application/json
 
@@ -47,7 +81,7 @@ Content-Type: application/json
 
 ###
 
-POST {{host}}/twirp/octolab.api.tablo.v1.TabloService/Delete
+POST {{host}}/twirp/octolab.api.tablo.v1.TabloService/DeleteBoard
 Authorization: Bearer {{token}}
 Content-Type: application/json
 

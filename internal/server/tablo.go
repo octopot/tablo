@@ -49,6 +49,30 @@ func (t *tablo) GetBoard(context.Context, *v1.URI) (*v1.Board, error) {
 		Title: "Tablo",
 		Emoji: "🧐",
 		Desc:  "The one point of view to all your task boards.",
+		Columns: []*v1.Column{
+			{
+				Id: &v1.URI{
+					Value: &v1.URI_Urn{Urn: "78B30F56-4EBD-43A3-950D-0F830FA12026"},
+				},
+				Title: "Backlog",
+				Emoji: "🗄",
+				Desc:  "Product backlog, a list of requirements for a software product in development.",
+				Cards: []*v1.Card{
+					{
+						Id: &v1.URI{
+							Value: &v1.URI_Urn{Urn: "7F35888A-2B4B-4BD6-83AB-B5E0E5B65AFA"},
+						},
+						Title:  "up stub http server",
+						Emoji:  "📦",
+						Desc:   "Describe stub data as responses of API.",
+						Url:    "https://github.com/octopot/tablo/issues/1",
+						Labels: []string{"type:task"},
+					},
+				},
+			},
+		},
+		Filters: []*v1.Filter{},
+		Sources: []*v1.Source{},
 	}, nil
 }
 
@@ -62,6 +86,30 @@ func (t *tablo) GetBoards(context.Context, *v1.Criteria) (*v1.BoardList, error) 
 				Title: "Tablo",
 				Emoji: "🧐",
 				Desc:  "The one point of view to all your task boards.",
+				Columns: []*v1.Column{
+					{
+						Id: &v1.URI{
+							Value: &v1.URI_Urn{Urn: "78B30F56-4EBD-43A3-950D-0F830FA12026"},
+						},
+						Title: "Backlog",
+						Emoji: "🗄",
+						Desc:  "Product backlog, a list of requirements for a software product in development.",
+						Cards: []*v1.Card{
+							{
+								Id: &v1.URI{
+									Value: &v1.URI_Urn{Urn: "7F35888A-2B4B-4BD6-83AB-B5E0E5B65AFA"},
+								},
+								Title:  "up stub http server",
+								Emoji:  "📦",
+								Desc:   "Describe stub data as responses of API.",
+								Url:    "https://github.com/octopot/tablo/issues/1",
+								Labels: []string{"type:task"},
+							},
+						},
+					},
+				},
+				Filters: []*v1.Filter{},
+				Sources: []*v1.Source{},
 			},
 		},
 	}, nil
