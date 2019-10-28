@@ -9,81 +9,98 @@ import "v1/vendor.proto";
 option go_package = "v1";
 
 service TabloService {
-    rpc Create (NewTablo) returns (URI);
-    rpc Get (URI) returns (Tablo);
-    rpc GetList (Criteria) returns (TabloList);
-    rpc Update (Tablo) returns (Void);
+    rpc Create (BatchRequest) returns (BatchResponse);
+
+    rpc CreateBoard (NewBoard) returns (URI);
+    rpc GetBoard (URI) returns (Board);
+    rpc GetBoards (Criteria) returns (BoardList);
+    rpc Update (Board) returns (Void);
     rpc Delete (URI) returns (Void);
 
     rpc CreateColumn (NewColumn) returns (URI);
+    rpc GetColumn (URI) returns (Column);
     rpc UpdateColumn (Column) returns (Void);
     rpc DeleteColumn (URI) returns (Void);
 
     rpc CreateCard (NewCard) returns (URI);
+    rpc GetCard (URI) returns (Card);
     rpc UpdateCard (Card) returns (Void);
     rpc DeleteCard (URI) returns (Void);
 }
 
-message NewTablo {
+message NewBoard {
     string title = 1;
     string emoji = 2;
     string desc = 3;
 }
 
-message Tablo {
+message Board {
     URI id = 1;
 
     string title = 2;
     string emoji = 3;
     string desc = 4;
 
-    google.protobuf.Timestamp created_at = 5;
-    google.protobuf.Timestamp updated_at = 6;
+    repeated Column columns = 5;
+    repeated Filter filters = 6;
+    repeated Source sources = 7;
 
-    repeated Column columns = 7;
-    repeated Source sources = 8;
+    google.protobuf.Timestamp created_at = 8;
+    google.protobuf.Timestamp updated_at = 9;
 }
 
-message TabloList {
-    repeated Tablo list = 1;
+message BoardList {
+    repeated Board list = 1;
 }
 
 message NewColumn {
-    string title = 1;
-    string emoji = 2;
-    string desc = 3;
+    URI board_id = 1;
+
+    string title = 2;
+    string emoji = 3;
+    string desc = 4;
 }
 
 message Column {
     URI id = 1;
+    URI board_id = 2;
 
-    string title = 2;
-    string emoji = 3;
-    string desc = 4;
+    string title = 3;
+    string emoji = 4;
+    string desc = 5;
 
-    google.protobuf.Timestamp created_at = 5;
-    google.protobuf.Timestamp updated_at = 6;
+    repeated Card cards = 6;
 
-    repeated Card cards = 7;
+    google.protobuf.Timestamp created_at = 7;
+    google.protobuf.Timestamp updated_at = 8;
 }
 
 message NewCard {
-    string title = 1;
-    string emoji = 2;
-    string url = 3;
-    repeated string labels = 4;
-}
-
-message Card {
-    URI id = 1;
+    URI column_id = 1;
 
     string title = 2;
     string emoji = 3;
     string url = 4;
     repeated string labels = 5;
-
-    google.protobuf.Timestamp created_at = 6;
-    google.protobuf.Timestamp updated_at = 7;
 }
 
+message Card {
+    URI id = 1;
+    URI column_id = 2;
+
+    string title = 3;
+    string emoji = 4;
+    string url = 5;
+    repeated string labels = 6;
+
+    google.protobuf.Timestamp created_at = 7;
+    google.protobuf.Timestamp updated_at = 8;
+}
+
+message Filter {}
+
 message Criteria {}
+
+message BatchRequest {}
+
+message BatchResponse {}
