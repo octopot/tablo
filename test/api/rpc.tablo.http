@@ -107,9 +107,24 @@ Authorization: Bearer {{token}}
 Content-Type: application/json
 
 {
-  "title": "Minimum viable product",
+  "column_id": {
+    "urn": "78B30F56-4EBD-43A3-950D-0F830FA12026"
+  },
+  "title": "up stub http server",
   "emoji": "📦",
-  "desc": "Minimum viable product is a product with just enough features to satisfy early customers and provide feedback for future product development."
+  "desc": "Use stub data as responses of API.",
+  "url": "https://github.com/octopot/tablo/issues/1",
+  "labels": ["type:task"]
+}
+
+###
+
+POST {{host}}/twirp/octolab.api.tablo.v1.TabloService/GetCard
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "urn": "7F35888A-2B4B-4BD6-83AB-B5E0E5B65AFA"
 }
 
 ###
@@ -122,9 +137,11 @@ Content-Type: application/json
   "id": {
     "urn": "7F35888A-2B4B-4BD6-83AB-B5E0E5B65AFA"
   },
-  "title": "Minimum viable product",
+  "title": "up stub http server",
   "emoji": "📦",
-  "desc": "Minimum viable product is a product with just enough features to satisfy early customers and provide feedback for future product development."
+  "desc": "Describe stub data as responses of API.",
+  "url": "https://github.com/octopot/tablo/issues/1",
+  "labels": ["type:task"]
 }
 
 ###

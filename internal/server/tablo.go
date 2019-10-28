@@ -100,7 +100,16 @@ func (t *tablo) CreateCard(context.Context, *v1.NewCard) (*v1.URI, error) {
 }
 
 func (t *tablo) GetCard(context.Context, *v1.URI) (*v1.Card, error) {
-	return &v1.Card{}, nil
+	return &v1.Card{
+		Id: &v1.URI{
+			Value: &v1.URI_Urn{Urn: "7F35888A-2B4B-4BD6-83AB-B5E0E5B65AFA"},
+		},
+		Title:  "up stub http server",
+		Emoji:  "📦",
+		Desc:   "Describe stub data as responses of API.",
+		Url:    "https://github.com/octopot/tablo/issues/1",
+		Labels: []string{"type:task"},
+	}, nil
 }
 
 func (t *tablo) UpdateCard(context.Context, *v1.Card) (*v1.Void, error) {
