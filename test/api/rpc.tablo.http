@@ -66,9 +66,22 @@ Authorization: Bearer {{token}}
 Content-Type: application/json
 
 {
+  "board_id": {
+    "urn": "DCC2E74D-CDCE-4AE2-870A-45BCC4DF430F"
+  },
   "title": "Backlog",
   "emoji": "🗄",
   "desc": "Product backlog, a list of requirements for a software product in development."
+}
+
+###
+
+POST {{host}}/twirp/octolab.api.tablo.v1.TabloService/GetColumn
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "urn": "78B30F56-4EBD-43A3-950D-0F830FA12026"
 }
 
 ###

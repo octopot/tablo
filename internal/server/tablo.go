@@ -82,7 +82,26 @@ func (t *tablo) CreateColumn(context.Context, *v1.NewColumn) (*v1.URI, error) {
 }
 
 func (t *tablo) GetColumn(context.Context, *v1.URI) (*v1.Column, error) {
-	return &v1.Column{}, nil
+	return &v1.Column{
+		Id: &v1.URI{
+			Value: &v1.URI_Urn{Urn: "78B30F56-4EBD-43A3-950D-0F830FA12026"},
+		},
+		Title: "Backlog",
+		Emoji: "🗄",
+		Desc:  "Product backlog, a list of requirements for a software product in development.",
+		Cards: []*v1.Card{
+			{
+				Id: &v1.URI{
+					Value: &v1.URI_Urn{Urn: "7F35888A-2B4B-4BD6-83AB-B5E0E5B65AFA"},
+				},
+				Title:  "up stub http server",
+				Emoji:  "📦",
+				Desc:   "Describe stub data as responses of API.",
+				Url:    "https://github.com/octopot/tablo/issues/1",
+				Labels: []string{"type:task"},
+			},
+		},
+	}, nil
 }
 
 func (t *tablo) UpdateColumn(context.Context, *v1.Column) (*v1.Void, error) {
