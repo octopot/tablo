@@ -2,7 +2,7 @@ syntax = "proto3";
 
 package octolab.api.tablo.v1;
 
-option go_package = "v1";
+option go_package = "go.octolab.org/ecosystem/tablo/internal/generated/api/v1;v1";
 
 message URI {
     oneof value {

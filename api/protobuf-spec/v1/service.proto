@@ -6,7 +6,7 @@ import "google/protobuf/timestamp.proto";
 import "v1/common.proto";
 import "v1/vendor.proto";
 
-option go_package = "v1";
+option go_package = "go.octolab.org/ecosystem/tablo/internal/generated/api/v1;v1";
 
 service TabloService {
     rpc Create (BatchRequest) returns (BatchResponse);

@@ -2,9 +2,9 @@ syntax = "proto3";
 
 package octolab.api.tablo.v2;
 
-option go_package = "v2";
-
 import "protoc-gen-swagger/options/annotations.proto";
+
+option go_package = "go.octolab.org/ecosystem/tablo/internal/generated/api/v2;v2";
 
 option (grpc.gateway.protoc_gen_swagger.options.openapiv2_swagger) = {
     info: {
