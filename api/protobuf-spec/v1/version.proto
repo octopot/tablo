@@ -1,0 +1,14 @@
+syntax = "proto3";
+
+package octolab.api.tablo.v1;
+
+option go_package = "v1";
+
+import "protoc-gen-swagger/options/annotations.proto";
+
+option (grpc.gateway.protoc_gen_swagger.options.openapiv2_swagger) = {
+    info: {
+        title: "Tablo"
+        version: "v1"
+    }
+};

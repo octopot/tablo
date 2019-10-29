@@ -2,8 +2,6 @@ syntax = "proto3";
 
 package octolab.api.tablo;
 
-option go_package = "v1"; // https://github.com/grpc-ecosystem/grpc-gateway/issues/837
-
 import "protoc-gen-swagger/options/annotations.proto";
 
 option (grpc.gateway.protoc_gen_swagger.options.openapiv2_swagger) = {
@@ -19,6 +17,5 @@ option (grpc.gateway.protoc_gen_swagger.options.openapiv2_swagger) = {
             name: "MIT"
             url:  "https://github.com/octopot/tablo/blob/master/LICENSE"
         }
-        version: "v1"
     }
 };

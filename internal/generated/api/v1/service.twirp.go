@@ -9,6 +9,7 @@ It is generated from these files:
 	v1/common.proto
 	v1/service.proto
 	v1/vendor.proto
+	v1/version.proto
 */
 package v1
 

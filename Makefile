@@ -85,22 +85,36 @@ generate-proto:
 	        --go_out=logtostderr=true:./internal/generated/api \
 	        --twirp_out=./internal/generated/api \
 	        $(shell ls api/protobuf-spec/v1 | grep .proto | awk '{print "v1/"$$1}')
+	@protoc --proto_path=./api/protobuf-spec \
+	        --proto_path=./third_party/protobuf-spec \
+	        --proto_path=./third_party/protobuf-spec/googleapis \
+	        --go_out=logtostderr=true:./internal/generated/api \
+	        --twirp_out=./internal/generated/api \
+	        $(shell ls api/protobuf-spec/v2 | grep .proto | awk '{print "v2/"$$1}')
 
-# https://github.com/grpc-ecosystem/grpc-gateway/issues/837
 	@protoc --proto_path=./api/protobuf-spec \
 	        --proto_path=./third_party/protobuf-spec \
 	        --proto_path=./third_party/protobuf-spec/googleapis \
 	        --swagger_out=logtostderr=true,allow_merge=true,merge_file_name=tablo:./api/openapi-spec \
-	        desc.proto
+	        metadata.proto
 	@protoc --proto_path=./api/protobuf-spec \
 	        --proto_path=./third_party/protobuf-spec \
 	        --proto_path=./third_party/protobuf-spec/googleapis \
 	        --swagger_out=logtostderr=true,allow_merge=true,merge_file_name=v1:./api/openapi-spec \
 	        $(shell ls api/protobuf-spec/v1 | grep .proto | awk '{print "v1/"$$1}')
 	@swagger mixin \
-	         -o api/openapi-spec/swagger.json \
-	         api/openapi-spec/tablo.swagger.json \
-	         api/openapi-spec/v1.swagger.json &>/dev/null
+	         -o api/openapi-spec/v1.json \
+	         api/openapi-spec/v1.swagger.json \
+	         api/openapi-spec/tablo.swagger.json &>/dev/null
+	@protoc --proto_path=./api/protobuf-spec \
+	        --proto_path=./third_party/protobuf-spec \
+	        --proto_path=./third_party/protobuf-spec/googleapis \
+	        --swagger_out=logtostderr=true,allow_merge=true,merge_file_name=v2:./api/openapi-spec \
+	        $(shell ls api/protobuf-spec/v2 | grep .proto | awk '{print "v2/"$$1}')
+	@swagger mixin \
+	         -o api/openapi-spec/v2.json \
+	         api/openapi-spec/v2.swagger.json \
+	         api/openapi-spec/tablo.swagger.json &>/dev/null
 	@rm api/openapi-spec/*.swagger.json
 
 .PHONY: generate-go

@@ -1,0 +1,28 @@
+{
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "schemes": [
+    "http",
+    "https"
+  ],
+  "swagger": "2.0",
+  "info": {
+    "description": "The one point of view to all your task boards.",
+    "title": "Tablo",
+    "contact": {
+      "name": "Tablo",
+      "url": "https://github.com/octopot/tablo",
+      "email": "tablo@octolab.org"
+    },
+    "license": {
+      "name": "MIT",
+      "url": "https://github.com/octopot/tablo/blob/master/LICENSE"
+    },
+    "version": "v2"
+  },
+  "paths": {}
+}
