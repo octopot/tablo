@@ -183,11 +183,11 @@
     },
     "v2EntityType": {
       "type": "string",
-      "default": "Board",
+      "default": "BOARD",
       "enum": [
-        "Board",
-        "Column",
-        "Card"
+        "BOARD",
+        "COLUMN",
+        "CARD"
       ]
     }
   }

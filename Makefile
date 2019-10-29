@@ -82,25 +82,25 @@ generate-proto:
 	@protoc --proto_path=./api/protobuf-spec \
 	        --proto_path=./third_party/protobuf-spec \
 	        --proto_path=./third_party/protobuf-spec/googleapis \
-	        --go_out=logtostderr=true:./internal/generated/api \
-	        --twirp_out=./internal/generated/api \
-	        $(shell ls api/protobuf-spec/v1 | grep .proto | awk '{print "v1/"$$1}')
+	        --go_out=paths=source_relative:./internal/generated/api \
+	        --twirp_out=paths=source_relative:./internal/generated/api \
+	        $(shell ls api/protobuf-spec/v1 | grep .proto | grep -v version | awk '{print "v1/"$$1}')
 	@protoc --proto_path=./api/protobuf-spec \
 	        --proto_path=./third_party/protobuf-spec \
 	        --proto_path=./third_party/protobuf-spec/googleapis \
-	        --go_out=logtostderr=true:./internal/generated/api \
-	        --twirp_out=./internal/generated/api \
-	        $(shell ls api/protobuf-spec/v2 | grep .proto | awk '{print "v2/"$$1}')
+	        --go_out=paths=source_relative:./internal/generated/api \
+	        --twirp_out=paths=source_relative:./internal/generated/api \
+	        $(shell ls api/protobuf-spec/v2 | grep .proto | grep -v version | awk '{print "v2/"$$1}')
 
 	@protoc --proto_path=./api/protobuf-spec \
 	        --proto_path=./third_party/protobuf-spec \
 	        --proto_path=./third_party/protobuf-spec/googleapis \
-	        --swagger_out=logtostderr=true,allow_merge=true,merge_file_name=tablo:./api/openapi-spec \
+	        --swagger_out=allow_merge=true,merge_file_name=tablo:./api/openapi-spec \
 	        metadata.proto
 	@protoc --proto_path=./api/protobuf-spec \
 	        --proto_path=./third_party/protobuf-spec \
 	        --proto_path=./third_party/protobuf-spec/googleapis \
-	        --swagger_out=logtostderr=true,allow_merge=true,merge_file_name=v1:./api/openapi-spec \
+	        --swagger_out=allow_merge=true,merge_file_name=v1:./api/openapi-spec \
 	        $(shell ls api/protobuf-spec/v1 | grep .proto | awk '{print "v1/"$$1}')
 	@swagger mixin \
 	         -o api/openapi-spec/v1.json \
@@ -109,7 +109,7 @@ generate-proto:
 	@protoc --proto_path=./api/protobuf-spec \
 	        --proto_path=./third_party/protobuf-spec \
 	        --proto_path=./third_party/protobuf-spec/googleapis \
-	        --swagger_out=logtostderr=true,allow_merge=true,merge_file_name=v2:./api/openapi-spec \
+	        --swagger_out=allow_merge=true,merge_file_name=v2:./api/openapi-spec \
 	        $(shell ls api/protobuf-spec/v2 | grep .proto | awk '{print "v2/"$$1}')
 	@swagger mixin \
 	         -o api/openapi-spec/v2.json \
