@@ -3,7 +3,7 @@
 
 # binaries
 /bin/*
-!/bin/.gitkeep
+!/bin/activate
 
 # sensitive data
 http-client.private.env.json

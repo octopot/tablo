@@ -1,0 +1,27 @@
+#!/usr/bin/env bash
+
+deactivate () {
+    if [[ -n "${_OLD_PATH:-}" ]] ; then
+        PATH="${_OLD_PATH:-}"
+        export PATH
+        unset _OLD_PATH
+    fi
+
+    if [[ -n "${BASH:-}" || -n "${ZSH_VERSION:-}" ]] ; then
+        hash -r
+    fi
+
+    if [[ ! "$1" = "nondestructive" ]] ; then
+        unset -f deactivate
+    fi
+}
+
+deactivate nondestructive
+
+_OLD_PATH="${PATH}"
+PATH="$(cd `dirname ${0}` && pwd):${PATH}"
+export PATH
+
+if [[ -n "${BASH:-}" || -n "${ZSH_VERSION:-}" ]] ; then
+    hash -r
+fi
