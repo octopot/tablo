@@ -13,7 +13,12 @@ deactivate () {
 
     if [[ ! "$1" = "nondestructive" ]] ; then
         unset -f deactivate
+        unset -f get
     fi
+}
+
+get () {
+    go get -mod= $@
 }
 
 deactivate nondestructive

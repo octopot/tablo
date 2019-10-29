@@ -9,6 +9,8 @@
 ```bash
 $ make deps
 $ source bin/activate
+# PATH         -> bin/:PATH
+# go get -mod= -> get
 ...
 $ deactivate
 ```
