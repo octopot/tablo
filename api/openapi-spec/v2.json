@@ -24,5 +24,171 @@
     },
     "version": "v2"
   },
-  "paths": {}
+  "paths": {},
+  "definitions": {
+    "tablov1Board": {
+      "type": "object",
+      "properties": {
+        "columns": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/tablov1Column"
+          }
+        },
+        "created_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "desc": {
+          "type": "string"
+        },
+        "emoji": {
+          "type": "string"
+        },
+        "filters": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/v1Filter"
+          }
+        },
+        "id": {
+          "$ref": "#/definitions/tablov1URI"
+        },
+        "sources": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/v1Source"
+          }
+        },
+        "title": {
+          "type": "string"
+        },
+        "updated_at": {
+          "type": "string",
+          "format": "date-time"
+        }
+      }
+    },
+    "tablov1Card": {
+      "type": "object",
+      "properties": {
+        "created_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "desc": {
+          "type": "string"
+        },
+        "emoji": {
+          "type": "string"
+        },
+        "id": {
+          "$ref": "#/definitions/tablov1URI"
+        },
+        "labels": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "title": {
+          "type": "string"
+        },
+        "updated_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "url": {
+          "type": "string"
+        }
+      }
+    },
+    "tablov1Column": {
+      "type": "object",
+      "properties": {
+        "cards": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/tablov1Card"
+          }
+        },
+        "created_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "desc": {
+          "type": "string"
+        },
+        "emoji": {
+          "type": "string"
+        },
+        "id": {
+          "$ref": "#/definitions/tablov1URI"
+        },
+        "title": {
+          "type": "string"
+        },
+        "updated_at": {
+          "type": "string",
+          "format": "date-time"
+        }
+      }
+    },
+    "tablov1URI": {
+      "type": "object",
+      "properties": {
+        "url": {
+          "type": "string",
+          "title": "resource type and its location"
+        },
+        "urn": {
+          "type": "string",
+          "title": "internal UUID v4"
+        }
+      }
+    },
+    "v1Filter": {
+      "type": "object"
+    },
+    "v1Source": {
+      "type": "object",
+      "properties": {
+        "desc": {
+          "type": "string"
+        },
+        "id": {
+          "$ref": "#/definitions/tablov1URI"
+        },
+        "name": {
+          "type": "string"
+        }
+      }
+    },
+    "v1Void": {
+      "type": "object"
+    },
+    "v2Entity": {
+      "type": "object",
+      "properties": {
+        "board": {
+          "$ref": "#/definitions/tablov1Board"
+        },
+        "card": {
+          "$ref": "#/definitions/tablov1Card"
+        },
+        "column": {
+          "$ref": "#/definitions/tablov1Column"
+        }
+      }
+    },
+    "v2EntityType": {
+      "type": "string",
+      "default": "Board",
+      "enum": [
+        "Board",
+        "Column",
+        "Card"
+      ]
+    }
+  }
 }

@@ -116,6 +116,7 @@ generate-proto:
 	         api/openapi-spec/v2.swagger.json \
 	         api/openapi-spec/tablo.swagger.json &>/dev/null
 	@rm api/openapi-spec/*.swagger.json
+	@for json in $$(ls api/openapi-spec/*.json); do echo >> $$json; done
 
 .PHONY: generate-go
 generate-go:
