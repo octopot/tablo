@@ -9,6 +9,8 @@
 ```bash
 $ make deps
 $ source bin/activate
+...
+$ deactivate
 ```
 
 ## 🧩 Integration
