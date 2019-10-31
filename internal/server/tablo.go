@@ -2,11 +2,15 @@ package server
 
 import (
 	"context"
+	"time"
 
 	"github.com/twitchtv/twirp"
+	"go.octolab.org/toolkit/protocol/protobuf"
 
 	v1 "go.octolab.org/ecosystem/tablo/internal/generated/api/v1"
 )
+
+var yesterday = time.Now().AddDate(0, 0, -1)
 
 // Tablo returns new server instance of the Tablo service.
 func Tablo() v1.TabloService {
@@ -62,17 +66,23 @@ func (t *tablo) GetBoard(context.Context, *v1.URI) (*v1.Board, error) {
 						Id: &v1.URI{
 							Value: &v1.URI_Urn{Urn: "7F35888A-2B4B-4BD6-83AB-B5E0E5B65AFA"},
 						},
-						Title:  "up stub http server",
-						Emoji:  "📦",
-						Desc:   "Describe stub data as responses of API.",
-						Url:    "https://github.com/octopot/tablo/issues/1",
-						Labels: []string{"type:task"},
+						Title:     "up stub http server",
+						Emoji:     "📦",
+						Desc:      "Describe stub data as responses of API.",
+						Url:       "https://github.com/octopot/tablo/issues/1",
+						Labels:    []string{"type:task"},
+						CreatedAt: protobuf.Timestamp(&yesterday),
+						UpdatedAt: protobuf.Timestamp(&yesterday),
 					},
 				},
+				CreatedAt: protobuf.Timestamp(&yesterday),
+				UpdatedAt: protobuf.Timestamp(&yesterday),
 			},
 		},
-		Filters: []*v1.Filter{},
-		Sources: []*v1.Source{},
+		Filters:   []*v1.Filter{},
+		Sources:   []*v1.Source{},
+		CreatedAt: protobuf.Timestamp(&yesterday),
+		UpdatedAt: protobuf.Timestamp(&yesterday),
 	}, nil
 }
 
@@ -99,17 +109,23 @@ func (t *tablo) GetBoards(context.Context, *v1.Criteria) (*v1.BoardList, error) 
 								Id: &v1.URI{
 									Value: &v1.URI_Urn{Urn: "7F35888A-2B4B-4BD6-83AB-B5E0E5B65AFA"},
 								},
-								Title:  "up stub http server",
-								Emoji:  "📦",
-								Desc:   "Describe stub data as responses of API.",
-								Url:    "https://github.com/octopot/tablo/issues/1",
-								Labels: []string{"type:task"},
+								Title:     "up stub http server",
+								Emoji:     "📦",
+								Desc:      "Describe stub data as responses of API.",
+								Url:       "https://github.com/octopot/tablo/issues/1",
+								Labels:    []string{"type:task"},
+								CreatedAt: protobuf.Timestamp(&yesterday),
+								UpdatedAt: protobuf.Timestamp(&yesterday),
 							},
 						},
+						CreatedAt: protobuf.Timestamp(&yesterday),
+						UpdatedAt: protobuf.Timestamp(&yesterday),
 					},
 				},
-				Filters: []*v1.Filter{},
-				Sources: []*v1.Source{},
+				Filters:   []*v1.Filter{},
+				Sources:   []*v1.Source{},
+				CreatedAt: protobuf.Timestamp(&yesterday),
+				UpdatedAt: protobuf.Timestamp(&yesterday),
 			},
 		},
 	}, nil
@@ -142,13 +158,17 @@ func (t *tablo) GetColumn(context.Context, *v1.URI) (*v1.Column, error) {
 				Id: &v1.URI{
 					Value: &v1.URI_Urn{Urn: "7F35888A-2B4B-4BD6-83AB-B5E0E5B65AFA"},
 				},
-				Title:  "up stub http server",
-				Emoji:  "📦",
-				Desc:   "Describe stub data as responses of API.",
-				Url:    "https://github.com/octopot/tablo/issues/1",
-				Labels: []string{"type:task"},
+				Title:     "up stub http server",
+				Emoji:     "📦",
+				Desc:      "Describe stub data as responses of API.",
+				Url:       "https://github.com/octopot/tablo/issues/1",
+				Labels:    []string{"type:task"},
+				CreatedAt: protobuf.Timestamp(&yesterday),
+				UpdatedAt: protobuf.Timestamp(&yesterday),
 			},
 		},
+		CreatedAt: protobuf.Timestamp(&yesterday),
+		UpdatedAt: protobuf.Timestamp(&yesterday),
 	}, nil
 }
 
@@ -171,11 +191,13 @@ func (t *tablo) GetCard(context.Context, *v1.URI) (*v1.Card, error) {
 		Id: &v1.URI{
 			Value: &v1.URI_Urn{Urn: "7F35888A-2B4B-4BD6-83AB-B5E0E5B65AFA"},
 		},
-		Title:  "up stub http server",
-		Emoji:  "📦",
-		Desc:   "Describe stub data as responses of API.",
-		Url:    "https://github.com/octopot/tablo/issues/1",
-		Labels: []string{"type:task"},
+		Title:     "up stub http server",
+		Emoji:     "📦",
+		Desc:      "Describe stub data as responses of API.",
+		Url:       "https://github.com/octopot/tablo/issues/1",
+		Labels:    []string{"type:task"},
+		CreatedAt: protobuf.Timestamp(&yesterday),
+		UpdatedAt: protobuf.Timestamp(&yesterday),
 	}, nil
 }
 
