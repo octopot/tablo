@@ -2,11 +2,7 @@ POST {{host}}/twirp/octolab.api.tablo.v1.TabloService/CreateBoard
 Authorization: Bearer {{token}}
 Content-Type: application/json
 
-{
-  "title": "Tablo",
-  "emoji": "🧐",
-  "desc": "The one point of view to all your task boards."
-}
+< payload/rpc.v1.board.CreateBoard.json
 
 ###
 
@@ -14,9 +10,7 @@ POST {{host}}/twirp/octolab.api.tablo.v1.TabloService/GetBoard
 Authorization: Bearer {{token}}
 Content-Type: application/json
 
-{
-  "urn": "DCC2E74D-CDCE-4AE2-870A-45BCC4DF430F"
-}
+< payload/rpc.v1.board.GetBoard.json
 
 ###
 
@@ -24,7 +18,7 @@ POST {{host}}/twirp/octolab.api.tablo.v1.TabloService/GetBoards
 Authorization: Bearer {{token}}
 Content-Type: application/json
 
-{}
+< payload/rpc.v1.board.GetBoards.json
 
 ###
 
@@ -32,14 +26,7 @@ POST {{host}}/twirp/octolab.api.tablo.v1.TabloService/UpdateBoard
 Authorization: Bearer {{token}}
 Content-Type: application/json
 
-{
-  "id": {
-    "urn": "DCC2E74D-CDCE-4AE2-870A-45BCC4DF430F"
-  },
-  "title": "Tablo",
-  "emoji": "🧐",
-  "desc": "The one point of view to all your task boards."
-}
+< payload/rpc.v1.board.UpdateBoard.json
 
 ###
 
@@ -47,8 +34,6 @@ POST {{host}}/twirp/octolab.api.tablo.v1.TabloService/DeleteBoard
 Authorization: Bearer {{token}}
 Content-Type: application/json
 
-{
-  "urn": "DCC2E74D-CDCE-4AE2-870A-45BCC4DF430F"
-}
+< payload/rpc.v1.board.DeleteBoard.json
 
 ###
