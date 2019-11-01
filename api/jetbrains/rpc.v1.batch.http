@@ -1,0 +1,33 @@
+POST {{host}}/twirp/octolab.api.tablo.v1.TabloService/Create
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "boards": [
+    {
+      "title": "Tablo",
+      "emoji": "🧐",
+      "desc": "The one point of view to all your task boards.",
+      "columns": [
+        {
+          "title": "Backlog",
+          "emoji": "🗄",
+          "desc": "Product backlog, a list of requirements for a software product in development.",
+          "cards": [
+            {
+              "title": "up stub http server",
+              "emoji": "📦",
+              "desc": "Describe stub data as responses of API.",
+              "url": "https://github.com/octopot/tablo/issues/1",
+              "labels": ["type:task"]
+            }
+          ]
+        }
+      ],
+      "filters": [],
+      "sources": []
+    }
+  ]
+}
+
+###
