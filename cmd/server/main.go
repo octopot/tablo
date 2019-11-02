@@ -5,7 +5,7 @@ import (
 	"net/http"
 
 	v1 "go.octolab.org/ecosystem/tablo/internal/generated/api/v1"
-	"go.octolab.org/ecosystem/tablo/internal/server"
+	server "go.octolab.org/ecosystem/tablo/internal/server/v1"
 )
 
 var (
