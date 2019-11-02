@@ -1,3 +1,11 @@
 version: "3"
 
-services: {}
+services:
+
+  storage:
+    image: octopot/tablo:storage
+    build:
+      context: ../storage/context
+      dockerfile: ../Dockerfile
+    env_file:
+      - ../storage/.env

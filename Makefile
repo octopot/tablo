@@ -13,8 +13,9 @@ TIMEOUT     = 1s
 export PATH := $(BINPATH):$(PATH)
 
 include env/make/go.mk
-include env/make/docker.mk
 include env/make/protobuf.mk
+include env/make/docker.mk
+include env/make/compose.mk
 
 .DEFAULT_GOAL = test-with-coverage
 

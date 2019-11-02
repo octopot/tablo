@@ -1,3 +1,13 @@
 version: "3"
 
-services: {}
+services:
+
+  storage:
+    ports:
+      - 5432:5432
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+volumes:
+
+  pgdata: { driver: local }
