@@ -2,7 +2,7 @@ FROM golang:latest AS build
 
 WORKDIR /src
 
-ADD . .
+COPY . .
 
 ENV GOOS        linux
 ENV GOARCH      amd64
