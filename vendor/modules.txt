@@ -1,6 +1,8 @@
+# github.com/Masterminds/squirrel v1.1.0
+github.com/Masterminds/squirrel
 # github.com/adlio/trello v1.4.0
 github.com/adlio/trello
-# github.com/davecgh/go-spew v1.1.0
+# github.com/davecgh/go-spew v1.1.1
 github.com/davecgh/go-spew/spew
 # github.com/golang/protobuf v1.3.2
 github.com/golang/protobuf/jsonpb
@@ -14,6 +16,10 @@ github.com/golang/protobuf/ptypes/timestamp
 github.com/google/go-github/v28/github
 # github.com/google/go-querystring v1.0.0
 github.com/google/go-querystring/query
+# github.com/lann/builder v0.0.0-20180802200727-47ae307949d0
+github.com/lann/builder
+# github.com/lann/ps v0.0.0-20150810152359-62de8c46ede0
+github.com/lann/ps
 # github.com/pkg/errors v0.8.1
 github.com/pkg/errors
 # github.com/pmezard/go-difflib v1.0.0
