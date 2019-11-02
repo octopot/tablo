@@ -1,0 +1,16 @@
+# folders
+.github
+api
+bin
+docs
+env
+test
+third_party
+tools
+
+# files
+.gitattributes
+.gitignore
+.gitmodule
+Makefile
+README.md

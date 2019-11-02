@@ -9,7 +9,6 @@ MODULE      = $(shell go list -m)
 PATHS       = $(shell go list ./... | sed -e "s|$(shell go list -m)/\{0,1\}||g")
 SHELL       = /bin/bash -euo pipefail
 TIMEOUT     = 1s
-VERSION     = 1.x
 
 export PATH := $(BINPATH):$(PATH)
 
