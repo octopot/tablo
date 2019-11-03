@@ -30,10 +30,11 @@ func (storage *storage) CreateCard(ctx context.Context, card model.Card) (model.
 
 func createCard(tx *sql.Tx, builder squirrel.StatementBuilderType, card model.Card) (model.ID, error) {
 	var id model.ID
+	idVal := squirrel.Expr("coalesce(?, uuid_generate_v4())", card.ID)
 	query := builder.
 		Insert("card").
 		Columns("id", "column_id", "title", "emoji", "description").
-		Values(card.ID, card.Column.ID, card.Title, card.Emoji, card.Description).
+		Values(idVal, card.Column.ID, card.Title, card.Emoji, card.Description).
 		Suffix(`RETURNING "id"`).
 		RunWith(tx)
 	return id, errors.Wrap(query.QueryRow().Scan(&id), "create card: cannot insert data")

@@ -30,10 +30,11 @@ func (storage *storage) CreateBoard(ctx context.Context, board model.Board) (mod
 
 func createBoard(tx *sql.Tx, builder squirrel.StatementBuilderType, board model.Board) (model.ID, error) {
 	var id model.ID
+	idVal := squirrel.Expr("coalesce(?, uuid_generate_v4())", board.ID)
 	query := builder.
 		Insert("board").
 		Columns("id", "title", "emoji", "description").
-		Values(board.ID, board.Title, board.Emoji, board.Description).
+		Values(idVal, board.Title, board.Emoji, board.Description).
 		Suffix(`RETURNING "id"`).
 		RunWith(tx)
 	return id, errors.Wrap(query.QueryRow().Scan(&id), "create board: cannot insert data")

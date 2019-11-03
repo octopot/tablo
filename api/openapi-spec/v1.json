@@ -166,6 +166,9 @@
             "$ref": "#/definitions/v1Filter"
           }
         },
+        "id": {
+          "$ref": "#/definitions/v1URI"
+        },
         "sources": {
           "type": "array",
           "items": {
@@ -185,6 +188,9 @@
         },
         "emoji": {
           "type": "string"
+        },
+        "id": {
+          "$ref": "#/definitions/v1URI"
         },
         "labels": {
           "type": "array",
@@ -214,6 +220,9 @@
         },
         "emoji": {
           "type": "string"
+        },
+        "id": {
+          "$ref": "#/definitions/v1URI"
         },
         "title": {
           "type": "string"

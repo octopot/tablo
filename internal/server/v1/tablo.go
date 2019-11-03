@@ -8,6 +8,7 @@ import (
 	"go.octolab.org/toolkit/protocol/protobuf"
 
 	v1 "go.octolab.org/ecosystem/tablo/internal/generated/api/v1"
+	"go.octolab.org/ecosystem/tablo/internal/model"
 	"go.octolab.org/ecosystem/tablo/internal/storage"
 )
 
@@ -26,29 +27,48 @@ type tablo struct {
 	storage Storage
 }
 
-func (service *tablo) Create(context.Context, *v1.BatchRequest) (*v1.BatchResponse, error) {
-	return &v1.BatchResponse{
-		Boards: []*v1.BatchResponse_Board{
-			{
-				Id: &v1.BatchResponse_Board_Urn{Urn: "DCC2E74D-CDCE-4AE2-870A-45BCC4DF430F"},
-				Columns: []*v1.BatchResponse_Column{
-					{
-						Id: &v1.BatchResponse_Column_Urn{Urn: "78B30F56-4EBD-43A3-950D-0F830FA12026"},
-						Cards: []*v1.BatchResponse_Card{
-							{
-								Id: &v1.BatchResponse_Card_Urn{Urn: "7F35888A-2B4B-4BD6-83AB-B5E0E5B65AFA"},
-							},
-						},
-					},
-				},
-			},
-		},
-	}, nil
+// Create handles a request to create all nested entities.
+func (service *tablo) Create(ctx context.Context, req *v1.BatchRequest) (*v1.BatchResponse, error) {
+	boards := make([]model.Board, 0, len(req.Boards))
+	for _, board := range req.Boards {
+		boards = append(boards, convertBoard(board))
+	}
+	boards, err := service.storage.Create(ctx, boards)
+	if err != nil {
+		return nil, err
+	}
+	resp := &v1.BatchResponse{Boards: make([]*v1.BatchResponse_Board, len(boards))}
+	for i, board := range boards {
+		resp.Boards[i] = &v1.BatchResponse_Board{
+			Id: &v1.BatchResponse_Board_Urn{Urn: board.ID.String()},
+		}
+		if board.Columns == nil {
+			continue
+		}
+		columns := *board.Columns
+		resp.Boards[i].Columns = make([]*v1.BatchResponse_Column, len(columns))
+		for j, column := range columns {
+			resp.Boards[i].Columns[j] = &v1.BatchResponse_Column{
+				Id: &v1.BatchResponse_Column_Urn{Urn: column.ID.String()},
+			}
+			if column.Cards == nil {
+				continue
+			}
+			cards := *column.Cards
+			resp.Boards[i].Columns[j].Cards = make([]*v1.BatchResponse_Card, len(cards))
+			for k, card := range cards {
+				resp.Boards[i].Columns[j].Cards[k] = &v1.BatchResponse_Card{
+					Id: &v1.BatchResponse_Card_Urn{Urn: card.ID.String()},
+				}
+			}
+		}
+	}
+	return resp, nil
 }
 
 // CreateBoard handles a request to create a new board.
-func (service *tablo) CreateBoard(ctx context.Context, board *v1.NewBoard) (*v1.URI, error) {
-	id, err := service.storage.CreateBoard(ctx, convertNewBoard(board))
+func (service *tablo) CreateBoard(ctx context.Context, req *v1.NewBoard) (*v1.URI, error) {
+	id, err := service.storage.CreateBoard(ctx, convertNewBoard(req))
 	if err != nil {
 		return nil, err
 	}
@@ -152,8 +172,8 @@ func (service *tablo) DeleteBoard(context.Context, *v1.URI) (*v1.Void, error) {
 }
 
 // CreateColumn handles a request to create a new column.
-func (service *tablo) CreateColumn(ctx context.Context, column *v1.NewColumn) (*v1.URI, error) {
-	id, err := service.storage.CreateColumn(ctx, convertNewColumn(column))
+func (service *tablo) CreateColumn(ctx context.Context, req *v1.NewColumn) (*v1.URI, error) {
+	id, err := service.storage.CreateColumn(ctx, convertNewColumn(req))
 	if err != nil {
 		return nil, err
 	}
@@ -198,8 +218,8 @@ func (service *tablo) DeleteColumn(context.Context, *v1.URI) (*v1.Void, error) {
 }
 
 // CreateCard handles a request to create a new card.
-func (service *tablo) CreateCard(ctx context.Context, card *v1.NewCard) (*v1.URI, error) {
-	id, err := service.storage.CreateCard(ctx, convertNewCard(card))
+func (service *tablo) CreateCard(ctx context.Context, req *v1.NewCard) (*v1.URI, error) {
+	id, err := service.storage.CreateCard(ctx, convertNewCard(req))
 	if err != nil {
 		return nil, err
 	}
