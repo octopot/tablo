@@ -32,8 +32,8 @@ func createBoard(tx *sql.Tx, builder squirrel.StatementBuilderType, board model.
 	var id model.ID
 	query := builder.
 		Insert("board").
-		Columns("title", "emoji", "description").
-		Values(board.Title, board.Emoji, board.Description).
+		Columns("id", "title", "emoji", "description").
+		Values(board.ID, board.Title, board.Emoji, board.Description).
 		Suffix(`RETURNING "id"`).
 		RunWith(tx)
 	return id, errors.Wrap(query.QueryRow().Scan(&id), "create board: cannot insert data")

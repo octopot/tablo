@@ -20,7 +20,5 @@ func (emoji *Emoji) String() string {
 	if emoji.IsEmpty() {
 		return ""
 	}
-
-	// TODO:debt use use go.octolab.org/pointer.ValueOfRune
 	return string(*emoji)
 }

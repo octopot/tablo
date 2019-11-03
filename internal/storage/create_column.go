@@ -31,9 +31,9 @@ func (storage *storage) CreateColumn(ctx context.Context, column model.Column) (
 func createColumn(tx *sql.Tx, builder squirrel.StatementBuilderType, column model.Column) (model.ID, error) {
 	var id model.ID
 	query := builder.
-		Insert("column").
-		Columns("board_id", "title", "emoji", "description").
-		Values(column.Board.ID, column.Title, column.Emoji, column.Description).
+		Insert(`"column"`).
+		Columns("id", "board_id", "title", "emoji", "description").
+		Values(column.ID, column.Board.ID, column.Title, column.Emoji, column.Description).
 		Suffix(`RETURNING "id"`).
 		RunWith(tx)
 	return id, errors.Wrap(query.QueryRow().Scan(&id), "create column: cannot insert data")

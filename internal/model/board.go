@@ -2,7 +2,7 @@ package model
 
 // Board represents a Tablo board.
 type Board struct {
-	ID          ID
+	ID          *ID
 	Title       string
 	Emoji       *Emoji
 	Description *string

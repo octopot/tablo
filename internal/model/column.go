@@ -2,7 +2,7 @@ package model
 
 // Column represents a board column.
 type Column struct {
-	ID          ID
+	ID          *ID
 	Title       string
 	Emoji       *Emoji
 	Description *string

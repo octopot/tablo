@@ -8,16 +8,19 @@ var uuid = regexp.MustCompile(`(?i:^[0-9A-F]{8}-[0-9A-F]{4}-[4][0-9A-F]{3}-[89AB
 type ID string
 
 // IsEmpty returns true if the ID is empty.
-func (id ID) IsEmpty() bool {
-	return id == ""
+func (id *ID) IsEmpty() bool {
+	return id == nil || *id == ""
 }
 
 // IsValid returns true if the ID is not empty and satisfies RFC 4122.
-func (id ID) IsValid() bool {
-	return !id.IsEmpty() && uuid.MatchString(string(id))
+func (id *ID) IsValid() bool {
+	return !id.IsEmpty() && uuid.MatchString(string(*id))
 }
 
 // String returns the underlying string value.
-func (id ID) String() string {
-	return string(id)
+func (id *ID) String() string {
+	if id.IsEmpty() {
+		return ""
+	}
+	return string(*id)
 }

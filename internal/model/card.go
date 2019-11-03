@@ -6,7 +6,7 @@ package model
 
 // Card represents a board card.
 type Card struct {
-	ID          ID
+	ID          *ID
 	Title       string
 	Emoji       *Emoji
 	Description *string
