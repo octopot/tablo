@@ -17,7 +17,10 @@ func (storage *storage) CreateBoard(ctx context.Context, board model.Board) (mod
 	if err != nil {
 		return id, errors.Wrap(err, "create board: cannot begin transaction")
 	}
+
+	// TODO:debt use go.octolab.org/safe.Do
 	defer func() { _ = tx.Rollback() }()
+
 	id, err = createBoard(tx, *storage.builder, board)
 	if err == nil {
 		return id, errors.Wrap(tx.Commit(), "create board: cannot commit transaction")

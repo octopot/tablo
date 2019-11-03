@@ -17,7 +17,10 @@ func (storage *storage) CreateCard(ctx context.Context, card model.Card) (model.
 	if err != nil {
 		return id, errors.Wrap(err, "create card: cannot begin transaction")
 	}
+
+	// TODO:debt use go.octolab.org/safe.Do
 	defer func() { _ = tx.Rollback() }()
+
 	id, err = createCard(tx, *storage.builder, card)
 	if err == nil {
 		return id, errors.Wrap(tx.Commit(), "create card: cannot commit transaction")
@@ -29,8 +32,8 @@ func createCard(tx *sql.Tx, builder squirrel.StatementBuilderType, card model.Ca
 	var id model.ID
 	query := builder.
 		Insert("card").
-		Columns("title", "emoji", "description").
-		Values(card.Title, card.Emoji, card.Description).
+		Columns("column_id", "title", "emoji", "description").
+		Values(card.Column.ID, card.Title, card.Emoji, card.Description).
 		Suffix(`RETURNING "id"`).
 		RunWith(tx)
 	return id, errors.Wrap(query.QueryRow().Scan(&id), "create card: cannot insert data")

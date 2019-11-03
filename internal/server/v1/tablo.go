@@ -8,18 +8,25 @@ import (
 	"go.octolab.org/toolkit/protocol/protobuf"
 
 	v1 "go.octolab.org/ecosystem/tablo/internal/generated/api/v1"
+	"go.octolab.org/ecosystem/tablo/internal/storage"
 )
 
 var yesterday = time.Now().AddDate(0, 0, -1)
 
 // Tablo returns new server instance of the Tablo service.
 func Tablo() v1.TabloService {
-	return &tablo{}
+
+	// TODO:debt define storage as a dependency and move it outside
+	postgres := storage.Must("postgres://tablo:tablo@localhost:5432/tablo?connect_timeout=1&sslmode=disable")
+
+	return &tablo{storage: postgres}
 }
 
-type tablo struct{}
+type tablo struct {
+	storage Storage
+}
 
-func (t *tablo) Create(context.Context, *v1.BatchRequest) (*v1.BatchResponse, error) {
+func (service *tablo) Create(context.Context, *v1.BatchRequest) (*v1.BatchResponse, error) {
 	return &v1.BatchResponse{
 		Boards: []*v1.BatchResponse_Board{
 			{
@@ -39,40 +46,45 @@ func (t *tablo) Create(context.Context, *v1.BatchRequest) (*v1.BatchResponse, er
 	}, nil
 }
 
-func (t *tablo) CreateBoard(context.Context, *v1.NewBoard) (*v1.URI, error) {
+// CreateBoard handles a request to create a new board.
+func (service *tablo) CreateBoard(ctx context.Context, board *v1.NewBoard) (*v1.URI, error) {
+	id, err := service.storage.CreateBoard(ctx, convertNewBoard(board))
+	if err != nil {
+		return nil, err
+	}
 	return &v1.URI{
-		Value: &v1.URI_Urn{Urn: "DCC2E74D-CDCE-4AE2-870A-45BCC4DF430F"},
+		Value: &v1.URI_Urn{Urn: id.String()},
 	}, nil
 }
 
-func (t *tablo) GetBoard(context.Context, *v1.URI) (*v1.Board, error) {
+func (service *tablo) GetBoard(context.Context, *v1.URI) (*v1.Board, error) {
 	return &v1.Board{
 		Id: &v1.URI{
 			Value: &v1.URI_Urn{Urn: "DCC2E74D-CDCE-4AE2-870A-45BCC4DF430F"},
 		},
-		Title: "Tablo",
-		Emoji: "🧐",
-		Desc:  "The one point of view to all your task boards.",
+		Title:       "Tablo",
+		Emoji:       "🧐",
+		Description: "The one point of view to all your task boards.",
 		Columns: []*v1.Column{
 			{
 				Id: &v1.URI{
 					Value: &v1.URI_Urn{Urn: "78B30F56-4EBD-43A3-950D-0F830FA12026"},
 				},
-				Title: "Backlog",
-				Emoji: "🗄",
-				Desc:  "Product backlog, a list of requirements for a software product in development.",
+				Title:       "Backlog",
+				Emoji:       "🗄",
+				Description: "Product backlog, a list of requirements for a software product in development.",
 				Cards: []*v1.Card{
 					{
 						Id: &v1.URI{
 							Value: &v1.URI_Urn{Urn: "7F35888A-2B4B-4BD6-83AB-B5E0E5B65AFA"},
 						},
-						Title:     "up stub http server",
-						Emoji:     "📦",
-						Desc:      "Describe stub data as responses of API.",
-						Url:       "https://github.com/octopot/tablo/issues/1",
-						Labels:    []string{"type:task"},
-						CreatedAt: protobuf.Timestamp(&yesterday),
-						UpdatedAt: protobuf.Timestamp(&yesterday),
+						Title:       "up stub http server",
+						Emoji:       "📦",
+						Description: "Describe stub data as responses of API.",
+						Url:         "https://github.com/octopot/tablo/issues/1",
+						Labels:      []string{"type:task"},
+						CreatedAt:   protobuf.Timestamp(&yesterday),
+						UpdatedAt:   protobuf.Timestamp(&yesterday),
 					},
 				},
 				CreatedAt: protobuf.Timestamp(&yesterday),
@@ -86,36 +98,36 @@ func (t *tablo) GetBoard(context.Context, *v1.URI) (*v1.Board, error) {
 	}, nil
 }
 
-func (t *tablo) GetBoards(context.Context, *v1.Criteria) (*v1.BoardList, error) {
+func (service *tablo) GetBoards(context.Context, *v1.Criteria) (*v1.BoardList, error) {
 	return &v1.BoardList{
 		List: []*v1.Board{
 			{
 				Id: &v1.URI{
 					Value: &v1.URI_Urn{Urn: "DCC2E74D-CDCE-4AE2-870A-45BCC4DF430F"},
 				},
-				Title: "Tablo",
-				Emoji: "🧐",
-				Desc:  "The one point of view to all your task boards.",
+				Title:       "Tablo",
+				Emoji:       "🧐",
+				Description: "The one point of view to all your task boards.",
 				Columns: []*v1.Column{
 					{
 						Id: &v1.URI{
 							Value: &v1.URI_Urn{Urn: "78B30F56-4EBD-43A3-950D-0F830FA12026"},
 						},
-						Title: "Backlog",
-						Emoji: "🗄",
-						Desc:  "Product backlog, a list of requirements for a software product in development.",
+						Title:       "Backlog",
+						Emoji:       "🗄",
+						Description: "Product backlog, a list of requirements for a software product in development.",
 						Cards: []*v1.Card{
 							{
 								Id: &v1.URI{
 									Value: &v1.URI_Urn{Urn: "7F35888A-2B4B-4BD6-83AB-B5E0E5B65AFA"},
 								},
-								Title:     "up stub http server",
-								Emoji:     "📦",
-								Desc:      "Describe stub data as responses of API.",
-								Url:       "https://github.com/octopot/tablo/issues/1",
-								Labels:    []string{"type:task"},
-								CreatedAt: protobuf.Timestamp(&yesterday),
-								UpdatedAt: protobuf.Timestamp(&yesterday),
+								Title:       "up stub http server",
+								Emoji:       "📦",
+								Description: "Describe stub data as responses of API.",
+								Url:         "https://github.com/octopot/tablo/issues/1",
+								Labels:      []string{"type:task"},
+								CreatedAt:   protobuf.Timestamp(&yesterday),
+								UpdatedAt:   protobuf.Timestamp(&yesterday),
 							},
 						},
 						CreatedAt: protobuf.Timestamp(&yesterday),
@@ -131,40 +143,45 @@ func (t *tablo) GetBoards(context.Context, *v1.Criteria) (*v1.BoardList, error) 
 	}, nil
 }
 
-func (t *tablo) UpdateBoard(context.Context, *v1.Board) (*v1.Void, error) {
+func (service *tablo) UpdateBoard(context.Context, *v1.Board) (*v1.Void, error) {
 	return &v1.Void{}, nil
 }
 
-func (t *tablo) DeleteBoard(context.Context, *v1.URI) (*v1.Void, error) {
+func (service *tablo) DeleteBoard(context.Context, *v1.URI) (*v1.Void, error) {
 	return nil, twirp.NewError(twirp.Unimplemented, "cannot delete tablo")
 }
 
-func (t *tablo) CreateColumn(context.Context, *v1.NewColumn) (*v1.URI, error) {
+// CreateColumn handles a request to create a new column.
+func (service *tablo) CreateColumn(ctx context.Context, column *v1.NewColumn) (*v1.URI, error) {
+	id, err := service.storage.CreateColumn(ctx, convertNewColumn(column))
+	if err != nil {
+		return nil, err
+	}
 	return &v1.URI{
-		Value: &v1.URI_Urn{Urn: "78B30F56-4EBD-43A3-950D-0F830FA12026"},
+		Value: &v1.URI_Urn{Urn: id.String()},
 	}, nil
 }
 
-func (t *tablo) GetColumn(context.Context, *v1.URI) (*v1.Column, error) {
+func (service *tablo) GetColumn(context.Context, *v1.URI) (*v1.Column, error) {
 	return &v1.Column{
 		Id: &v1.URI{
 			Value: &v1.URI_Urn{Urn: "78B30F56-4EBD-43A3-950D-0F830FA12026"},
 		},
-		Title: "Backlog",
-		Emoji: "🗄",
-		Desc:  "Product backlog, a list of requirements for a software product in development.",
+		Title:       "Backlog",
+		Emoji:       "🗄",
+		Description: "Product backlog, a list of requirements for a software product in development.",
 		Cards: []*v1.Card{
 			{
 				Id: &v1.URI{
 					Value: &v1.URI_Urn{Urn: "7F35888A-2B4B-4BD6-83AB-B5E0E5B65AFA"},
 				},
-				Title:     "up stub http server",
-				Emoji:     "📦",
-				Desc:      "Describe stub data as responses of API.",
-				Url:       "https://github.com/octopot/tablo/issues/1",
-				Labels:    []string{"type:task"},
-				CreatedAt: protobuf.Timestamp(&yesterday),
-				UpdatedAt: protobuf.Timestamp(&yesterday),
+				Title:       "up stub http server",
+				Emoji:       "📦",
+				Description: "Describe stub data as responses of API.",
+				Url:         "https://github.com/octopot/tablo/issues/1",
+				Labels:      []string{"type:task"},
+				CreatedAt:   protobuf.Timestamp(&yesterday),
+				UpdatedAt:   protobuf.Timestamp(&yesterday),
 			},
 		},
 		CreatedAt: protobuf.Timestamp(&yesterday),
@@ -172,39 +189,44 @@ func (t *tablo) GetColumn(context.Context, *v1.URI) (*v1.Column, error) {
 	}, nil
 }
 
-func (t *tablo) UpdateColumn(context.Context, *v1.Column) (*v1.Void, error) {
+func (service *tablo) UpdateColumn(context.Context, *v1.Column) (*v1.Void, error) {
 	return &v1.Void{}, nil
 }
 
-func (t *tablo) DeleteColumn(context.Context, *v1.URI) (*v1.Void, error) {
+func (service *tablo) DeleteColumn(context.Context, *v1.URI) (*v1.Void, error) {
 	return nil, twirp.NewError(twirp.Unimplemented, "cannot delete column")
 }
 
-func (t *tablo) CreateCard(context.Context, *v1.NewCard) (*v1.URI, error) {
+// CreateCard handles a request to create a new card.
+func (service *tablo) CreateCard(ctx context.Context, card *v1.NewCard) (*v1.URI, error) {
+	id, err := service.storage.CreateCard(ctx, convertNewCard(card))
+	if err != nil {
+		return nil, err
+	}
 	return &v1.URI{
-		Value: &v1.URI_Urn{Urn: "7F35888A-2B4B-4BD6-83AB-B5E0E5B65AFA"},
+		Value: &v1.URI_Urn{Urn: id.String()},
 	}, nil
 }
 
-func (t *tablo) GetCard(context.Context, *v1.URI) (*v1.Card, error) {
+func (service *tablo) GetCard(context.Context, *v1.URI) (*v1.Card, error) {
 	return &v1.Card{
 		Id: &v1.URI{
 			Value: &v1.URI_Urn{Urn: "7F35888A-2B4B-4BD6-83AB-B5E0E5B65AFA"},
 		},
-		Title:     "up stub http server",
-		Emoji:     "📦",
-		Desc:      "Describe stub data as responses of API.",
-		Url:       "https://github.com/octopot/tablo/issues/1",
-		Labels:    []string{"type:task"},
-		CreatedAt: protobuf.Timestamp(&yesterday),
-		UpdatedAt: protobuf.Timestamp(&yesterday),
+		Title:       "up stub http server",
+		Emoji:       "📦",
+		Description: "Describe stub data as responses of API.",
+		Url:         "https://github.com/octopot/tablo/issues/1",
+		Labels:      []string{"type:task"},
+		CreatedAt:   protobuf.Timestamp(&yesterday),
+		UpdatedAt:   protobuf.Timestamp(&yesterday),
 	}, nil
 }
 
-func (t *tablo) UpdateCard(context.Context, *v1.Card) (*v1.Void, error) {
+func (service *tablo) UpdateCard(context.Context, *v1.Card) (*v1.Void, error) {
 	return &v1.Void{}, nil
 }
 
-func (t *tablo) DeleteCard(context.Context, *v1.URI) (*v1.Void, error) {
+func (service *tablo) DeleteCard(context.Context, *v1.URI) (*v1.Void, error) {
 	return nil, twirp.NewError(twirp.Unimplemented, "cannot delete card")
 }
