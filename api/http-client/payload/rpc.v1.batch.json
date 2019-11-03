@@ -1,19 +1,28 @@
 {
   "boards": [
     {
+      "id": {
+        "urn": "DCC2E74D-CDCE-4AE2-870A-45BCC4DF430F"
+      },
       "title": "Tablo",
       "emoji": "🧐",
-      "desc": "The one point of view to all your task boards.",
+      "description": "The one point of view to all your task boards.",
       "columns": [
         {
+          "id": {
+            "urn": "78B30F56-4EBD-43A3-950D-0F830FA12026"
+          },
           "title": "Backlog",
           "emoji": "🗄",
-          "desc": "Product backlog, a list of requirements for a software product in development.",
+          "description": "Product backlog, a list of requirements for a software product in development.",
           "cards": [
             {
+              "id": {
+                "urn": "7F35888A-2B4B-4BD6-83AB-B5E0E5B65AFA"
+              },
               "title": "up stub http server",
               "emoji": "📦",
-              "desc": "Describe stub data as responses of API.",
+              "description": "Describe stub data as responses of API.",
               "url": "https://github.com/octopot/tablo/issues/1",
               "labels": [
                 "type:task"

@@ -1,0 +1,11 @@
+{
+  "id": {
+    "urn": "78B30F56-4EBD-43A3-950D-0F830FA12026"
+  },
+  "board_id": {
+    "urn": "DCC2E74D-CDCE-4AE2-870A-45BCC4DF430F"
+  },
+  "title": "Backlog",
+  "emoji": "🗄",
+  "description": "Product backlog, a list of requirements for a software product in development."
+}

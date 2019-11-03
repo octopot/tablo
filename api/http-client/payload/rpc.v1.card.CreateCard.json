@@ -1,0 +1,13 @@
+{
+  "id": {
+    "urn": "7F35888A-2B4B-4BD6-83AB-B5E0E5B65AFA"
+  },
+  "column_id": {
+    "urn": "78B30F56-4EBD-43A3-950D-0F830FA12026"
+  },
+  "title": "up stub http server",
+  "emoji": "📦",
+  "description": "Use stub data as responses of API.",
+  "url": "https://github.com/octopot/tablo/issues/1",
+  "labels": ["type:task"]
+}
