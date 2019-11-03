@@ -39,7 +39,7 @@
           "type": "string",
           "format": "date-time"
         },
-        "desc": {
+        "description": {
           "type": "string"
         },
         "emoji": {
@@ -76,7 +76,7 @@
           "type": "string",
           "format": "date-time"
         },
-        "desc": {
+        "description": {
           "type": "string"
         },
         "emoji": {
@@ -116,7 +116,7 @@
           "type": "string",
           "format": "date-time"
         },
-        "desc": {
+        "description": {
           "type": "string"
         },
         "emoji": {
@@ -153,7 +153,7 @@
     "v1Source": {
       "type": "object",
       "properties": {
-        "desc": {
+        "description": {
           "type": "string"
         },
         "id": {

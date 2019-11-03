@@ -26,6 +26,10 @@ CREATE TABLE "column"
     "deleted_at"  TIMESTAMP NULL                 DEFAULT NULL
 );
 
+-- TODO:debt add
+--  - string url
+--  - repeated string labels
+
 CREATE TABLE "card"
 (
     "id"          UUID      NOT NULL PRIMARY KEY DEFAULT uuid_generate_v4(),

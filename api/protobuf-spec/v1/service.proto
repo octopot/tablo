@@ -32,7 +32,7 @@ message BatchRequest {
     message Board {
         string title = 1;
         string emoji = 2;
-        string desc = 3;
+        string description = 3;
 
         repeated Column columns = 4;
         repeated Filter filters = 5;
@@ -42,7 +42,7 @@ message BatchRequest {
     message Column {
         string title = 1;
         string emoji = 2;
-        string desc = 3;
+        string description = 3;
 
         repeated Card cards = 4;
     }
@@ -50,7 +50,7 @@ message BatchRequest {
     message Card {
         string title = 1;
         string emoji = 2;
-        string desc = 3;
+        string description = 3;
         string url = 4;
         repeated string labels = 5;
     }
@@ -88,9 +88,11 @@ message BatchResponse {
 message Criteria {}
 
 message NewBoard {
-    string title = 1;
-    string emoji = 2;
-    string desc = 3;
+    URI id = 1;
+
+    string title = 2;
+    string emoji = 3;
+    string description = 4;
 }
 
 message Board {
@@ -98,7 +100,7 @@ message Board {
 
     string title = 2;
     string emoji = 3;
-    string desc = 4;
+    string description = 4;
 
     repeated Column columns = 5;
     repeated Filter filters = 6;
@@ -113,11 +115,12 @@ message BoardList {
 }
 
 message NewColumn {
-    URI board_id = 1;
+    URI id = 1;
+    URI board_id = 2;
 
-    string title = 2;
-    string emoji = 3;
-    string desc = 4;
+    string title = 3;
+    string emoji = 4;
+    string description = 5;
 }
 
 message Column {
@@ -125,7 +128,7 @@ message Column {
 
     string title = 3;
     string emoji = 4;
-    string desc = 5;
+    string description = 5;
 
     repeated Card cards = 6;
 
@@ -134,13 +137,14 @@ message Column {
 }
 
 message NewCard {
-    URI column_id = 1;
+    URI id = 1;
+    URI column_id = 2;
 
-    string title = 2;
-    string emoji = 3;
-    string desc = 4;
-    string url = 5;
-    repeated string labels = 6;
+    string title = 3;
+    string emoji = 4;
+    string description = 5;
+    string url = 6;
+    repeated string labels = 7;
 }
 
 message Card {
@@ -148,7 +152,7 @@ message Card {
 
     string title = 3;
     string emoji = 4;
-    string desc = 5;
+    string description = 5;
     string url = 6;
     repeated string labels = 7;
 
