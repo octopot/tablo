@@ -4,7 +4,6 @@ import (
 	"context"
 	"time"
 
-	"github.com/twitchtv/twirp"
 	"go.octolab.org/toolkit/protocol/protobuf"
 
 	v1 "go.octolab.org/ecosystem/tablo/internal/generated/api/v1"
@@ -27,7 +26,7 @@ type tablo struct {
 	storage Storage
 }
 
-// Create handles a request to create all nested entities.
+// Create handles requests to create all nested entities.
 func (service *tablo) Create(ctx context.Context, req *v1.BatchRequest) (*v1.BatchResponse, error) {
 	boards := make([]model.Board, 0, len(req.Boards))
 	for _, board := range req.Boards {
@@ -66,7 +65,7 @@ func (service *tablo) Create(ctx context.Context, req *v1.BatchRequest) (*v1.Bat
 	return resp, nil
 }
 
-// CreateBoard handles a request to create a new board.
+// CreateBoard handles requests to create a new board.
 func (service *tablo) CreateBoard(ctx context.Context, req *v1.NewBoard) (*v1.URI, error) {
 	id, err := service.storage.CreateBoard(ctx, convertNewBoard(req))
 	if err != nil {
@@ -167,11 +166,12 @@ func (service *tablo) UpdateBoard(context.Context, *v1.Board) (*v1.Void, error) 
 	return &v1.Void{}, nil
 }
 
-func (service *tablo) DeleteBoard(context.Context, *v1.URI) (*v1.Void, error) {
-	return nil, twirp.NewError(twirp.Unimplemented, "cannot delete tablo")
+// DeleteBoard handles requests to delete a board.
+func (service *tablo) DeleteBoard(ctx context.Context, req *v1.URI) (*v1.Void, error) {
+	return &v1.Void{}, service.storage.DeleteBoard(ctx, model.ID(req.GetUrn()))
 }
 
-// CreateColumn handles a request to create a new column.
+// CreateColumn handles requests to create a new column.
 func (service *tablo) CreateColumn(ctx context.Context, req *v1.NewColumn) (*v1.URI, error) {
 	id, err := service.storage.CreateColumn(ctx, convertNewColumn(req))
 	if err != nil {
@@ -213,11 +213,12 @@ func (service *tablo) UpdateColumn(context.Context, *v1.Column) (*v1.Void, error
 	return &v1.Void{}, nil
 }
 
-func (service *tablo) DeleteColumn(context.Context, *v1.URI) (*v1.Void, error) {
-	return nil, twirp.NewError(twirp.Unimplemented, "cannot delete column")
+// DeleteCard handles requests to delete a column.
+func (service *tablo) DeleteColumn(ctx context.Context, req *v1.URI) (*v1.Void, error) {
+	return &v1.Void{}, service.storage.DeleteColumn(ctx, model.ID(req.GetUrn()))
 }
 
-// CreateCard handles a request to create a new card.
+// CreateCard handles requests to create a new card.
 func (service *tablo) CreateCard(ctx context.Context, req *v1.NewCard) (*v1.URI, error) {
 	id, err := service.storage.CreateCard(ctx, convertNewCard(req))
 	if err != nil {
@@ -247,6 +248,7 @@ func (service *tablo) UpdateCard(context.Context, *v1.Card) (*v1.Void, error) {
 	return &v1.Void{}, nil
 }
 
-func (service *tablo) DeleteCard(context.Context, *v1.URI) (*v1.Void, error) {
-	return nil, twirp.NewError(twirp.Unimplemented, "cannot delete card")
+// DeleteCard handles requests to delete a card.
+func (service *tablo) DeleteCard(ctx context.Context, req *v1.URI) (*v1.Void, error) {
+	return &v1.Void{}, service.storage.DeleteCard(ctx, model.ID(req.GetUrn()))
 }
