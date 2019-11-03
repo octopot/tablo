@@ -2,6 +2,7 @@ syntax = "proto3";
 
 package octolab.api.tablo.v1;
 
+import "google/protobuf/empty.proto";
 import "v1/common.proto";
 
 option go_package = "go.octolab.org/ecosystem/tablo/internal/generated/api/v1;v1";
@@ -13,7 +14,7 @@ enum Provider {
 
 service VendorService {
     rpc Connect (Secret) returns (Vendor);
-    rpc Connected (Void) returns (VendorList);
+    rpc Connected (google.protobuf.Empty) returns (VendorList);
     rpc Disconnect (URI) returns (Void);
     rpc Sources (URI) returns (SourceNode);
 }
