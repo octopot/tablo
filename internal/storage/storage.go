@@ -6,6 +6,8 @@ import (
 	"github.com/Masterminds/squirrel"
 )
 
+// Must returns new instance of persistent storage
+// or panic if something went wrong.
 func Must(dsn string) *storage {
 	storage, err := New(dsn)
 	if err != nil {
@@ -14,6 +16,8 @@ func Must(dsn string) *storage {
 	return storage
 }
 
+// New returns new instance of persistent storage
+// or error if something went wrong.
 func New(dsn string) (*storage, error) {
 	db, builder, err := Engine(dsn)
 	if err != nil {
@@ -24,5 +28,6 @@ func New(dsn string) (*storage, error) {
 
 type storage struct {
 	db      *sql.DB
+	tx      *sql.TxOptions
 	builder *squirrel.StatementBuilderType
 }

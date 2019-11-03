@@ -1,7 +1,37 @@
 package storage
 
-import "go.octolab.org/ecosystem/tablo/internal/model"
+import (
+	"context"
+	"database/sql"
 
-func (storage *storage) CreateColumn(column model.Column) (model.ID, error) {
-	return "", nil
+	"github.com/Masterminds/squirrel"
+	"github.com/pkg/errors"
+
+	"go.octolab.org/ecosystem/tablo/internal/model"
+)
+
+// CreateColumn stores the column into a database.
+func (storage *storage) CreateColumn(ctx context.Context, column model.Column) (model.ID, error) {
+	var id model.ID
+	tx, err := storage.db.BeginTx(ctx, storage.tx)
+	if err != nil {
+		return id, errors.Wrap(err, "create column: cannot begin transaction")
+	}
+	defer func() { _ = tx.Rollback() }()
+	id, err = createColumn(tx, *storage.builder, column)
+	if err == nil {
+		return id, errors.Wrap(tx.Commit(), "create column: cannot commit transaction")
+	}
+	return id, err
+}
+
+func createColumn(tx *sql.Tx, builder squirrel.StatementBuilderType, column model.Column) (model.ID, error) {
+	var id model.ID
+	query := builder.
+		Insert("column").
+		Columns("title", "emoji", "description").
+		Values(column.Title, column.Emoji, column.Description).
+		Suffix(`RETURNING "id"`).
+		RunWith(tx)
+	return id, errors.Wrap(query.QueryRow().Scan(&id), "create column: cannot insert data")
 }

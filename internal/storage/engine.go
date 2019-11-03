@@ -14,7 +14,7 @@ const (
 	sqlite   = "sqlite"
 )
 
-// Engine returns related to the data source name database a handler
+// Engine returns related to the data source name a database handler
 // and a query builder or error if something went wrong.
 func Engine(dsn string) (*sql.DB, *squirrel.StatementBuilderType, error) {
 	schema, err := url.Parse(dsn)
