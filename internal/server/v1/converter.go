@@ -5,7 +5,76 @@ import (
 	"go.octolab.org/ecosystem/tablo/internal/model"
 )
 
-func convertBoard(in *v1.BatchRequest_Board) model.Board {
+func convertBoard(in *v1.Board) model.Board {
+	var out model.Board
+
+	id := model.ID(in.Id.GetUrn())
+	out.ID = &id
+
+	out.Title = in.Title
+	if in.Emoji != "" {
+
+		// TODO:debt use use go.octolab.org/pointer.ToString
+		out.Emoji = (*model.Emoji)(&in.Emoji)
+
+	}
+	if in.Description != "" {
+
+		// TODO:debt use use go.octolab.org/pointer.ToString
+		out.Description = &in.Description
+
+	}
+
+	return out
+}
+
+func convertCard(in *v1.Card) model.Card {
+	var out model.Card
+
+	id := model.ID(in.Id.GetUrn())
+	out.ID = &id
+
+	out.Title = in.Title
+	if in.Emoji != "" {
+
+		// TODO:debt use use go.octolab.org/pointer.ToString
+		out.Emoji = (*model.Emoji)(&in.Emoji)
+
+	}
+	if in.Description != "" {
+
+		// TODO:debt use use go.octolab.org/pointer.ToString
+		out.Description = &in.Description
+
+	}
+
+	return out
+}
+
+func convertColumn(in *v1.Column) model.Column {
+	var out model.Column
+
+	id := model.ID(in.Id.GetUrn())
+	out.ID = &id
+
+	out.Title = in.Title
+	if in.Emoji != "" {
+
+		// TODO:debt use use go.octolab.org/pointer.ToString
+		out.Emoji = (*model.Emoji)(&in.Emoji)
+
+	}
+	if in.Description != "" {
+
+		// TODO:debt use use go.octolab.org/pointer.ToString
+		out.Description = &in.Description
+
+	}
+
+	return out
+}
+
+func convertBatchBoard(in *v1.BatchRequest_Board) model.Board {
 	var out model.Board
 
 	if in.Id != nil {
@@ -31,7 +100,7 @@ func convertBoard(in *v1.BatchRequest_Board) model.Board {
 	if in.Columns != nil {
 		columns := make([]model.Column, 0, len(in.Columns))
 		for _, column := range in.Columns {
-			columns = append(columns, convertColumn(column))
+			columns = append(columns, convertBatchColumn(column))
 		}
 		out.Columns = &columns
 	}
@@ -39,7 +108,7 @@ func convertBoard(in *v1.BatchRequest_Board) model.Board {
 	return out
 }
 
-func convertCard(in *v1.BatchRequest_Card) model.Card {
+func convertBatchCard(in *v1.BatchRequest_Card) model.Card {
 	var out model.Card
 
 	if in.Id != nil {
@@ -66,7 +135,7 @@ func convertCard(in *v1.BatchRequest_Card) model.Card {
 	return out
 }
 
-func convertColumn(in *v1.BatchRequest_Column) model.Column {
+func convertBatchColumn(in *v1.BatchRequest_Column) model.Column {
 	var out model.Column
 
 	if in.Id != nil {
@@ -92,7 +161,7 @@ func convertColumn(in *v1.BatchRequest_Column) model.Column {
 	if in.Cards != nil {
 		cards := make([]model.Card, 0, len(in.Cards))
 		for _, card := range in.Cards {
-			cards = append(cards, convertCard(card))
+			cards = append(cards, convertBatchCard(card))
 		}
 		out.Cards = &cards
 	}

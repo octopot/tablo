@@ -30,7 +30,7 @@ type tablo struct {
 func (service *tablo) Create(ctx context.Context, req *v1.BatchRequest) (*v1.BatchResponse, error) {
 	boards := make([]model.Board, 0, len(req.Boards))
 	for _, board := range req.Boards {
-		boards = append(boards, convertBoard(board))
+		boards = append(boards, convertBatchBoard(board))
 	}
 	boards, err := service.storage.Create(ctx, boards)
 	if err != nil {
@@ -162,8 +162,9 @@ func (service *tablo) GetBoards(context.Context, *v1.Criteria) (*v1.BoardList, e
 	}, nil
 }
 
-func (service *tablo) UpdateBoard(context.Context, *v1.Board) (*v1.Void, error) {
-	return &v1.Void{}, nil
+// UpdateBoard handles requests to update a board.
+func (service *tablo) UpdateBoard(ctx context.Context, req *v1.Board) (*v1.Void, error) {
+	return &v1.Void{}, service.storage.UpdateBoard(ctx, convertBoard(req))
 }
 
 // DeleteBoard handles requests to delete a board.
@@ -209,8 +210,9 @@ func (service *tablo) GetColumn(context.Context, *v1.URI) (*v1.Column, error) {
 	}, nil
 }
 
-func (service *tablo) UpdateColumn(context.Context, *v1.Column) (*v1.Void, error) {
-	return &v1.Void{}, nil
+// UpdateColumn handles requests to update a column.
+func (service *tablo) UpdateColumn(ctx context.Context, req *v1.Column) (*v1.Void, error) {
+	return &v1.Void{}, service.storage.UpdateColumn(ctx, convertColumn(req))
 }
 
 // DeleteCard handles requests to delete a column.
@@ -244,8 +246,9 @@ func (service *tablo) GetCard(context.Context, *v1.URI) (*v1.Card, error) {
 	}, nil
 }
 
-func (service *tablo) UpdateCard(context.Context, *v1.Card) (*v1.Void, error) {
-	return &v1.Void{}, nil
+// UpdateCard handles requests to update a card.
+func (service *tablo) UpdateCard(ctx context.Context, req *v1.Card) (*v1.Void, error) {
+	return &v1.Void{}, service.storage.UpdateCard(ctx, convertCard(req))
 }
 
 // DeleteCard handles requests to delete a card.
