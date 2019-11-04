@@ -62,7 +62,7 @@ func fetchColumnsByBoard(tx *sql.Tx, builder squirrel.StatementBuilderType, boar
 	// TODO:debt use go.octolab.org/safe.Close
 	defer func() { _ = rows.Close() }()
 
-	columns := make([]model.Column, 0, 4)
+	columns := make([]model.Column, 0, 8)
 	for rows.Next() {
 		var column model.Column
 		err := rows.Scan(
@@ -73,6 +73,9 @@ func fetchColumnsByBoard(tx *sql.Tx, builder squirrel.StatementBuilderType, boar
 			return nil, errors.Wrap(err, "fetch column: cannot fetch data on iteration")
 		}
 		columns = append(columns, column)
+	}
+	if rows.Err() != nil {
+		return nil, errors.Wrap(err, "fetch columns: cannot complete iteration")
 	}
 
 	_ = rows.Close()
@@ -85,5 +88,5 @@ func fetchColumnsByBoard(tx *sql.Tx, builder squirrel.StatementBuilderType, boar
 		columns[i].Cards = &cards
 	}
 
-	return columns, errors.Wrap(rows.Err(), "fetch columns: cannot complete iteration")
+	return columns, nil
 }

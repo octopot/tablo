@@ -57,7 +57,7 @@ func fetchCardsByColumn(tx *sql.Tx, builder squirrel.StatementBuilderType, colum
 	// TODO:debt use go.octolab.org/safe.Close
 	defer func() { _ = rows.Close() }()
 
-	cards := make([]model.Card, 0, 4)
+	cards := make([]model.Card, 0, 8)
 	for rows.Next() {
 		var card model.Card
 		err := rows.Scan(&card.ID, &card.Title, &card.Emoji, &card.Description, &card.CreatedAt, &card.UpdatedAt)

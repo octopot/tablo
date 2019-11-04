@@ -99,9 +99,9 @@ func (service *tablo) GetBoard(ctx context.Context, req *v1.URI) (*v1.Board, err
 	}
 	if board.Columns != nil {
 		columns := *board.Columns
-		resp.Columns = make([]*v1.Column, 0, len(columns))
+		resp.Columns = make([]*v1.Column, len(columns))
 		for i, column := range columns {
-			resp.Columns = append(resp.Columns, &v1.Column{
+			resp.Columns[i] = &v1.Column{
 				Id: &v1.URI{
 					Value: &v1.URI_Urn{Urn: column.ID.String()},
 				},
@@ -110,12 +110,12 @@ func (service *tablo) GetBoard(ctx context.Context, req *v1.URI) (*v1.Board, err
 				Description: column.DescriptionValue(),
 				CreatedAt:   protobuf.Timestamp(column.CreatedAt),
 				UpdatedAt:   protobuf.Timestamp(column.UpdatedAt),
-			})
+			}
 			if column.Cards != nil {
 				cards := *column.Cards
-				resp.Columns[i].Cards = make([]*v1.Card, 0, len(cards))
-				for _, card := range cards {
-					resp.Columns[i].Cards = append(resp.Columns[i].Cards, &v1.Card{
+				resp.Columns[i].Cards = make([]*v1.Card, len(cards))
+				for j, card := range cards {
+					resp.Columns[i].Cards[j] = &v1.Card{
 						Id: &v1.URI{
 							Value: &v1.URI_Urn{Urn: card.ID.String()},
 						},
@@ -129,7 +129,7 @@ func (service *tablo) GetBoard(ctx context.Context, req *v1.URI) (*v1.Board, err
 
 						CreatedAt: protobuf.Timestamp(card.CreatedAt),
 						UpdatedAt: protobuf.Timestamp(card.UpdatedAt),
-					})
+					}
 				}
 			}
 		}
@@ -137,49 +137,74 @@ func (service *tablo) GetBoard(ctx context.Context, req *v1.URI) (*v1.Board, err
 	return resp, nil
 }
 
-func (service *tablo) GetBoards(context.Context, *v1.Criteria) (*v1.BoardList, error) {
-	return &v1.BoardList{
-		List: []*v1.Board{
-			{
-				Id: &v1.URI{
-					Value: &v1.URI_Urn{Urn: "DCC2E74D-CDCE-4AE2-870A-45BCC4DF430F"},
-				},
-				Title:       "Tablo",
-				Emoji:       "🧐",
-				Description: "The one point of view to all your task boards.",
-				Columns: []*v1.Column{
-					{
-						Id: &v1.URI{
-							Value: &v1.URI_Urn{Urn: "78B30F56-4EBD-43A3-950D-0F830FA12026"},
-						},
-						Title:       "Backlog",
-						Emoji:       "🗄",
-						Description: "Product backlog, a list of requirements for a software product in development.",
-						Cards: []*v1.Card{
-							{
-								Id: &v1.URI{
-									Value: &v1.URI_Urn{Urn: "7F35888A-2B4B-4BD6-83AB-B5E0E5B65AFA"},
-								},
-								Title:       "up stub http server",
-								Emoji:       "📦",
-								Description: "Describe stub data as responses of API.",
-								Url:         "https://github.com/octopot/tablo/issues/1",
-								Labels:      []string{"type:task"},
-								CreatedAt:   protobuf.Timestamp(&yesterday),
-								UpdatedAt:   protobuf.Timestamp(&yesterday),
-							},
-						},
-						CreatedAt: protobuf.Timestamp(&yesterday),
-						UpdatedAt: protobuf.Timestamp(&yesterday),
-					},
-				},
-				Filters:   []*v1.Filter{},
-				Sources:   []*v1.Source{},
-				CreatedAt: protobuf.Timestamp(&yesterday),
-				UpdatedAt: protobuf.Timestamp(&yesterday),
+// GetBoards handles request to fetch all boards satisfying the criteria.
+func (service *tablo) GetBoards(ctx context.Context, req *v1.Criteria) (*v1.BoardList, error) {
+
+	// TODO:debt use real criteria
+	boards, err := service.storage.FetchBoards(ctx, nil)
+
+	if err != nil {
+		return nil, err
+	}
+
+	resp := &v1.BoardList{
+		List: make([]*v1.Board, len(boards)),
+	}
+	for i, board := range boards {
+		resp.List[i] = &v1.Board{
+			Id: &v1.URI{
+				Value: &v1.URI_Urn{Urn: board.ID.String()},
 			},
-		},
-	}, nil
+			Title:       board.Title,
+			Emoji:       board.Emoji.String(),
+			Description: board.DescriptionValue(),
+
+			// TODO:debt use real values
+			Filters: []*v1.Filter{},
+			Sources: []*v1.Source{},
+
+			CreatedAt: protobuf.Timestamp(board.CreatedAt),
+			UpdatedAt: protobuf.Timestamp(board.UpdatedAt),
+		}
+		if board.Columns != nil {
+			columns := *board.Columns
+			resp.List[i].Columns = make([]*v1.Column, len(columns))
+			for j, column := range columns {
+				resp.List[i].Columns[j] = &v1.Column{
+					Id: &v1.URI{
+						Value: &v1.URI_Urn{Urn: column.ID.String()},
+					},
+					Title:       column.Title,
+					Emoji:       column.Emoji.String(),
+					Description: column.DescriptionValue(),
+					CreatedAt:   protobuf.Timestamp(column.CreatedAt),
+					UpdatedAt:   protobuf.Timestamp(column.UpdatedAt),
+				}
+				if column.Cards != nil {
+					cards := *column.Cards
+					resp.List[i].Columns[j].Cards = make([]*v1.Card, len(cards))
+					for k, card := range cards {
+						resp.List[i].Columns[j].Cards[k] = &v1.Card{
+							Id: &v1.URI{
+								Value: &v1.URI_Urn{Urn: card.ID.String()},
+							},
+							Title:       card.Title,
+							Emoji:       card.Emoji.String(),
+							Description: card.DescriptionValue(),
+
+							// TODO:debt use real values
+							Url:    "https://github.com/octopot/tablo/issues/1",
+							Labels: []string{"type:task"},
+
+							CreatedAt: protobuf.Timestamp(card.CreatedAt),
+							UpdatedAt: protobuf.Timestamp(card.UpdatedAt),
+						}
+					}
+				}
+			}
+		}
+	}
+	return resp, nil
 }
 
 // UpdateBoard handles requests to update a board.

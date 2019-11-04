@@ -12,6 +12,7 @@ type Storage interface {
 
 	CreateBoard(context.Context, model.Board) (model.ID, error)
 	FetchBoard(context.Context, model.ID) (model.Board, error)
+	FetchBoards(context.Context, map[string]interface{}) ([]model.Board, error)
 	UpdateBoard(context.Context, model.Board) error
 	DeleteBoard(context.Context, model.ID) error
 
