@@ -76,7 +76,8 @@ func (service *tablo) CreateBoard(ctx context.Context, req *v1.NewBoard) (*v1.UR
 	}, nil
 }
 
-func (service *tablo) GetBoard(context.Context, *v1.URI) (*v1.Board, error) {
+// GetBoard handles requests to fetch a board.
+func (service *tablo) GetBoard(ctx context.Context, req *v1.URI) (*v1.Board, error) {
 	return &v1.Board{
 		Id: &v1.URI{
 			Value: &v1.URI_Urn{Urn: "DCC2E74D-CDCE-4AE2-870A-45BCC4DF430F"},
@@ -183,7 +184,8 @@ func (service *tablo) CreateColumn(ctx context.Context, req *v1.NewColumn) (*v1.
 	}, nil
 }
 
-func (service *tablo) GetColumn(context.Context, *v1.URI) (*v1.Column, error) {
+// GetColumn handles requests to fetch a column.
+func (service *tablo) GetColumn(ctx context.Context, req *v1.URI) (*v1.Column, error) {
 	return &v1.Column{
 		Id: &v1.URI{
 			Value: &v1.URI_Urn{Urn: "78B30F56-4EBD-43A3-950D-0F830FA12026"},
@@ -231,18 +233,26 @@ func (service *tablo) CreateCard(ctx context.Context, req *v1.NewCard) (*v1.URI,
 	}, nil
 }
 
-func (service *tablo) GetCard(context.Context, *v1.URI) (*v1.Card, error) {
+// GetCard handles requests to fetch a card.
+func (service *tablo) GetCard(ctx context.Context, req *v1.URI) (*v1.Card, error) {
+	card, err := service.storage.FetchCard(ctx, model.ID(req.GetUrn()))
+	if err != nil {
+		return nil, err
+	}
 	return &v1.Card{
 		Id: &v1.URI{
-			Value: &v1.URI_Urn{Urn: "7F35888A-2B4B-4BD6-83AB-B5E0E5B65AFA"},
+			Value: &v1.URI_Urn{Urn: card.ID.String()},
 		},
-		Title:       "up stub http server",
-		Emoji:       "📦",
-		Description: "Describe stub data as responses of API.",
-		Url:         "https://github.com/octopot/tablo/issues/1",
-		Labels:      []string{"type:task"},
-		CreatedAt:   protobuf.Timestamp(&yesterday),
-		UpdatedAt:   protobuf.Timestamp(&yesterday),
+		Title:       card.Title,
+		Emoji:       card.Emoji.String(),
+		Description: card.DescriptionValue(),
+
+		// TODO:debt use real values
+		Url:    "https://github.com/octopot/tablo/issues/1",
+		Labels: []string{"type:task"},
+
+		CreatedAt: protobuf.Timestamp(card.CreatedAt),
+		UpdatedAt: protobuf.Timestamp(card.UpdatedAt),
 	}, nil
 }
 

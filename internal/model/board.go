@@ -1,5 +1,7 @@
 package model
 
+import "time"
+
 // Board represents a Tablo board.
 type Board struct {
 	ID          *ID
@@ -7,4 +9,6 @@ type Board struct {
 	Emoji       *Emoji
 	Description *string
 	Columns     *[]Column
+	CreatedAt   *time.Time
+	UpdatedAt   *time.Time
 }

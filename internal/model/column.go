@@ -1,5 +1,7 @@
 package model
 
+import "time"
+
 // Column represents a board column.
 type Column struct {
 	ID          *ID
@@ -8,4 +10,6 @@ type Column struct {
 	Description *string
 	Board       *Board
 	Cards       *[]Card
+	CreatedAt   *time.Time
+	UpdatedAt   *time.Time
 }

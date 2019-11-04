@@ -1,5 +1,7 @@
 package model
 
+import "time"
+
 // TODO:debt add
 //  - string url
 //  - repeated string labels
@@ -11,4 +13,15 @@ type Card struct {
 	Emoji       *Emoji
 	Description *string
 	Column      *Column
+	CreatedAt   *time.Time
+	UpdatedAt   *time.Time
+}
+
+// DescriptionValue returns stored string value in description
+// or empty string if description is nil.
+func (card Card) DescriptionValue() string {
+	if card.Description == nil {
+		return ""
+	}
+	return *card.Description
 }
