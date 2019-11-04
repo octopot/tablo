@@ -13,3 +13,12 @@ type Column struct {
 	CreatedAt   *time.Time
 	UpdatedAt   *time.Time
 }
+
+// DescriptionValue returns stored string value in description
+// or empty string if description is nil.
+func (column Column) DescriptionValue() string {
+	if column.Description == nil {
+		return ""
+	}
+	return *column.Description
+}

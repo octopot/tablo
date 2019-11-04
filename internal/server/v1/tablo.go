@@ -186,30 +186,42 @@ func (service *tablo) CreateColumn(ctx context.Context, req *v1.NewColumn) (*v1.
 
 // GetColumn handles requests to fetch a column.
 func (service *tablo) GetColumn(ctx context.Context, req *v1.URI) (*v1.Column, error) {
-	return &v1.Column{
+	column, err := service.storage.FetchColumn(ctx, model.ID(req.GetUrn()))
+	if err != nil {
+		return nil, err
+	}
+	resp := &v1.Column{
 		Id: &v1.URI{
-			Value: &v1.URI_Urn{Urn: "78B30F56-4EBD-43A3-950D-0F830FA12026"},
+			Value: &v1.URI_Urn{Urn: column.ID.String()},
 		},
-		Title:       "Backlog",
-		Emoji:       "🗄",
-		Description: "Product backlog, a list of requirements for a software product in development.",
-		Cards: []*v1.Card{
-			{
+		Title:       column.Title,
+		Emoji:       column.Emoji.String(),
+		Description: column.DescriptionValue(),
+		CreatedAt:   protobuf.Timestamp(column.CreatedAt),
+		UpdatedAt:   protobuf.Timestamp(column.UpdatedAt),
+	}
+	if column.Cards != nil {
+		cards := *column.Cards
+		resp.Cards = make([]*v1.Card, 0, len(cards))
+		for _, card := range cards {
+			resp.Cards = append(resp.Cards, &v1.Card{
 				Id: &v1.URI{
-					Value: &v1.URI_Urn{Urn: "7F35888A-2B4B-4BD6-83AB-B5E0E5B65AFA"},
+					Value: &v1.URI_Urn{Urn: card.ID.String()},
 				},
-				Title:       "up stub http server",
-				Emoji:       "📦",
-				Description: "Describe stub data as responses of API.",
-				Url:         "https://github.com/octopot/tablo/issues/1",
-				Labels:      []string{"type:task"},
-				CreatedAt:   protobuf.Timestamp(&yesterday),
-				UpdatedAt:   protobuf.Timestamp(&yesterday),
-			},
-		},
-		CreatedAt: protobuf.Timestamp(&yesterday),
-		UpdatedAt: protobuf.Timestamp(&yesterday),
-	}, nil
+				Title:       card.Title,
+				Emoji:       card.Emoji.String(),
+				Description: card.DescriptionValue(),
+
+				// TODO:debt use real values
+				Url:    "https://github.com/octopot/tablo/issues/1",
+				Labels: []string{"type:task"},
+
+				CreatedAt: protobuf.Timestamp(card.CreatedAt),
+				UpdatedAt: protobuf.Timestamp(card.UpdatedAt),
+			})
+		}
+	}
+	return resp, nil
 }
 
 // UpdateColumn handles requests to update a column.

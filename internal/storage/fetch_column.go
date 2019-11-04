@@ -22,10 +22,15 @@ func (storage *storage) FetchColumn(ctx context.Context, id model.ID) (model.Col
 	defer func() { _ = tx.Rollback() }()
 
 	column, err = fetchColumn(tx, *storage.builder, id)
-	if err == nil {
-		return column, errors.Wrap(tx.Commit(), "fetch column: cannot commit transaction")
+	if err != nil {
+		return column, err
 	}
-	return column, err
+	cards, err := fetchCardsByColumn(tx, *storage.builder, *column.ID)
+	if err != nil {
+		return column, err
+	}
+	column.Cards = &cards
+	return column, errors.Wrap(tx.Commit(), "fetch column: cannot commit transaction")
 }
 
 // TODO:debt generalize to fetchByID

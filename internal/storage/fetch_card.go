@@ -42,3 +42,29 @@ func fetchCard(tx *sql.Tx, builder squirrel.StatementBuilderType, id model.ID) (
 		"fetch card: cannot fetch data",
 	)
 }
+
+func fetchCardsByColumn(tx *sql.Tx, builder squirrel.StatementBuilderType, column model.ID) ([]model.Card, error) {
+	query := builder.
+		Select("id", "title", "emoji", "description", "created_at", "updated_at").
+		From("card").
+		Where(squirrel.Eq{"column_id": column}).
+		RunWith(tx)
+	rows, err := query.Query()
+	if err != nil {
+		return nil, errors.Wrap(err, "fetch cards: cannot fetch data")
+	}
+
+	// TODO:debt use go.octolab.org/safe.Close
+	defer func() { _ = rows.Close() }()
+
+	cards := make([]model.Card, 0, 4)
+	for rows.Next() {
+		var card model.Card
+		err := rows.Scan(&card.ID, &card.Title, &card.Emoji, &card.Description, &card.CreatedAt, &card.UpdatedAt)
+		if err != nil {
+			return nil, errors.Wrap(err, "fetch card: cannot fetch data on iteration")
+		}
+		cards = append(cards, card)
+	}
+	return cards, errors.Wrap(rows.Err(), "fetch cards: cannot complete iteration")
+}
