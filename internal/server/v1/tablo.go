@@ -2,7 +2,7 @@ package v1
 
 import (
 	"context"
-	"time"
+	"os"
 
 	"go.octolab.org/toolkit/protocol/protobuf"
 
@@ -11,13 +11,11 @@ import (
 	"go.octolab.org/ecosystem/tablo/internal/storage"
 )
 
-var yesterday = time.Now().AddDate(0, 0, -1)
-
 // Tablo returns new server instance of the Tablo service.
 func Tablo() v1.TabloService {
 
 	// TODO:debt define storage as a dependency and move it outside
-	postgres := storage.Must("postgres://tablo:tablo@localhost:5432/tablo?connect_timeout=1&sslmode=disable")
+	postgres := storage.Must(os.Getenv("STORAGE_DSN"))
 
 	return &tablo{storage: postgres}
 }
