@@ -22,10 +22,15 @@ func (storage *storage) FetchBoard(ctx context.Context, id model.ID) (model.Boar
 	defer func() { _ = tx.Rollback() }()
 
 	board, err = fetchBoard(tx, *storage.builder, id)
-	if err == nil {
-		return board, errors.Wrap(tx.Commit(), "fetch board: cannot commit transaction")
+	if err != nil {
+		return board, err
 	}
-	return board, err
+	columns, err := fetchColumnsByBoard(tx, *storage.builder, *board.ID)
+	if err != nil {
+		return board, err
+	}
+	board.Columns = &columns
+	return board, errors.Wrap(tx.Commit(), "fetch board: cannot commit transaction")
 }
 
 // TODO:debt generalize to fetchByID

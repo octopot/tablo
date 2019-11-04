@@ -47,3 +47,43 @@ func fetchColumn(tx *sql.Tx, builder squirrel.StatementBuilderType, id model.ID)
 		"fetch column: cannot fetch data",
 	)
 }
+
+func fetchColumnsByBoard(tx *sql.Tx, builder squirrel.StatementBuilderType, board model.ID) ([]model.Column, error) {
+	query := builder.
+		Select("id", "title", "emoji", "description", "created_at", "updated_at").
+		From(`"column"`).
+		Where(squirrel.Eq{"board_id": board}).
+		RunWith(tx)
+	rows, err := query.Query()
+	if err != nil {
+		return nil, errors.Wrap(err, "fetch columns: cannot fetch data")
+	}
+
+	// TODO:debt use go.octolab.org/safe.Close
+	defer func() { _ = rows.Close() }()
+
+	columns := make([]model.Column, 0, 4)
+	for rows.Next() {
+		var column model.Column
+		err := rows.Scan(
+			&column.ID, &column.Title, &column.Emoji, &column.Description,
+			&column.CreatedAt, &column.UpdatedAt,
+		)
+		if err != nil {
+			return nil, errors.Wrap(err, "fetch column: cannot fetch data on iteration")
+		}
+		columns = append(columns, column)
+	}
+
+	_ = rows.Close()
+	for i := range columns {
+		// TODO:debt parallel execution and golang.org/x/sync/errgroup
+		cards, err := fetchCardsByColumn(tx, builder, *columns[i].ID)
+		if err != nil {
+			return nil, errors.Wrap(err, "fetch column: cannot fetch column's cards")
+		}
+		columns[i].Cards = &cards
+	}
+
+	return columns, errors.Wrap(rows.Err(), "fetch columns: cannot complete iteration")
+}
