@@ -1,3 +1,3 @@
-FROM redis:alpine AS cache
+FROM getsentry/sentry:latest AS monitoring
 
 LABEL maintainer="Kamil Samigullin <kamil@samigullin.info>"

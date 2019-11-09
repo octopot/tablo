@@ -6,4 +6,5 @@
 !/bin/activate
 
 # sensitive data
+.private.env
 http-client.private.env.json

@@ -1,3 +1,3 @@
-FROM redis:alpine AS cache
+FROM scratch
 
 LABEL maintainer="Kamil Samigullin <kamil@samigullin.info>"

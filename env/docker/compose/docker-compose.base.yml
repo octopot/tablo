@@ -13,7 +13,6 @@ services:
   storage:
     image: octopot/tablo:storage
     build:
-      context: ../storage/context
-      dockerfile: ../Dockerfile
+      context: ../storage
     env_file:
       - ../storage/.env
