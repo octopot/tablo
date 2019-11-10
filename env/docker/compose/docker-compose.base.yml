@@ -2,6 +2,20 @@ version: "3"
 
 services:
 
+#  cache:
+#    image: octopot/tablo:cache
+#    build:
+#      context: ../cache
+#    env_file:
+#      - ../cache/.env
+#
+#  monitoring:
+#    image: octopot/tablo:monitoring
+#    build:
+#      context: ../monitoring
+#    env_file:
+#      - ../monitoring/.env
+
   service:
     image: octopot/tablo:latest
     build:

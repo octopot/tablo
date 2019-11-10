@@ -4,6 +4,8 @@ github.com/Masterminds/squirrel
 github.com/adlio/trello
 # github.com/davecgh/go-spew v1.1.1
 github.com/davecgh/go-spew/spew
+# github.com/go-chi/cors v1.0.0
+github.com/go-chi/cors
 # github.com/golang/protobuf v1.3.2
 github.com/golang/protobuf/jsonpb
 github.com/golang/protobuf/proto

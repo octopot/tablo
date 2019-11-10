@@ -1,0 +1,4 @@
+OPTIONS {{host}}/twirp/octolab.api.tablo.v1.TabloService/Get
+Origin: http://127.0.0.1
+
+###

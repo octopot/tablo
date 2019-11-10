@@ -5,6 +5,7 @@ go 1.11
 require (
 	github.com/Masterminds/squirrel v1.1.0
 	github.com/adlio/trello v1.4.0
+	github.com/go-chi/cors v1.0.0
 	github.com/go-sql-driver/mysql v1.4.1 // indirect
 	github.com/golang/protobuf v1.3.2
 	github.com/google/go-github/v28 v28.1.1
