@@ -6,6 +6,7 @@ import (
 
 	"github.com/Masterminds/squirrel"
 	"github.com/pkg/errors"
+	"go.octolab.org/safe"
 
 	"go.octolab.org/ecosystem/tablo/internal/model"
 )
@@ -53,9 +54,7 @@ func fetchCardsByColumn(tx *sql.Tx, builder squirrel.StatementBuilderType, colum
 	if err != nil {
 		return nil, errors.Wrap(err, "fetch cards: cannot fetch data")
 	}
-
-	// TODO:debt use go.octolab.org/safe.Close
-	defer func() { _ = rows.Close() }()
+	defer safe.Close(rows)
 
 	cards := make([]model.Card, 0, 8)
 	for rows.Next() {

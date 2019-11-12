@@ -4,6 +4,7 @@ import (
 	"context"
 
 	"github.com/pkg/errors"
+	"go.octolab.org/safe"
 
 	"go.octolab.org/ecosystem/tablo/internal/model"
 )
@@ -25,9 +26,7 @@ func (storage *storage) FetchBoards(ctx context.Context, criteria map[string]int
 	if err != nil {
 		return nil, errors.Wrap(err, "fetch boards: cannot fetch data")
 	}
-
-	// TODO:debt use go.octolab.org/safe.Close
-	defer func() { _ = rows.Close() }()
+	defer safe.Close(rows)
 
 	boards := make([]model.Board, 0, 8)
 	for rows.Next() {

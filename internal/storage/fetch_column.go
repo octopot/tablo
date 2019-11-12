@@ -6,6 +6,7 @@ import (
 
 	"github.com/Masterminds/squirrel"
 	"github.com/pkg/errors"
+	"go.octolab.org/safe"
 
 	"go.octolab.org/ecosystem/tablo/internal/model"
 )
@@ -58,9 +59,7 @@ func fetchColumnsByBoard(tx *sql.Tx, builder squirrel.StatementBuilderType, boar
 	if err != nil {
 		return nil, errors.Wrap(err, "fetch columns: cannot fetch data")
 	}
-
-	// TODO:debt use go.octolab.org/safe.Close
-	defer func() { _ = rows.Close() }()
+	defer safe.Close(rows)
 
 	columns := make([]model.Column, 0, 8)
 	for rows.Next() {
