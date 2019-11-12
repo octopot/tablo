@@ -3,6 +3,7 @@ package storage
 import (
 	"context"
 	"database/sql"
+	"log"
 
 	"github.com/Masterminds/squirrel"
 	"github.com/pkg/errors"
@@ -59,7 +60,7 @@ func fetchColumnsByBoard(tx *sql.Tx, builder squirrel.StatementBuilderType, boar
 	if err != nil {
 		return nil, errors.Wrap(err, "fetch columns: cannot fetch data")
 	}
-	defer safe.Close(rows)
+	defer safe.Close(rows, func(err error) { log.Println(err) })
 
 	columns := make([]model.Column, 0, 8)
 	for rows.Next() {

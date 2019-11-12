@@ -3,6 +3,7 @@ package storage
 import (
 	"context"
 	"database/sql"
+	"log"
 
 	"github.com/Masterminds/squirrel"
 	"github.com/pkg/errors"
@@ -54,7 +55,7 @@ func fetchCardsByColumn(tx *sql.Tx, builder squirrel.StatementBuilderType, colum
 	if err != nil {
 		return nil, errors.Wrap(err, "fetch cards: cannot fetch data")
 	}
-	defer safe.Close(rows)
+	defer safe.Close(rows, func(err error) { log.Println(err) })
 
 	cards := make([]model.Card, 0, 8)
 	for rows.Next() {

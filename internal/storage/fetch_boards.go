@@ -2,6 +2,7 @@ package storage
 
 import (
 	"context"
+	"log"
 
 	"github.com/pkg/errors"
 	"go.octolab.org/safe"
@@ -26,7 +27,7 @@ func (storage *storage) FetchBoards(ctx context.Context, criteria map[string]int
 	if err != nil {
 		return nil, errors.Wrap(err, "fetch boards: cannot fetch data")
 	}
-	defer safe.Close(rows)
+	defer safe.Close(rows, func(err error) { log.Println(err) })
 
 	boards := make([]model.Board, 0, 8)
 	for rows.Next() {
