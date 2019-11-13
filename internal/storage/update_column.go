@@ -3,9 +3,11 @@ package storage
 import (
 	"context"
 	"database/sql"
+	"log"
 
 	"github.com/Masterminds/squirrel"
 	"github.com/pkg/errors"
+	"go.octolab.org/safe"
 
 	"go.octolab.org/ecosystem/tablo/internal/model"
 )
@@ -16,9 +18,7 @@ func (storage *storage) UpdateColumn(ctx context.Context, column model.Column) e
 	if err != nil {
 		return errors.Wrap(err, "update column: cannot begin transaction")
 	}
-
-	// TODO:debt use go.octolab.org/safe.Do
-	defer func() { _ = tx.Rollback() }()
+	defer safe.Do(tx.Rollback, func(err error) { log.Println(err) })
 
 	err = updateColumn(tx, *storage.builder, column)
 	if err == nil {

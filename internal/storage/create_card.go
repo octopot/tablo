@@ -3,9 +3,11 @@ package storage
 import (
 	"context"
 	"database/sql"
+	"log"
 
 	"github.com/Masterminds/squirrel"
 	"github.com/pkg/errors"
+	"go.octolab.org/safe"
 
 	"go.octolab.org/ecosystem/tablo/internal/model"
 )
@@ -17,9 +19,7 @@ func (storage *storage) CreateCard(ctx context.Context, card model.Card) (model.
 	if err != nil {
 		return id, errors.Wrap(err, "create card: cannot begin transaction")
 	}
-
-	// TODO:debt use go.octolab.org/safe.Do
-	defer func() { _ = tx.Rollback() }()
+	defer safe.Do(tx.Rollback, func(err error) { log.Println(err) })
 
 	id, err = createCard(tx, *storage.builder, card)
 	if err == nil {

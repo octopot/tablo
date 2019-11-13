@@ -19,9 +19,7 @@ func (storage *storage) FetchColumn(ctx context.Context, id model.ID) (model.Col
 	if err != nil {
 		return column, errors.Wrap(err, "fetch column: cannot begin transaction")
 	}
-
-	// TODO:debt use go.octolab.org/safe.Do
-	defer func() { _ = tx.Rollback() }()
+	defer safe.Do(tx.Rollback, func(err error) { log.Println(err) })
 
 	column, err = fetchColumn(tx, *storage.builder, id)
 	if err != nil {

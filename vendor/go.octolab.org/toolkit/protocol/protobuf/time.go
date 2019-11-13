@@ -20,7 +20,7 @@ func Time(ts *timestamp.Timestamp) *time.Time {
 	return &tp
 }
 
-// Time converts built-in Time into protobuf Timestamp.
+// Timestamp converts built-in Time into protobuf Timestamp.
 func Timestamp(tp *time.Time) *timestamp.Timestamp {
 	if tp == nil {
 		return nil

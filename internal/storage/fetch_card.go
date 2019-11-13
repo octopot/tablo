@@ -19,9 +19,7 @@ func (storage *storage) FetchCard(ctx context.Context, id model.ID) (model.Card,
 	if err != nil {
 		return card, errors.Wrap(err, "fetch card: cannot begin transaction")
 	}
-
-	// TODO:debt use go.octolab.org/safe.Do
-	defer func() { _ = tx.Rollback() }()
+	defer safe.Do(tx.Rollback, func(err error) { log.Println(err) })
 
 	card, err = fetchCard(tx, *storage.builder, id)
 	if err == nil {

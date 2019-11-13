@@ -14,7 +14,7 @@ require (
 	github.com/pkg/errors v0.8.1
 	github.com/stretchr/testify v1.4.0
 	github.com/twitchtv/twirp v5.8.0+incompatible
-	go.octolab.org v0.0.4
-	go.octolab.org/toolkit/protocol v0.0.1
+	go.octolab.org v0.0.6
+	go.octolab.org/toolkit/protocol v0.0.4
 	golang.org/x/crypto v0.0.0-20191011191535-87dc89f01550 // indirect
 )

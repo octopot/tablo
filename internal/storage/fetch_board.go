@@ -3,9 +3,11 @@ package storage
 import (
 	"context"
 	"database/sql"
+	"log"
 
 	"github.com/Masterminds/squirrel"
 	"github.com/pkg/errors"
+	"go.octolab.org/safe"
 
 	"go.octolab.org/ecosystem/tablo/internal/model"
 )
@@ -17,9 +19,7 @@ func (storage *storage) FetchBoard(ctx context.Context, id model.ID) (model.Boar
 	if err != nil {
 		return board, errors.Wrap(err, "fetch board: cannot begin transaction")
 	}
-
-	// TODO:debt use go.octolab.org/safe.Do
-	defer func() { _ = tx.Rollback() }()
+	defer safe.Do(tx.Rollback, func(err error) { log.Println(err) })
 
 	board, err = fetchBoard(tx, *storage.builder, id)
 	if err != nil {

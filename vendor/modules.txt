@@ -38,9 +38,9 @@ github.com/stretchr/testify/require
 github.com/twitchtv/twirp
 github.com/twitchtv/twirp/ctxsetters
 github.com/twitchtv/twirp/internal/contextkeys
-# go.octolab.org v0.0.4
+# go.octolab.org v0.0.6
 go.octolab.org/safe
-# go.octolab.org/toolkit/protocol v0.0.1
+# go.octolab.org/toolkit/protocol v0.0.4
 go.octolab.org/toolkit/protocol/protobuf
 # golang.org/x/crypto v0.0.0-20191011191535-87dc89f01550
 golang.org/x/crypto/cast5
