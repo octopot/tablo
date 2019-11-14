@@ -39,6 +39,7 @@ github.com/twitchtv/twirp
 github.com/twitchtv/twirp/ctxsetters
 github.com/twitchtv/twirp/internal/contextkeys
 # go.octolab.org v0.0.7
+go.octolab.org/pointer
 go.octolab.org/safe
 # go.octolab.org/toolkit/protocol v0.0.4
 go.octolab.org/toolkit/protocol/protobuf

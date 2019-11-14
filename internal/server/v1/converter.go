@@ -1,6 +1,8 @@
 package v1
 
 import (
+	"go.octolab.org/pointer"
+
 	v1 "go.octolab.org/ecosystem/tablo/internal/generated/api/v1"
 	"go.octolab.org/ecosystem/tablo/internal/model"
 )
@@ -12,18 +14,8 @@ func convertBoard(in *v1.Board) model.Board {
 	out.ID = &id
 
 	out.Title = in.Title
-	if in.Emoji != "" {
-
-		// TODO:debt use use go.octolab.org/pointer.ToString
-		out.Emoji = (*model.Emoji)(&in.Emoji)
-
-	}
-	if in.Description != "" {
-
-		// TODO:debt use use go.octolab.org/pointer.ToString
-		out.Description = &in.Description
-
-	}
+	out.Emoji = (*model.Emoji)(pointer.ToStringOrNil(in.Emoji))
+	out.Description = pointer.ToStringOrNil(in.Description)
 
 	return out
 }
@@ -35,18 +27,8 @@ func convertCard(in *v1.Card) model.Card {
 	out.ID = &id
 
 	out.Title = in.Title
-	if in.Emoji != "" {
-
-		// TODO:debt use use go.octolab.org/pointer.ToString
-		out.Emoji = (*model.Emoji)(&in.Emoji)
-
-	}
-	if in.Description != "" {
-
-		// TODO:debt use use go.octolab.org/pointer.ToString
-		out.Description = &in.Description
-
-	}
+	out.Emoji = (*model.Emoji)(pointer.ToStringOrNil(in.Emoji))
+	out.Description = pointer.ToStringOrNil(in.Description)
 
 	return out
 }
@@ -58,18 +40,8 @@ func convertColumn(in *v1.Column) model.Column {
 	out.ID = &id
 
 	out.Title = in.Title
-	if in.Emoji != "" {
-
-		// TODO:debt use use go.octolab.org/pointer.ToString
-		out.Emoji = (*model.Emoji)(&in.Emoji)
-
-	}
-	if in.Description != "" {
-
-		// TODO:debt use use go.octolab.org/pointer.ToString
-		out.Description = &in.Description
-
-	}
+	out.Emoji = (*model.Emoji)(pointer.ToStringOrNil(in.Emoji))
+	out.Description = pointer.ToStringOrNil(in.Description)
 
 	return out
 }
@@ -85,18 +57,8 @@ func convertBatchBoard(in *v1.BatchRequest_Board) model.Board {
 	}
 
 	out.Title = in.Title
-	if in.Emoji != "" {
-
-		// TODO:debt use use go.octolab.org/pointer.ToString
-		out.Emoji = (*model.Emoji)(&in.Emoji)
-
-	}
-	if in.Description != "" {
-
-		// TODO:debt use use go.octolab.org/pointer.ToString
-		out.Description = &in.Description
-
-	}
+	out.Emoji = (*model.Emoji)(pointer.ToStringOrNil(in.Emoji))
+	out.Description = pointer.ToStringOrNil(in.Description)
 	if in.Columns != nil {
 		columns := make([]model.Column, 0, len(in.Columns))
 		for _, column := range in.Columns {
@@ -119,18 +81,8 @@ func convertBatchCard(in *v1.BatchRequest_Card) model.Card {
 	}
 
 	out.Title = in.Title
-	if in.Emoji != "" {
-
-		// TODO:debt use use go.octolab.org/pointer.ToString
-		out.Emoji = (*model.Emoji)(&in.Emoji)
-
-	}
-	if in.Description != "" {
-
-		// TODO:debt use use go.octolab.org/pointer.ToString
-		out.Description = &in.Description
-
-	}
+	out.Emoji = (*model.Emoji)(pointer.ToStringOrNil(in.Emoji))
+	out.Description = pointer.ToStringOrNil(in.Description)
 
 	return out
 }
@@ -146,18 +98,8 @@ func convertBatchColumn(in *v1.BatchRequest_Column) model.Column {
 	}
 
 	out.Title = in.Title
-	if in.Emoji != "" {
-
-		// TODO:debt use use go.octolab.org/pointer.ToString
-		out.Emoji = (*model.Emoji)(&in.Emoji)
-
-	}
-	if in.Description != "" {
-
-		// TODO:debt use use go.octolab.org/pointer.ToString
-		out.Description = &in.Description
-
-	}
+	out.Emoji = (*model.Emoji)(pointer.ToStringOrNil(in.Emoji))
+	out.Description = pointer.ToStringOrNil(in.Description)
 	if in.Cards != nil {
 		cards := make([]model.Card, 0, len(in.Cards))
 		for _, card := range in.Cards {
@@ -180,18 +122,8 @@ func convertNewBoard(in *v1.NewBoard) model.Board {
 	}
 
 	out.Title = in.Title
-	if in.Emoji != "" {
-
-		// TODO:debt use use go.octolab.org/pointer.ToString
-		out.Emoji = (*model.Emoji)(&in.Emoji)
-
-	}
-	if in.Description != "" {
-
-		// TODO:debt use use go.octolab.org/pointer.ToString
-		out.Description = &in.Description
-
-	}
+	out.Emoji = (*model.Emoji)(pointer.ToStringOrNil(in.Emoji))
+	out.Description = pointer.ToStringOrNil(in.Description)
 
 	return out
 }
@@ -211,18 +143,8 @@ func convertNewCard(in *v1.NewCard) model.Card {
 	out.Column = &model.Column{ID: &columnID}
 
 	out.Title = in.Title
-	if in.Emoji != "" {
-
-		// TODO:debt use use go.octolab.org/pointer.ToString
-		out.Emoji = (*model.Emoji)(&in.Emoji)
-
-	}
-	if in.Description != "" {
-
-		// TODO:debt use use go.octolab.org/pointer.ToString
-		out.Description = &in.Description
-
-	}
+	out.Emoji = (*model.Emoji)(pointer.ToStringOrNil(in.Emoji))
+	out.Description = pointer.ToStringOrNil(in.Description)
 
 	return out
 }
@@ -242,18 +164,8 @@ func convertNewColumn(in *v1.NewColumn) model.Column {
 	out.Board = &model.Board{ID: &boardID}
 
 	out.Title = in.Title
-	if in.Emoji != "" {
-
-		// TODO:debt use use go.octolab.org/pointer.ToString
-		out.Emoji = (*model.Emoji)(&in.Emoji)
-
-	}
-	if in.Description != "" {
-
-		// TODO:debt use use go.octolab.org/pointer.ToString
-		out.Description = &in.Description
-
-	}
+	out.Emoji = (*model.Emoji)(pointer.ToStringOrNil(in.Emoji))
+	out.Description = pointer.ToStringOrNil(in.Description)
 
 	return out
 }
