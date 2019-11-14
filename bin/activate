@@ -14,11 +14,17 @@ deactivate () {
     if [[ ! "$1" = "nondestructive" ]] ; then
         unset -f deactivate
         unset -f get
+        unset -f up
     fi
 }
 
 get () {
     go get -mod= $@
+}
+
+up () {
+    get -u $@
+    make deps-main
 }
 
 deactivate nondestructive

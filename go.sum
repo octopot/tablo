@@ -41,8 +41,8 @@ github.com/stretchr/testify v1.4.0 h1:2E4SXV/wtOkTonXsotYi4li6zVWxYlZuYNCXe9XRJy
 github.com/stretchr/testify v1.4.0/go.mod h1:j7eGeouHqKxXV5pUuKE4zz7dFj8WfuZ+81PSLYec5m4=
 github.com/twitchtv/twirp v5.8.0+incompatible h1:DTfGS9u/jHbo34cBB+qhzVHRaAq+tRois71j8pvjQ5M=
 github.com/twitchtv/twirp v5.8.0+incompatible/go.mod h1:RRJoFSAmTEh2weEqWtpPE3vFK5YBhA6bqp2l1kfCC5A=
-go.octolab.org v0.0.6 h1:3Gtcdm8r2t79A9puhWu9spGc0kF0K5yBIv7Iu52gadI=
-go.octolab.org v0.0.6/go.mod h1:tV28oFk9jpM4AEog9pdne98TX/t+LSjDG7/5fhhCtU0=
+go.octolab.org v0.0.7 h1:GZ3N66LnWxj/nY+vwGckhoRG5hYxF7Tz7MRvGs/L6Js=
+go.octolab.org v0.0.7/go.mod h1:tV28oFk9jpM4AEog9pdne98TX/t+LSjDG7/5fhhCtU0=
 go.octolab.org/toolkit/protocol v0.0.4 h1:Rr3FZtFwY7GJCAlUcJ0F8WoomrHUBj1XblqaKBsnskI=
 go.octolab.org/toolkit/protocol v0.0.4/go.mod h1:f466YJk/pgVJoO/yQULK1tfxC2fE+bfhtGAXTveQP7k=
 golang.org/x/crypto v0.0.0-20190308221718-c2843e01d9a2 h1:VklqNMn3ovrHsnt90PveolxSbWFaJdECFbxSq0Mqo2M=
