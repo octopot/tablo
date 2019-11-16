@@ -7,12 +7,12 @@ _compose = $(_base) -f env/docker/compose/docker-compose.dev.yml
 .PHONY: demo
 demo:
 	$(eval _compose = $(_base) -f env/docker/compose/docker-compose.demo.yml)
-	@(echo $(_compose))
+	@echo $(_compose)
 
 .PHONY: e2e
 e2e:
 	$(eval _compose = $(_base) -f env/docker/compose/docker-compose.e2e.yml)
-	@(echo $(_compose))
+	@echo $(_compose)
 
 .PHONY: up
 up:
