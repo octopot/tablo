@@ -13,9 +13,18 @@ deactivate () {
 
     if [[ ! "$1" = "nondestructive" ]] ; then
         unset -f deactivate
+        unset -f realpath
         unset -f get
         unset -f up
     fi
+}
+
+realpath () {
+    if [[ -z "${1:-}" ]]; then
+        echo 'Please provide a file/dir name'
+        return
+    fi
+    echo "$(cd `dirname ${1}` && pwd)/${1}"
 }
 
 get () {
@@ -30,7 +39,7 @@ up () {
 deactivate nondestructive
 
 _OLD_PATH="${PATH}"
-export PATH="$(cd `dirname ${0}` && pwd):${PATH}"
+export PATH="$(realpath $(dirname $0)):${PATH}"
 export VAULT_ADDR=http://127.0.0.1:8200
 
 if [[ -n "${BASH:-}" || -n "${ZSH_VERSION:-}" ]] ; then
