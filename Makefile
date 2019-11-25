@@ -12,6 +12,7 @@ TIMEOUT     = 1s
 
 export PATH := $(BINPATH):$(PATH)
 
+include env/make/ansible.mk
 include env/make/go.mk
 include env/make/protobuf.mk
 include env/make/docker.mk

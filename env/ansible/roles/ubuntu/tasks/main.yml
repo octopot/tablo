@@ -1,0 +1,12 @@
+- name: Update the apt package index
+  apt:
+    autoclean:    yes
+    autoremove:   yes
+    update_cache: yes
+
+- name: Install useful packages
+  apt:
+    name:
+      - git
+      - make
+    state: present

@@ -1,0 +1,11 @@
+---
+
+- hosts:  docker
+  become: yes
+
+  module_defaults:
+    apt:
+      force_apt_get: yes
+
+  roles:
+    - docker
