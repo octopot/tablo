@@ -1,17 +1,17 @@
 PROJECT = tablo
 
-_base    = docker-compose -p $(PROJECT) -f env/docker/compose/docker-compose.base.yml
-_compose = $(_base) -f env/docker/compose/docker-compose.dev.yml
+_base    = docker-compose -p $(PROJECT) -f env/docker/compose/base.yml
+_compose = $(_base) -f env/docker/compose/dev.yml
 
 
 .PHONY: demo
 demo:
-	$(eval _compose = $(_base) -f env/docker/compose/docker-compose.demo.yml)
+	$(eval _compose = $(_base) -f env/docker/compose/demo.yml)
 	@echo $(_compose)
 
 .PHONY: e2e
 e2e:
-	$(eval _compose = $(_base) -f env/docker/compose/docker-compose.e2e.yml)
+	$(eval _compose = $(_base) -f env/docker/compose/e2e.yml)
 	@echo $(_compose)
 
 .PHONY: up
