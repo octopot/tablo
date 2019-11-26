@@ -16,6 +16,15 @@ services:
 #    env_file:
 #      - ../monitoring/.env
 
+  server:
+    image: octopot/tablo:server
+    build:
+      context: ../server
+    depends_on:
+      - service
+    env_file:
+      - ../server/.env
+
   service:
     image: octopot/tablo:latest
     build:

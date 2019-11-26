@@ -29,12 +29,12 @@ ENV BIND=0.0.0.0 \
     HTTP_PORT=8080 \
     GRPC_PORT=8090 \
     PROFILING_PORT=8091 \
-    MONITORING_PORT=8092
+    TELEMETRY_PORT=8092
 
 EXPOSE ${HTTP_PORT} \
        ${GRPC_PORT} \
        ${PROFILING_PORT} \
-       ${MONITORING_PORT}
+       ${TELEMETRY_PORT}
 
 ENTRYPOINT [ "service" ]
 CMD        [ "help", "run" ]

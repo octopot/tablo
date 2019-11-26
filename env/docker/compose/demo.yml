@@ -1,3 +1,28 @@
 version: "3"
 
-services: {}
+services:
+
+  server:
+    command: tablo.octolab.org
+    environment:
+      - DEV_ENABLED=false
+      - LE_ENABLED=true
+      - LE_EMAIL=kamil@samigullin.info
+    ports:
+      - 80:80
+      - 443:443
+    volumes:
+      - certificates:/etc/nginx/ssl
+      - letsencrypt:/etc/letsencrypt
+
+  storage:
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+volumes:
+
+  certificates: { driver: local }
+  letsencrypt:  { driver: local }
+
+  pgdata:       { driver: local }
+
