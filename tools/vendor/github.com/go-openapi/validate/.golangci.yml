@@ -18,4 +18,3 @@ linters:
   disable:
     - maligned
     - lll
-    - godox

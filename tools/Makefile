@@ -1,26 +1,24 @@
+.DEFAULT_GOAL = install
+
+SHELL = /bin/bash -euo pipefail
+
 BINPATH     = $(shell dirname $(PWD))/bin
 GO111MODULE = on
-GOFLAGS     = -mod=
-GOPROXY     = https://proxy.golang.org,https://gocenter.io,direct
-SHELL       = /bin/bash -euo pipefail
+GOFLAGS     = -mod=vendor
+GOPRIVATE   =
+GOPROXY     = direct
+MODULE      = $(shell go list -m)
 
 export PATH := $(BINPATH):$(PATH)
-
-.DEFAULT_GOAL = install
 
 .PHONY: env
 env:
 	@echo "BINPATH:     $(BINPATH)"
 	@echo "GO111MODULE: $(shell go env GO111MODULE)"
-	@echo "GOFLAGS:     $(shell go env GOFLAGS)"
-	@echo "GOPRIVATE:   $(shell go env GOPRIVATE)"
-	@echo "GOPROXY:     $(shell go env GOPROXY)"
-	@echo "GONOPROXY:   $(shell go env GONOPROXY)"
-	@echo "GOSUMDB:     $(shell go env GOSUMDB)"
-	@echo "GONOSUMDB:   $(shell go env GONOSUMDB)"
-	@echo "PATH:        $(PATH)"
-	@echo "SHELL:       $(SHELL)"
-
+	@echo "GOFLAGS:     $(strip $(shell go env GOFLAGS))"
+	@echo "GOPRIVATE:   $(strip $(shell go env GOPRIVATE))"
+	@echo "GOPROXY:     $(strip $(shell go env GOPROXY))"
+	@echo "MODULE:      $(MODULE)"
 
 .PHONY: brew
 brew:
@@ -28,22 +26,12 @@ brew:
 
 .PHONY: deps
 deps:
-	@go mod tidy && go mod vendor && go mod verify
+	@GOPRIVATE=$(GOPRIVATE) go mod tidy && go mod vendor
 
-.PHONY: deps-update
-deps-update:
-	@go get -u all
-
-.PHONY: egg
-egg:
-	@go get -d -u github.com/kamilsk/egg
-	@go build -o $(BINPATH)/egg github.com/kamilsk/egg
-
-
-.PHONY: build
-build:
-	@GOFLAGS='-mod=vendor' egg --build
-	@mv bin/* $(BINPATH) && rm -rf bin
+.PHONY: update
+update:
+	@GOPRIVATE=$(GOPRIVATE) go get -mod= -u all
 
 .PHONY: install
-install: brew egg deps build
+install: brew
+	@GOPRIVATE=$(GOPRIVATE) ROOT=$(dir $(BINPATH)) go generate ./tools.go
