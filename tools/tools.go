@@ -11,6 +11,7 @@ import (
 	_ "github.com/golang/protobuf/protoc-gen-go"
 	_ "github.com/golangci/golangci-lint/cmd/golangci-lint"
 	_ "github.com/grpc-ecosystem/grpc-gateway/protoc-gen-swagger"
+	_ "github.com/kamilsk/egg"
 	_ "github.com/twitchtv/twirp/protoc-gen-twirp"
 	_ "golang.org/x/tools/cmd/goimports"
 )
@@ -21,5 +22,6 @@ import (
 //go:generate go build -v -o=${ROOT}bin/protoc-gen-go github.com/golang/protobuf/protoc-gen-go
 //go:generate go build -v -o=${ROOT}bin/golangci-lint github.com/golangci/golangci-lint/cmd/golangci-lint
 //go:generate go build -v -o=${ROOT}bin/protoc-gen-swagger github.com/grpc-ecosystem/grpc-gateway/protoc-gen-swagger
+//go:generate go build -v -o=${ROOT}bin/egg github.com/kamilsk/egg
 //go:generate go build -v -o=${ROOT}bin/protoc-gen-twirp github.com/twitchtv/twirp/protoc-gen-twirp
 //go:generate go build -v -o=${ROOT}bin/goimports golang.org/x/tools/cmd/goimports

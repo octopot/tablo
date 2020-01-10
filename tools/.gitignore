@@ -1,3 +1,5 @@
 # binaries
-/bin
+/bin/
+
+# platform deps
 Brewfile.lock.json
