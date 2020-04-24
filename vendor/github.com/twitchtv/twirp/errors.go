@@ -41,7 +41,12 @@
 //
 package twirp
 
-import "fmt"
+import (
+	"encoding/json"
+	"fmt"
+	"net/http"
+	"strconv"
+)
 
 // Error represents an error in a Twirp service call.
 type Error interface {
@@ -346,3 +351,62 @@ func (e *wrappedErr) WithMeta(key string, val string) Error {
 	}
 }
 func (e *wrappedErr) Cause() error { return e.cause }
+
+// WriteError writes an HTTP response with a valid Twirp error format (code, msg, meta).
+// Useful outside of the Twirp server (e.g. http middleware).
+// If err is not a twirp.Error, it will get wrapped with twirp.InternalErrorWith(err)
+func WriteError(resp http.ResponseWriter, err error) error {
+	return writeError(resp, err)
+}
+
+// writeError writes Twirp errors in the response.
+func writeError(resp http.ResponseWriter, err error) error {
+	// Non-twirp errors are wrapped as Internal (default)
+	twerr, ok := err.(Error)
+	if !ok {
+		twerr = InternalErrorWith(err)
+	}
+
+	statusCode := ServerHTTPStatusFromErrorCode(twerr.Code())
+	respBody := marshalErrorToJSON(twerr)
+
+	resp.Header().Set("Content-Type", "application/json") // Error responses are always JSON
+	resp.Header().Set("Content-Length", strconv.Itoa(len(respBody)))
+	resp.WriteHeader(statusCode) // set HTTP status code and send response
+
+	_, writeErr := resp.Write(respBody)
+	if writeErr != nil {
+		return writeErr
+	}
+	return nil
+}
+
+// JSON serialization for errors
+type twerrJSON struct {
+	Code string            `json:"code"`
+	Msg  string            `json:"msg"`
+	Meta map[string]string `json:"meta,omitempty"`
+}
+
+// marshalErrorToJSON returns JSON from a twirp.Error, that can be used as HTTP error response body.
+// If serialization fails, it will use a descriptive Internal error instead.
+func marshalErrorToJSON(twerr Error) []byte {
+	// make sure that msg is not too large
+	msg := twerr.Msg()
+	if len(msg) > 1e6 {
+		msg = msg[:1e6]
+	}
+
+	tj := twerrJSON{
+		Code: string(twerr.Code()),
+		Msg:  msg,
+		Meta: twerr.MetaMap(),
+	}
+
+	buf, err := json.Marshal(&tj)
+	if err != nil {
+		buf = []byte("{\"type\": \"" + Internal + "\", \"msg\": \"There was an error but it could not be serialized into JSON\"}") // fallback
+	}
+
+	return buf
+}

@@ -3,8 +3,12 @@ package safe
 import "github.com/pkg/errors"
 
 // Do reliably runs the action and captures panic as its error.
+// If an error is not nil, it passes it to the handler.
 //
-//  go safe.Do(func() error { return unsafe.Work() }, func(err error) { log.Println(err) })
+//  go safe.Do(
+//  	func() error { ... },
+//  	func(err error) { log.Println(err) },
+//  )
 //
 func Do(action func() error, handler func(error)) {
 	var err error

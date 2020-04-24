@@ -12,16 +12,18 @@ import (
 	_ "github.com/golangci/golangci-lint/cmd/golangci-lint"
 	_ "github.com/grpc-ecosystem/grpc-gateway/protoc-gen-swagger"
 	_ "github.com/kamilsk/egg"
+	_ "github.com/mailru/easyjson/easyjson"
 	_ "github.com/twitchtv/twirp/protoc-gen-twirp"
 	_ "golang.org/x/tools/cmd/goimports"
 )
 
-//go:generate go build -v -o=${ROOT}bin/swagger github.com/go-swagger/go-swagger/cmd/swagger
-//go:generate go build -v -o=${ROOT}bin/protoc-gen-gofast github.com/gogo/protobuf/protoc-gen-gofast
-//go:generate go build -v -o=${ROOT}bin/mockgen github.com/golang/mock/mockgen
-//go:generate go build -v -o=${ROOT}bin/protoc-gen-go github.com/golang/protobuf/protoc-gen-go
-//go:generate go build -v -o=${ROOT}bin/golangci-lint github.com/golangci/golangci-lint/cmd/golangci-lint
-//go:generate go build -v -o=${ROOT}bin/protoc-gen-swagger github.com/grpc-ecosystem/grpc-gateway/protoc-gen-swagger
-//go:generate go build -v -o=${ROOT}bin/egg github.com/kamilsk/egg
-//go:generate go build -v -o=${ROOT}bin/protoc-gen-twirp github.com/twitchtv/twirp/protoc-gen-twirp
-//go:generate go build -v -o=${ROOT}bin/goimports golang.org/x/tools/cmd/goimports
+//go:generate go install github.com/go-swagger/go-swagger/cmd/swagger
+//go:generate go install github.com/gogo/protobuf/protoc-gen-gofast
+//go:generate go install github.com/golang/mock/mockgen
+//go:generate go install github.com/golang/protobuf/protoc-gen-go
+//go:generate go install github.com/golangci/golangci-lint/cmd/golangci-lint
+//go:generate go install github.com/grpc-ecosystem/grpc-gateway/protoc-gen-swagger
+//go:generate go install github.com/kamilsk/egg
+//go:generate go install github.com/mailru/easyjson/easyjson
+//go:generate go install github.com/twitchtv/twirp/protoc-gen-twirp
+//go:generate go install golang.org/x/tools/cmd/goimports

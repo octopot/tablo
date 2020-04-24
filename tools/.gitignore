@@ -1,5 +1,5 @@
 # binaries
 /bin/
 
-# platform deps
-Brewfile.lock.json
+# dependencies
+/vendor/
