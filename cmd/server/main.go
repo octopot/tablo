@@ -1,8 +1,10 @@
 package main
 
 import (
+	"fmt"
 	"log"
 	"net/http"
+	"runtime/debug"
 
 	"github.com/go-chi/cors"
 
@@ -10,11 +12,21 @@ import (
 	server "go.octolab.org/ecosystem/tablo/internal/server/v1"
 )
 
+const unknown = "unknown"
+
 var (
-	commit  = "none"
-	date    = "unknown"
+	commit  = unknown
+	date    = unknown
 	version = "dev"
 )
+
+//nolint:gochecknoinits
+func init() {
+	if info, available := debug.ReadBuildInfo(); available && commit == unknown {
+		version = info.Main.Version
+		commit = fmt.Sprintf("%s, mod sum: %s", commit, info.Main.Sum)
+	}
+}
 
 func main() {
 	log.Printf("{commit: %q, date: %q, version: %q, port: 8080}\n", commit, date, version)
