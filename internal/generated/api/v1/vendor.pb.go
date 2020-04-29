@@ -5,9 +5,10 @@ package v1
 
 import (
 	fmt "fmt"
+	math "math"
+
 	proto "github.com/golang/protobuf/proto"
 	_ "github.com/golang/protobuf/ptypes/empty"
-	math "math"
 )
 
 // Reference imports to suppress errors if they are not otherwise used.

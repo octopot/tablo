@@ -3,20 +3,21 @@
 
 package v1
 
-import bytes "bytes"
-import strings "strings"
-import context "context"
-import fmt "fmt"
-import ioutil "io/ioutil"
-import http "net/http"
-import strconv "strconv"
+import (
+	bytes "bytes"
+	context "context"
+	fmt "fmt"
+	ioutil "io/ioutil"
+	http "net/http"
+	strconv "strconv"
+	strings "strings"
 
-import jsonpb "github.com/golang/protobuf/jsonpb"
-import proto "github.com/golang/protobuf/proto"
-import twirp "github.com/twitchtv/twirp"
-import ctxsetters "github.com/twitchtv/twirp/ctxsetters"
-
-import google_protobuf1 "github.com/golang/protobuf/ptypes/empty"
+	jsonpb "github.com/golang/protobuf/jsonpb"
+	proto "github.com/golang/protobuf/proto"
+	google_protobuf1 "github.com/golang/protobuf/ptypes/empty"
+	twirp "github.com/twitchtv/twirp"
+	ctxsetters "github.com/twitchtv/twirp/ctxsetters"
+)
 
 // =======================
 // VendorService Interface

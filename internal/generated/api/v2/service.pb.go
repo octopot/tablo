@@ -5,9 +5,11 @@ package v2
 
 import (
 	fmt "fmt"
-	proto "github.com/golang/protobuf/proto"
-	v1 "go.octolab.org/ecosystem/tablo/internal/generated/api/v1"
 	math "math"
+
+	proto "github.com/golang/protobuf/proto"
+
+	v1 "go.octolab.org/ecosystem/tablo/internal/generated/api/v1"
 )
 
 // Reference imports to suppress errors if they are not otherwise used.
