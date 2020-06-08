@@ -1,10 +1,6 @@
 # code coverage and quality reports
 *.out
 
-# binaries
-/bin/*
-!/bin/activate
-
 # sensitive data
 .private.env
 .private.hosts

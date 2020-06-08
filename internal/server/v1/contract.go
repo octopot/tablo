@@ -6,6 +6,8 @@ import (
 	"go.octolab.org/ecosystem/tablo/internal/model"
 )
 
+//go:generate mockgen -package ${GOPACKAGE}_test -source $GOFILE -destination mocks_test.go
+
 // Storage defines the behavior of a storage layer.
 type Storage interface {
 	Create(context.Context, []model.Board) ([]model.Board, error)

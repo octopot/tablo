@@ -1,15 +1,18 @@
 package main
 
 import (
+	"context"
 	"fmt"
-	"log"
-	"net/http"
+	"io"
+	"os"
 	"runtime/debug"
 
-	"github.com/go-chi/cors"
+	"go.octolab.org/errors"
+	"go.octolab.org/safe"
+	"go.octolab.org/toolkit/cli/cobra"
+	"go.octolab.org/unsafe"
 
-	v1 "go.octolab.org/ecosystem/tablo/internal/generated/api/v1"
-	server "go.octolab.org/ecosystem/tablo/internal/server/v1"
+	"go.octolab.org/ecosystem/tablo/internal/cmd"
 )
 
 const unknown = "unknown"
@@ -18,9 +21,11 @@ var (
 	commit  = unknown
 	date    = unknown
 	version = "dev"
+	exit    = os.Exit
+	stderr  = io.Writer(os.Stderr)
+	stdout  = io.Writer(os.Stdout)
 )
 
-//nolint:gochecknoinits
 func init() {
 	if info, available := debug.ReadBuildInfo(); available && commit == unknown {
 		version = info.Main.Version
@@ -29,20 +34,23 @@ func init() {
 }
 
 func main() {
-	log.Printf("{commit: %q, date: %q, version: %q, port: 8080}\n", commit, date, version)
+	ctx, cancel := context.WithCancel(context.Background())
+	defer cancel()
+	root := cmd.NewServer()
+	root.SetErr(stderr)
+	root.SetOut(stdout)
+	root.AddCommand(
+		cobra.NewCompletionCommand(),
+		cobra.NewVersionCommand(version, date, commit),
+	)
+	safe.Do(func() error { return root.ExecuteContext(ctx) }, shutdown)
+}
 
-	handler := v1.NewTabloServiceServer(server.Tablo(), nil)
-	middleware := cors.New(cors.Options{
-		AllowedOrigins:   []string{"*"},
-		AllowedMethods:   []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
-		AllowedHeaders:   []string{"Accept", "Authorization", "Content-Type", "X-CSRF-Token"},
-		ExposedHeaders:   []string{"Link"},
-		AllowCredentials: true,
-		MaxAge:           300,
-	})
-
-	mux := http.NewServeMux()
-	mux.Handle(handler.PathPrefix(), middleware.Handler(handler))
-
-	log.Fatal(http.ListenAndServe(":8080", mux))
+func shutdown(err error) {
+	if recovered, is := errors.Unwrap(err).(errors.Recovered); is {
+		unsafe.DoSilent(fmt.Fprintf(stderr, "recovered: %+v\n", recovered.Cause()))
+		unsafe.DoSilent(fmt.Fprintln(stderr, "---"))
+		unsafe.DoSilent(fmt.Fprintf(stderr, "%+v\n", err))
+	}
+	exit(1)
 }

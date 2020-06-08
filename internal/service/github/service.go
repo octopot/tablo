@@ -1,3 +1,3 @@
 package github
 
-import _ "github.com/google/go-github/v31/github"
+import _ "github.com/google/go-github/v32/github"
