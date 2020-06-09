@@ -6,10 +6,10 @@ require (
 	github.com/Masterminds/squirrel v1.4.0
 	github.com/adlio/trello v1.7.0
 	github.com/go-chi/cors v1.1.1
+	github.com/golang/mock v1.4.3
 	github.com/golang/protobuf v1.4.2
 	github.com/google/go-github/v32 v32.0.0
 	github.com/lib/pq v1.6.0
-	github.com/golang/mock v1.4.3
 	github.com/mailru/easyjson v0.7.1
 	github.com/pkg/errors v0.9.1
 	github.com/spf13/cobra v1.0.0
