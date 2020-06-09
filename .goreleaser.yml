@@ -1,0 +1,86 @@
+---
+project_name: tablo
+
+archives:
+  - id: tablo
+    builds:
+      - tablo
+      - tabloctl
+    files:
+      - LICENSE
+    format: tar.gz
+    name_template: "{{.ProjectName}}_{{.Version}}_{{.Os}}-{{.Arch}}"
+    replacements:
+      386:    32bit
+      amd64:  64bit
+      darwin: macOS
+      linux:  Linux
+
+brews:
+  - name: tablo
+    caveats:
+    commit_author:
+      name:  Kamil Samigullin
+      email: kamil@samigullin.info
+    description: The one point of view to all your task boards.
+    folder: Formula
+    homepage: https://github.com/octopot/tablo
+    github:
+      owner: octolab
+      name:  homebrew-tap
+    install: |
+      bin.install "tablo"
+      output = Utils.popen_read("#{bin}/tablo completion bash")
+      (bash_completion/"tablo").write output
+      output = Utils.popen_read("#{bin}/tablo completion zsh")
+      (zsh_completion/"_tablo").write output
+
+      bin.install "tabloctl"
+      output = Utils.popen_read("#{bin}/tabloctl completion bash")
+      (bash_completion/"tabloctl").write output
+      output = Utils.popen_read("#{bin}/tabloctl completion zsh")
+      (zsh_completion/"_tabloctl").write output
+
+      prefix.install_metafiles
+    test: |
+      system "#{bin}/tablo    version"
+      system "#{bin}/tabloctl version"
+
+builds:
+  - id: tablo
+    binary: tablo
+    env:
+      - CGO_ENABLED=0
+    flags:
+      - -trimpath
+    goarch:
+      - 386
+      - amd64
+    goos:
+      - darwin
+      - linux
+    ldflags:
+      - -s -w -X main.version={{.Version}} -X main.commit={{.Commit}} -X main.date={{.Date}}
+    main: ./cmd/server/main.go
+  - id: tabloctl
+    binary: tabloctl
+    env:
+      - CGO_ENABLED=0
+    flags:
+      - -trimpath
+    goarch:
+      - 386
+      - amd64
+    goos:
+      - darwin
+      - linux
+    ldflags:
+      - -s -w -X main.version={{.Version}} -X main.commit={{.Commit}} -X main.date={{.Date}}
+    main: ./cmd/client/main.go
+
+checksum: { name_template: checksums.txt }
+
+release:
+  github:
+    owner: octopot
+    name:  tablo
